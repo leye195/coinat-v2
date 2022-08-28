@@ -1,4 +1,4 @@
-import createHandler from 'server/middleware';
+import createHandler from '@/server/middleware';
 
 const app = createHandler();
 
