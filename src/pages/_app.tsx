@@ -1,6 +1,6 @@
-import { Global } from "@emotion/react";
-import type { AppProps } from "next/app";
-import styles from "styles";
+import { Global } from '@emotion/react';
+import type { AppProps } from 'next/app';
+import styles from 'styles';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

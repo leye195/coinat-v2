@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -10,8 +10,8 @@ export function dbConnect() {
 
   if (db.readyState >= 1) return;
 
-  db.on("error", console.error);
-  db.once("open", () => {
+  db.on('error', console.error);
+  db.once('open', () => {
     console.log(`Connected to mongodb server`);
   });
 

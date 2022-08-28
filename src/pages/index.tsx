@@ -1,5 +1,5 @@
-import { css } from "@emotion/react";
-import type { NextPage } from "next";
+import { css } from '@emotion/react';
+import type { NextPage } from 'next';
 
 const Container = css`
   font-weight: 700;
