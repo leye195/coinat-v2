@@ -1,11 +1,7 @@
 import axios from 'axios';
 import createHandler from '@/server/middleware';
 import currencyModel from '@/server/models/Currency';
-
-type Currency = {
-  value: number;
-  name: string;
-};
+import type { Currency } from 'types/Currency';
 
 const MEXC_API =
   'https://www.mexc.com/api/platform/common/currency/exchange/rate';
