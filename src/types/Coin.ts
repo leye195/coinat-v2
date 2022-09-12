@@ -14,3 +14,5 @@ export type UpbitCoin = {
   korean_name: string;
   english_name: string;
 };
+
+export type TickerType = 'KRW' | 'BTC';
