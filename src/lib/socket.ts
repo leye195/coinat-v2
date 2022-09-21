@@ -1,9 +1,17 @@
 import api from 'axios';
+import { getPercent } from './utils';
 import type { Coin, UpbitCoin } from 'types/Coin';
 import type { Exchange } from 'types/Ticker';
 
 type OpenCallback = (socket: WebSocket) => void;
 type MessageCallback = (e: MessageEvent<any>) => void;
+type CombinedTickers = {
+  symbol: string;
+  last: number;
+  blast: number;
+  convertedBlast?: number;
+  per?: number;
+};
 
 const tickers: Exchange = {
   upbit: {
@@ -30,6 +38,8 @@ const onUpbitOpen = () => async (socket: WebSocket) => {
     (coin: UpbitCoin) =>
       coin.market.includes('KRW-') || coin.market.includes('BTC-'),
   );
+
+  console.log('upbit connected');
 
   const data = [
     { ticket: 'coin-at' },
@@ -81,7 +91,33 @@ const handleUpbitMessage = (e: any) => {
   }
 };
 
-const onBinanceOpen = () => async (socket: WebSocket) => {};
+const onBinanceOpen = () => async (socket: WebSocket) => {
+  console.log('binance connected');
+};
+
+const handleBinanceMessage = (e: any) => {
+  const {
+    data: { s, c, h, l, o },
+  } = JSON.parse(e.data);
+
+  const symbol = s.slice(0, s.length - 3);
+  if (symbol === 'BTCU') {
+    btcKrw.binance = parseFloat(c);
+    tickers.binance.btc[s.slice(0, s.length - 4)] = {
+      tradePrice: parseFloat(c),
+      highPrice: h,
+      lowPrice: l,
+      openPrice: o,
+    };
+  } else {
+    tickers.binance.btc[symbol] = {
+      tradePrice: parseFloat(c),
+      highPrice: h,
+      lowPrice: l,
+      openPrice: o,
+    };
+  }
+};
 
 const connect = (
   url: string,
@@ -94,11 +130,12 @@ const connect = (
 
   if (binaryType) socket.binaryType = binaryType;
 
-  if (!!onOpen)
+  if (!!onOpen) {
     socket.onopen = () => {
       console.log(`connected to ${url}`);
       onOpen(socket);
     };
+  }
 
   if (!!onMessage) {
     socket.onmessage = onMessage;
@@ -116,14 +153,80 @@ const connect = (
   };
 };
 
-export const initSocket = () => {
+export const initSocket = (coinList: Coin[]) => {
   //upbit
   connect(UPBIT_SOCKET, onUpbitOpen, handleUpbitMessage, 'arraybuffer');
 
-  // binance;
-  connect(BINANCE_SOCKET, onBinanceOpen);
+  // binance
+  const streams = `${coinList
+    .map((coin: Coin) => `${coin.name}btc@ticker/`)
+    .join('')}'btcusdt@ticker`;
+
+  connect(`${BINANCE_SOCKET}${streams}`, onBinanceOpen, handleBinanceMessage);
 };
 
-export const combineTickers = () => {
-  return {};
+export const combineTickers = (coinList: Coin[], type?: string) => {
+  const combinedTickers: CombinedTickers[] = [{ name: 'BTC' }, ...coinList].map(
+    ({ name }) => {
+      if (type === 'KRW' && name === 'BTC') {
+        return {
+          symbol: name,
+          last:
+            tickers.upbit.krw[name] === undefined
+              ? 0
+              : tickers.upbit.krw[name].tradePrice,
+          blast:
+            tickers.binance.btc[name] === undefined
+              ? 0
+              : tickers.binance.btc[name].tradePrice,
+          convertedBlast:
+            tickers.binance.btc[name] === undefined
+              ? 0
+              : parseFloat(
+                  (tickers.binance.btc[name].tradePrice * btcKrw.upbit).toFixed(
+                    2,
+                  ),
+                ),
+          per:
+            tickers.upbit.krw[name] === undefined ||
+            tickers.binance.btc[name] === undefined
+              ? undefined
+              : getPercent(
+                  tickers.upbit.krw[name].tradePrice,
+                  parseFloat(
+                    (
+                      tickers.binance.btc[name].tradePrice * btcKrw.upbit
+                    ).toFixed(2),
+                  ),
+                ),
+        };
+      }
+
+      return {
+        symbol: name,
+        last:
+          tickers.upbit.btc[name] === undefined
+            ? 0
+            : tickers.upbit.btc[name].tradePrice,
+        blast:
+          tickers.binance.btc[name] === undefined
+            ? 0
+            : tickers.upbit.btc[name].tradePrice,
+
+        per:
+          tickers.upbit.btc[name] === undefined ||
+          tickers.upbit.btc[name] === undefined
+            ? undefined
+            : getPercent(
+                tickers.upbit.btc[name].tradePrice,
+                tickers.binance.btc[name].tradePrice,
+              ),
+      };
+    },
+  );
+
+  return {
+    tickers: combinedTickers,
+    type: type !== 'KRW' ? 'BTC' : 'KRW',
+  };
 };
