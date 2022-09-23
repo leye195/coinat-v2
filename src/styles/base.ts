@@ -12,6 +12,7 @@ const base = css`
     color: inherit;
     text-decoration: none;
   }
+
   * {
     box-sizing: border-box;
   }
