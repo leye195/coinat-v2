@@ -3,15 +3,20 @@ import { getPercent } from './utils';
 import type { Coin, UpbitCoin } from 'types/Coin';
 import type { Exchange } from 'types/Ticker';
 
-type OpenCallback = (socket: WebSocket) => void;
-type MessageCallback = (e: MessageEvent<any>) => void;
-type CombinedTickers = {
+export type Rate = {
+  upbit: number;
+  binance: number;
+};
+export type CombinedTickers = {
   symbol: string;
   last: number;
   blast: number;
   convertedBlast?: number;
   per?: number;
 };
+
+type OpenCallback = (socket: WebSocket) => void;
+type MessageCallback = (e: MessageEvent<any>) => void;
 
 const tickers: Exchange = {
   upbit: {
@@ -23,7 +28,8 @@ const tickers: Exchange = {
     btc: {},
   },
 };
-const btcKrw = {
+
+const btcKrw: Rate = {
   upbit: 0, //krw
   binance: 0, // btc
 };
