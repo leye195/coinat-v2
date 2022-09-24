@@ -1,13 +1,20 @@
-import Layout from '@/components/Layout';
-import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+
+import { breakpoint } from '@/styles/mixin';
 import type { NextPageWithLayout } from 'types/Page';
 
-const Container = css`
+import Layout from '@/components/Layout';
+
+const Container = styled.div`
   font-weight: 700;
+
+  ${breakpoint('md').down`
+      color: red;
+  `}
 `;
 
 const Home: NextPageWithLayout = () => {
-  return <div css={Container}>Main Page</div>;
+  return <Container>Main Page</Container>;
 };
 
 Home.getLayout = (page) => {

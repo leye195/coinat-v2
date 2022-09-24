@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints, Size } from '@/styles/variables';
 
 type Flex = {
   display?: 'flex' | 'inline-flex';
@@ -34,3 +35,22 @@ export const flex = ({
   align-items: ${alignItems};
   justify-content: ${justifyContents};
 `;
+
+export const breakpoint = (key: Size) => {
+  const breakUp = (...args: any) => css`
+    @media (min-width: ${breakpoints[key as Size]}px) {
+      ${css(...args)};
+    }
+  `;
+
+  const breakDown = (...args: any) => css`
+    @media (max-width: ${breakpoints[key as Size]}px) {
+      ${css(...args)};
+    }
+  `;
+
+  return {
+    up: breakUp,
+    down: breakDown,
+  };
+};
