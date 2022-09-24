@@ -3,12 +3,19 @@ import { Global, ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 
 import type { AppProps } from 'next/app';
 import styles from 'styles';
+import { NextPageWithLayout } from 'types/Page';
 
-function MyApp({ Component, pageProps }: AppProps) {
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <EmotionThemeProvider theme={globalTheme}>
       <Global styles={styles} />
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </EmotionThemeProvider>
   );
 }
