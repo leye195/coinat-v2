@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import type { ComponentPropsWithoutRef } from 'react';
-import { Spacing } from 'types/Style';
+import type { Spacing } from 'types/Style';
 
 type Props = {
   onClick?: () => void;
