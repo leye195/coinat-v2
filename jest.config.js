@@ -12,9 +12,10 @@ const customJestConfig = {
     '^@/pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@/styles/(.*)$': '<rootDir>/src/styles/$1',
     '^@/hooks/(.*)$': '<rootDir>/src/hooks/$1',
+    '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
     '\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom',
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
