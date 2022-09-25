@@ -3,9 +3,7 @@
  */
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
 export type BreakPoints = Record<Size, number>;
-
 export const breakpoints: BreakPoints = {
   xs: 0,
   sm: 480,

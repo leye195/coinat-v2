@@ -1,5 +1,5 @@
 import api from 'axios';
-import { getPercent } from './utils';
+import { getPercent } from '@/lib/utils';
 import type { Coin, UpbitCoin } from 'types/Coin';
 import type { Exchange } from 'types/Ticker';
 
