@@ -1,9 +1,11 @@
 import { globalTheme } from '@/styles/theme';
 import { Global, ThemeProvider as EmotionThemeProvider } from '@emotion/react';
-
+import { RecoilRoot } from 'recoil';
 import type { AppProps } from 'next/app';
-import styles from 'styles';
+
 import { NextPageWithLayout } from 'types/Page';
+
+import styles from 'styles';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -14,8 +16,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <EmotionThemeProvider theme={globalTheme}>
-      <Global styles={styles} />
-      {getLayout(<Component {...pageProps} />)}
+      <RecoilRoot>
+        <Global styles={styles} />
+        {getLayout(<Component {...pageProps} />)}
+      </RecoilRoot>
     </EmotionThemeProvider>
   );
 }
