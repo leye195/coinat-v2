@@ -37,7 +37,7 @@ const btcKrw: Rate = {
 const UPBIT_SOCKET = 'wss://api.upbit.com/websocket/v1';
 const BINANCE_SOCKET = 'wss://stream.binance.com:9443/stream?streams=';
 
-const onUpbitOpen = () => async (socket: WebSocket) => {
+const onUpbitOpen = async (socket: WebSocket) => {
   const upbitList = (
     await api.get('https://api.upbit.com/v1/market/all')
   ).data.filter(
@@ -51,10 +51,7 @@ const onUpbitOpen = () => async (socket: WebSocket) => {
     { ticket: 'coin-at' },
     {
       type: 'ticker',
-      codes: [
-        'KRW-BTC',
-        ...upbitList.map((coin: UpbitCoin) => `${coin.market}`),
-      ],
+      codes: ['KRW-BTC', ...upbitList.map((coin: UpbitCoin) => coin.market)],
     },
   ];
 
@@ -97,7 +94,7 @@ const handleUpbitMessage = (e: any) => {
   }
 };
 
-const onBinanceOpen = () => async (socket: WebSocket) => {
+const onBinanceOpen = async (socket: WebSocket) => {
   console.log('binance connected');
 };
 
@@ -108,19 +105,19 @@ const handleBinanceMessage = (e: any) => {
 
   const symbol = s.slice(0, s.length - 3);
   if (symbol === 'BTCU') {
-    btcKrw.binance = parseFloat(c);
+    btcKrw.binance = parseFloat(c ?? 0);
     tickers.binance.btc[s.slice(0, s.length - 4)] = {
-      tradePrice: parseFloat(c),
-      highPrice: h,
-      lowPrice: l,
-      openPrice: o,
+      tradePrice: parseFloat(c ?? 0),
+      highPrice: h ?? 0,
+      lowPrice: l ?? 0,
+      openPrice: o ?? 0,
     };
   } else {
     tickers.binance.btc[symbol] = {
-      tradePrice: parseFloat(c),
-      highPrice: h,
-      lowPrice: l,
-      openPrice: o,
+      tradePrice: parseFloat(c ?? 0),
+      highPrice: h ?? 0,
+      lowPrice: l ?? 0,
+      openPrice: o ?? 0,
     };
   }
 };
@@ -137,17 +134,19 @@ const connect = (
   if (binaryType) socket.binaryType = binaryType;
 
   if (!!onOpen) {
-    socket.onopen = () => {
+    socket.onopen = function () {
       console.log(`connected to ${url}`);
-      onOpen(socket);
+      onOpen(this);
     };
   }
 
   if (!!onMessage) {
-    socket.onmessage = onMessage;
+    socket.onmessage = function (e) {
+      onMessage(e);
+    };
   }
 
-  socket.onclose = () => {
+  socket.onclose = function () {
     console.log('reconnecting socket');
     if (retry) {
       setTimeout(() => connect(url), 3000);
@@ -165,16 +164,16 @@ export const initSocket = (coinList: Coin[]) => {
 
   // binance
   const streams = `${coinList
-    .map((coin: Coin) => `${coin.name}btc@ticker/`)
-    .join('')}'btcusdt@ticker`;
+    .map((coin: Coin) => `${coin.name.toLowerCase()}btc@ticker/`)
+    .join('')}btcusdt@ticker`;
 
   connect(`${BINANCE_SOCKET}${streams}`, onBinanceOpen, handleBinanceMessage);
 };
 
 export const combineTickers = (coinList: Coin[], type?: string) => {
-  const combinedTickers: CombinedTickers[] = [{ name: 'BTC' }, ...coinList].map(
+  const result: CombinedTickers[] = [{ name: 'BTC' }, ...coinList].map(
     ({ name }) => {
-      if (type === 'KRW' && name === 'BTC') {
+      if (type === 'KRW' || name === 'BTC') {
         return {
           symbol: name,
           last:
@@ -221,7 +220,7 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
 
         per:
           tickers.upbit.btc[name] === undefined ||
-          tickers.upbit.btc[name] === undefined
+          tickers.binance.btc[name] === undefined
             ? undefined
             : getPercent(
                 tickers.upbit.btc[name].tradePrice,
@@ -231,8 +230,5 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
     },
   );
 
-  return {
-    tickers: combinedTickers,
-    type: type !== 'KRW' ? 'BTC' : 'KRW',
-  };
+  return result;
 };
