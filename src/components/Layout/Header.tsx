@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Image from 'next/future/image';
 import { flex } from '@/styles/mixin';
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
 const Container = styled.header<{ color?: string }>`
   ${flex({ alignItems: 'center', justifyContents: 'space-between' })};
   width: 100%;
-  height: 3.5rem;
+  height: 3rem;
   background-color: ${({ color }) => color ?? '#000000cc'};
   border-bottom: 1px solid rgb(240, 240, 241);
 `;
@@ -23,9 +24,14 @@ const Nav = styled.nav`
 `;
 
 const Logo = styled.div`
+  position: relative;
   color: #ffffff;
   font-weight: 700;
   font-size: 1.5rem;
+
+  img {
+    position: absolute;
+  }
 `;
 
 const LeftSide = styled.div``;
@@ -37,7 +43,10 @@ const Header = ({ headerColor }: Props) => {
     <Container color={headerColor}>
       <Nav>
         <LeftSide>
-          <Logo>CoinAT</Logo>
+          <Logo>
+            CoinAT
+            <Image src="/assets/coin.svg" alt="coin" width={14} height={14} />
+          </Logo>
         </LeftSide>
         <RightSide></RightSide>
       </Nav>

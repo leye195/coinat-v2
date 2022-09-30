@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
 import type { ComponentProps } from 'react';
 import { flex } from '@/styles/mixin';
-import Header from './Header';
-import Row from './Row';
+import Header from '@/components/Table/Header';
+import Row from '@/components/Table/Row';
+import Cell from '@/components/Table/Cell';
 
 type Props = {
-  header: string[];
-} & ComponentProps<'div'>;
+  header: JSX.Element | React.ReactElement;
+  body: JSX.Element | React.ReactElement;
+};
 
 const TableHeaderBox = styled.div`
   ${flex({})}
@@ -21,20 +23,17 @@ const TableBodyBox = styled.div``;
 
 const TableContainer = styled.div``;
 
-const Table = ({ children, header }: Props) => {
+const Table = ({ header, body }: Props) => {
   return (
     <TableContainer>
-      <TableHeaderBox>
-        {header.map((item) => (
-          <Header name={item} key={item} />
-        ))}
-      </TableHeaderBox>
-      <TableBodyBox>{children}</TableBodyBox>
+      <TableHeaderBox>{header}</TableHeaderBox>
+      <TableBodyBox>{body}</TableBodyBox>
     </TableContainer>
   );
 };
 
 Table.Header = Header;
 Table.Row = Row;
+Table.Cell = Cell;
 
 export default Table;

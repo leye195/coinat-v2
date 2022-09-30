@@ -1,3 +1,4 @@
+import { breakpoint } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import styled from '@emotion/styled';
 
@@ -8,6 +9,10 @@ type Props = {
 
 const HeaderBlock = styled.div<{ width?: string }>`
   padding: ${spacing.xs};
+
+  ${breakpoint('md').down`
+    font-size: 12px;
+  `}
 `;
 
 const Header = ({ name, width }: Props) => {
