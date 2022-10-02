@@ -35,5 +35,5 @@ const coinSchema = new mongoose.Schema({
   },
 });
 
-const coinModel = mongoose.model('Coin', coinSchema);
+const coinModel = mongoose.models.Coin || mongoose.model('Coin', coinSchema);
 export default coinModel;

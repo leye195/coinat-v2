@@ -17,5 +17,6 @@ const currencySchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-const currencyModel = mongoose.model('Currency', currencySchema);
+const currencyModel =
+  mongoose.models.Currency || mongoose.model('Currency', currencySchema);
 export default currencyModel;
