@@ -12,4 +12,4 @@ export const getPercent = (x: number, y: number) => {
  * @param num
  */
 export const setComma = (num: number): string =>
-  num.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  num.toLocaleString(undefined, { maximumFractionDigits: 2 });
