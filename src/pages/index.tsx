@@ -1,54 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 
-import { getCoins } from 'api';
-import { breakpoint, flex } from '@/styles/mixin';
+import { getCoins, getCurrencyInfo } from 'api';
+import { flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { setComma } from '@/lib/utils';
 import { combineTickers, initSocket } from '@/lib/socket';
 import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
+import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
 
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
+import Exchange from '@/components/Exchange';
 
 const Container = styled.div`
   font-weight: 700;
 `;
 
-const InfoTitle = styled.h6`
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.7);
-
-  ${breakpoint('md').down`
-    width: min-content;
-    font-size: 12px;
-  `}
-`;
-
-const InfoValue = styled.p`
-  margin: 0;
-
-  ${breakpoint('md').down`
-    font-size: 10px;
-  `}
-`;
-
-const InfoCard = styled.div`
-  ${flex({ direction: 'column' })};
-  gap: ${spacing.xxs};
-  width: 30%;
-  padding: ${spacing.s};
-  border: 1px solid #d0d0d0;
-  border-radius: 16px;
-  background-color: #000000cc;
-  color: ${({ theme }) => theme.color.white};
-`;
-
-const InfoBox = styled.div`
+const ExchangeBox = styled.div`
   ${flex({})};
   gap: ${spacing.xxs};
   margin: ${spacing.s} 0;
@@ -76,6 +47,8 @@ const Home: NextPageWithLayout = () => {
   const coinType = useRecoilValue(typeState);
   const [krwCoinData, setKrwCoinList] = useRecoilState(krCoinListState);
   const [btcCoinData, setBtcCoinList] = useRecoilState(btcCoinListState);
+  const exchangeData = useRecoilValue(exchangeSelector);
+  const setExchangeState = useSetRecoilState(exchangeState);
 
   const fetchCoins = (type: 'KRW' | 'BTC') => async () => {
     try {
@@ -86,18 +59,35 @@ const Home: NextPageWithLayout = () => {
     }
   };
 
-  const getTickers = () => {
-    const data = combineTickers(
-      coinType === 'KRW' ? krwCoinData.data : btcCoinData.data,
-      coinType,
-    );
-    console.log(data);
+  const getTickers = async () => {
+    try {
+      const data = combineTickers(
+        coinType === 'KRW' ? krwCoinData.data : btcCoinData.data,
+        coinType,
+      );
+      const { data: currencyData } = await getCurrencyInfo();
 
-    if (!timeRef.current) {
-      timeRef.current = setTimeout(() => {
-        timeRef.current = null;
-        getTickers();
-      }, 1000);
+      if (coinType === 'KRW') {
+        const btc = data.find((data) => data.symbol === 'BTC');
+        const upbitBit = btc?.last ?? 0;
+        const binanceBit = btc?.blast ?? 0;
+
+        setExchangeState({
+          upbitBit,
+          binanceBit,
+          usdToKrw: currencyData.value,
+          isLoading: false,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (!timeRef.current) {
+        timeRef.current = setTimeout(() => {
+          timeRef.current = null;
+          getTickers();
+        }, 1000);
+      }
     }
   };
 
@@ -133,29 +123,33 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <Container>
-      <InfoBox>
-        <InfoCard>
-          <InfoTitle>환율(USD/KRW)</InfoTitle>
-          <InfoValue>{setComma(1422.937)}</InfoValue>
-        </InfoCard>
-        <InfoCard>
-          <InfoTitle>환율(USDT/KRW)</InfoTitle>
-          <InfoValue>{setComma(1422.937)}</InfoValue>
-        </InfoCard>
-        <InfoCard>
-          <InfoTitle>업비트(BTC/KRW)</InfoTitle>
-          <InfoValue>{setComma(26881645.21)}</InfoValue>
-        </InfoCard>
-        <InfoCard>
-          <InfoTitle>바이낸스(BTC/KRW)</InfoTitle>
-          <InfoValue>{setComma(26881645.21)}</InfoValue>
-        </InfoCard>
-      </InfoBox>
+      <ExchangeBox>
+        <Exchange
+          title="환율(USD/KRW)"
+          value={setComma(exchangeData.usdToKrw)}
+          isLoading={exchangeData.isLoading}
+        />
+        <Exchange
+          title="환율(USDT/KRW)"
+          value={setComma(exchangeData.usdtToKrw)}
+          isLoading={exchangeData.isLoading}
+        />
+        <Exchange
+          title="업비트(BTC/KRW)"
+          value={setComma(exchangeData.upbitBit)}
+          isLoading={exchangeData.isLoading}
+        />
+        <Exchange
+          title="바이낸스(BTC/KRW)"
+          value={setComma(exchangeData.binanceBit)}
+          isLoading={exchangeData.isLoading}
+        />
+      </ExchangeBox>
       <Table
         header={
           <>
             {['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'].map((name) => (
-              <Table.Header name={name} width="30%" />
+              <Table.Header key={name} name={name} width="30%" />
             ))}
           </>
         }
