@@ -25,11 +25,16 @@ const InfoTitle = styled.h6`
 
   ${breakpoint('md').down`
     width: min-content;
+    font-size: 12px;
   `}
 `;
 
 const InfoValue = styled.p`
   margin: 0;
+
+  ${breakpoint('md').down`
+    font-size: 10px;
+  `}
 `;
 
 const InfoCard = styled.div`
@@ -155,15 +160,19 @@ const Home: NextPageWithLayout = () => {
           </>
         }
         body={
-          <Table.Row>
-            <CoinCell>ETH</CoinCell>
-            <UpbitCell>1880500₩</UpbitCell>
-            <BinanceCell>
-              <p>0.06904100</p>
-              <p>1880184.66₩</p>
-            </BinanceCell>
-            <PercentCell>0.00%</PercentCell>
-          </Table.Row>
+          krwCoinData.isLoading || btcCoinData.isLoading ? (
+            <Table.Skeleton />
+          ) : (
+            <Table.Row>
+              <CoinCell>ETH</CoinCell>
+              <UpbitCell>1880500₩</UpbitCell>
+              <BinanceCell>
+                <p>0.06904100</p>
+                <p>1880184.66₩</p>
+              </BinanceCell>
+              <PercentCell>0.00%</PercentCell>
+            </Table.Row>
+          )
         }
       ></Table>
     </Container>
