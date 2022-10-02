@@ -195,14 +195,10 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
           per:
             tickers.upbit.krw[name] === undefined ||
             tickers.binance.btc[name] === undefined
-              ? undefined
+              ? 0
               : getPercent(
                   tickers.upbit.krw[name].tradePrice,
-                  parseFloat(
-                    (
-                      tickers.binance.btc[name].tradePrice * btcKrw.upbit
-                    ).toFixed(2),
-                  ),
+                  tickers.binance.btc[name].tradePrice * btcKrw.upbit,
                 ),
         };
       }
@@ -217,7 +213,7 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
           tickers.binance.btc[name] === undefined
             ? 0
             : tickers.upbit.btc[name].tradePrice,
-
+        convertedBlast: undefined,
         per:
           tickers.upbit.btc[name] === undefined ||
           tickers.binance.btc[name] === undefined

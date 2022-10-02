@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import Header from '@/components/Layout/Header';
+import { breakpoint } from '@/styles/mixin';
 
 type Props = {
   children?: React.ReactNode;
@@ -17,6 +18,10 @@ const MainBox = styled.div`
   height: 100%;
   margin: 0 auto;
   padding: 0 0.75rem;
+
+  ${breakpoint('md').down`
+    padding: 0 0.5rem;
+  `}
 `;
 
 const Layout = ({ children, headerColor, isHideHeader }: Props) => {
