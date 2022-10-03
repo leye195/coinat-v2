@@ -35,6 +35,7 @@ const ExchangeBox = styled.div`
   ${breakpoint('md').down`
     width: 100vw;
     margin: ${spacing.xs} 0;
+    gap: ${spacing.xxxs};
   `}
 `;
 
@@ -197,6 +198,11 @@ const Home: NextPageWithLayout = () => {
             title="바이낸스(BTC/KRW)"
             value={setComma(exchangeData.binanceBit)}
             isLoading={exchangeData.isLoading || !exchangeData.binanceBit}
+          />
+          <Exchange
+            title="BTC 차이(%)"
+            value={`${setComma(exchangeData.bitDiff)}%`}
+            isLoading={exchangeData.isLoading || !exchangeData.bitDiff}
           />
         </ExchangeBox>
       </ExchangeBlock>

@@ -17,6 +17,7 @@ export const breakpoints: BreakPoints = {
  */
 
 export type SpacingType =
+  | 'xxxs'
   | 'xxs'
   | 'xs'
   | 's'
@@ -29,6 +30,7 @@ export type SpacingNumber = Record<SpacingType, number>;
 export type Spacing = Record<SpacingType, string>;
 
 const spacingNumber: SpacingNumber = {
+  xxxs: 2,
   xxs: 4,
   xs: 8,
   s: 12,

@@ -12,15 +12,17 @@ type Props = {
 const ExchangeBlock = styled.div`
   ${flex({ direction: 'column' })};
   gap: ${spacing.xxs};
-  width: 25%;
+  width: 20%;
   padding: ${spacing.s};
   border: 1px solid ${({ theme }) => theme.color.gray};
   border-radius: 16px;
   background-color: white;
   color: ${({ theme }) => theme.color.white};
+  white-space: pre;
 
   ${breakpoint('md').down`
-    padding: ${spacing.xs};
+    width: 10rem;
+    padding: ${spacing.xs} ${spacing.xxs};
   `}
 `;
 
@@ -32,7 +34,7 @@ const ExchangeTitle = styled.h6`
 
   ${breakpoint('md').down`
     width: min-content;
-    font-size: 12px;
+    font-size: 11px;
   `}
 `;
 
