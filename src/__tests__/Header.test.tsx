@@ -1,17 +1,19 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 import { RecoilRoot } from 'recoil';
 import { globalTheme } from '@/styles/theme';
-import Home from 'pages/index';
+import Header from '@/components/Layout/Header';
 
-describe('Home', () => {
-  it('renders a header', () => {
-    render(
+describe('<Header/>', () => {
+  it('should render Header component', () => {
+    const { getByText } = render(
       <EmotionThemeProvider theme={globalTheme}>
         <RecoilRoot>
-          <Home />
+          <Header />
         </RecoilRoot>
       </EmotionThemeProvider>,
     );
+
+    expect(getByText(/CoinAT/)).toBeInTheDocument();
   });
 });
