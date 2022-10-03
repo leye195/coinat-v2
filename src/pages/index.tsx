@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
+import Image from 'next/future/image';
 
 import { getCoins, getCurrencyInfo } from 'api';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { setComma } from '@/lib/utils';
 import { CombinedTickers, combineTickers, initSocket } from '@/lib/socket';
+import sort, { initSort, Sort, sortColumn } from '@/lib/sort';
 import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
@@ -71,6 +73,13 @@ const SymbolCell = styled.div`
 const Home: NextPageWithLayout = () => {
   const [coinList, setCoinList] = useState<CombinedTickers[]>([]);
   const [isMounted, setIsMounted] = useState(false);
+  const selectedType = useRef<string | null>(null);
+  const sortType = useRef({
+    symbol: false,
+    last: false,
+    blast: false,
+    per: false,
+  });
   const timeRef = useRef<NodeJS.Timeout | null>(null);
 
   const coinType = useRecoilValue(typeState);
@@ -107,7 +116,13 @@ const Home: NextPageWithLayout = () => {
         isLoading: false,
       });
 
-      setCoinList(data);
+      setCoinList(
+        sort(
+          data,
+          selectedType.current ?? 'symbol',
+          sortType.current[selectedType.current as Sort],
+        ),
+      );
     } catch (err) {
       console.error(err);
     } finally {
@@ -118,6 +133,15 @@ const Home: NextPageWithLayout = () => {
         }, 2000);
       }
     }
+  };
+
+  const handleSort = (type: string) => () => {
+    sortType.current = {
+      ...initSort,
+      [type]: !sortType.current[type as Sort],
+    };
+
+    selectedType.current = type;
   };
 
   useEffect(() => {
@@ -185,8 +209,21 @@ const Home: NextPageWithLayout = () => {
             header={
               <>
                 {['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'].map(
-                  (name) => (
-                    <Table.Header key={name} name={name} width="25%" />
+                  (name, idx) => (
+                    <Table.Header
+                      key={name}
+                      name={name}
+                      right={
+                        <Image
+                          src="/assets/updown.png"
+                          alt=""
+                          width={6}
+                          height={12}
+                        />
+                      }
+                      width="25%"
+                      onClick={handleSort(sortColumn[idx])}
+                    />
                   ),
                 )}
               </>
