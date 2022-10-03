@@ -44,6 +44,21 @@ const BinanceCell = styled.div`
   }
 `;
 
+const ContentsBlock = styled.section``;
+
+const CountBox = styled.div`
+  p {
+    margin: 0.5rem;
+  }
+`;
+
+const TableBlock = styled.div`
+  max-width: 768px;
+  margin: ${spacing.m} auto 0 auto;
+`;
+
+const PercentCell = styled(BinanceCell)``;
+
 const SymbolCell = styled.div`
   ${flex({ alignItems: 'center' })}
   gap: ${spacing.xs};
@@ -161,52 +176,73 @@ const Home: NextPageWithLayout = () => {
           />
         </ExchangeBox>
       </ExchangeBlock>
-      <Table
-        header={
-          <>
-            {['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'].map((name) => (
-              <Table.Header key={name} name={name} width="25%" />
-            ))}
-          </>
-        }
-        body={
-          krwCoinData.isLoading ||
-          btcCoinData.isLoading ||
-          exchangeData.isLoading ? (
-            <Table.Skeleton />
-          ) : (
-            <>
-              {coinList
-                .filter((data) => data.symbol !== 'BTC')
-                .map((data: CombinedTickers) => (
-                  <Table.Row>
-                    <Table.Cell>
-                      <SymbolCell>
-                        <img
-                          alt={data.symbol}
-                          src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                          width={20}
-                          height={20}
-                        />
-                        {data.symbol}
-                      </SymbolCell>
-                    </Table.Cell>
-                    <Table.Cell>{setComma(data.last)}₩</Table.Cell>
-                    <Table.Cell>
-                      <BinanceCell>
-                        <p>{data.blast}</p>
-                        {data.convertedBlast && (
-                          <p>{setComma(data.convertedBlast ?? 0)}₩</p>
-                        )}
-                      </BinanceCell>
-                    </Table.Cell>
-                    <Table.Cell>{(data?.per ?? 0).toFixed(3)}%</Table.Cell>
-                  </Table.Row>
-                ))}
-            </>
-          )
-        }
-      />
+      <ContentsBlock>
+        <TableBlock>
+          <CountBox>
+            <p>암호화폐 - {coinList.length}개</p>
+          </CountBox>
+          <Table
+            header={
+              <>
+                {['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'].map(
+                  (name) => (
+                    <Table.Header key={name} name={name} width="25%" />
+                  ),
+                )}
+              </>
+            }
+            body={
+              krwCoinData.isLoading ||
+              btcCoinData.isLoading ||
+              exchangeData.isLoading ? (
+                <Table.Skeleton />
+              ) : (
+                <>
+                  {coinList
+                    .filter((data) => data.symbol !== 'BTC')
+                    .map((data: CombinedTickers) => (
+                      <Table.Row>
+                        <Table.Cell>
+                          <SymbolCell>
+                            <img
+                              alt={data.symbol}
+                              src={`https://static.upbit.com/logos/${data.symbol}.png`}
+                              width={20}
+                              height={20}
+                            />
+                            {data.symbol}
+                          </SymbolCell>
+                        </Table.Cell>
+                        <Table.Cell>{setComma(data.last)}₩</Table.Cell>
+                        <Table.Cell>
+                          <BinanceCell>
+                            <p>{data.blast}</p>
+                            {data.convertedBlast && (
+                              <p>{setComma(data.convertedBlast ?? 0)}₩</p>
+                            )}
+                          </BinanceCell>
+                        </Table.Cell>
+                        <Table.Cell
+                          color={
+                            data.per
+                              ? data.per > 0
+                                ? '#ef5350'
+                                : '#42a5f5'
+                              : '#000000'
+                          }
+                        >
+                          <PercentCell>
+                            <p>{(data?.per ?? 0).toFixed(3)}%</p>
+                          </PercentCell>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                </>
+              )
+            }
+          />
+        </TableBlock>
+      </ContentsBlock>
     </Container>
   );
 };
