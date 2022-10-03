@@ -11,7 +11,6 @@ const Container = styled.header<{ color?: string }>`
   width: 100%;
   height: 3rem;
   background-color: ${({ color }) => color ?? '#000000cc'};
-  border-bottom: 1px solid rgb(240, 240, 241);
 `;
 
 const Nav = styled.nav`

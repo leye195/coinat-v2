@@ -6,6 +6,10 @@ const Container = styled.div`
   ${flex({ alignItems: 'center' })}
   border-bottom: 1px solid ${({ theme }) => theme.color.gray};
 
+  &:last-child {
+    border-bottom: none;
+  }
+
   ${breakpoint('md').down`
     font-size: 12px;
   `}

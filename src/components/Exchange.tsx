@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
-
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import Skeleton from './Skeleton';
+import Skeleton from '@/components/Skeleton';
 
 type Props = {
   title: string;
@@ -15,9 +14,9 @@ const ExchangeBlock = styled.div`
   gap: ${spacing.xxs};
   width: 25%;
   padding: ${spacing.s};
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid ${({ theme }) => theme.color.gray};
   border-radius: 16px;
-  background-color: #000000cc;
+  background-color: white;
   color: ${({ theme }) => theme.color.white};
 
   ${breakpoint('md').down`
@@ -29,7 +28,7 @@ const ExchangeTitle = styled.h6`
   margin: 0;
   font-size: 14px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.7);
+  color: #333333;
 
   ${breakpoint('md').down`
     width: min-content;
@@ -39,10 +38,11 @@ const ExchangeTitle = styled.h6`
 
 const ExchangeValue = styled.p`
   margin: 0;
+  color: ${({ theme }) => theme.color.black};
 
   ${breakpoint('md').down`
     font-size: 10px;
-  `}
+  `};
 `;
 
 const Exchange = ({ title, value, isLoading }: Props) => {

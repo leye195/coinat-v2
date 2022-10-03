@@ -8,7 +8,8 @@ type Props = {
 };
 
 const HeaderBlock = styled.div<{ width?: string }>`
-  padding: ${spacing.xs};
+  padding: ${spacing.s} ${spacing.xs};
+  font-weight: 400;
 
   ${breakpoint('md').down`
     font-size: 12px;
