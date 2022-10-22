@@ -244,7 +244,7 @@ const Home: NextPageWithLayout = () => {
                   {coinList
                     .filter((data) => data.symbol !== 'BTC')
                     .map((data: CombinedTickers) => (
-                      <Table.Row>
+                      <Table.Row key={data.symbol}>
                         <Table.Cell>
                           <SymbolCell>
                             <img
