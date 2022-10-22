@@ -16,6 +16,7 @@ import type { NextPageWithLayout } from 'types/Page';
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
 import Exchange from '@/components/Exchange';
+import Chatting from '@/components/Chatting';
 
 const Container = styled.div`
   font-weight: 700;
@@ -286,6 +287,7 @@ const Home: NextPageWithLayout = () => {
           />
         </TableBlock>
       </ContentsBlock>
+      <Chatting />
     </Container>
   );
 };
