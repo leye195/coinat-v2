@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { QueryClientProvider, QueryClient } from 'react-query';
 import { globalTheme } from '@/styles/theme';
 import { Global, ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 import { RecoilRoot } from 'recoil';
@@ -14,15 +16,19 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const [queryClient] = useState(new QueryClient());
+
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
     <EmotionThemeProvider theme={globalTheme}>
       <RecoilRoot>
-        <MetaTag />
-        <Initialize />
-        <Global styles={styles} />
-        {getLayout(<Component {...pageProps} />)}
+        <QueryClientProvider client={queryClient}>
+          <MetaTag />
+          <Initialize />
+          <Global styles={styles} />
+          {getLayout(<Component {...pageProps} />)}
+        </QueryClientProvider>
       </RecoilRoot>
     </EmotionThemeProvider>
   );
