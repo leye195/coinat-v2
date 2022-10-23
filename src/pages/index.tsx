@@ -86,6 +86,11 @@ const FearGreedBlock = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   border: 1px solid #d0d0d0;
   font-weight: 600;
+
+  ${breakpoint('md').down`
+      padding: ${spacing.xs};
+      font-size: 14px;
+   `}
 `;
 
 const FearGreedTitle = styled.span`
