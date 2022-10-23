@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import Image from 'next/future/image';
+import { useQuery } from 'react-query';
 
-import { getCoins, getCurrencyInfo } from 'api';
+import { getCoins, getCurrencyInfo, getFearGreedIndex } from 'api';
+import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { setComma } from '@/lib/utils';
@@ -12,11 +14,13 @@ import sort, { initSort, Sort, sortColumn } from '@/lib/sort';
 import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
+import type { FearGreed } from 'types/FearGreed';
 
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
 import Exchange from '@/components/Exchange';
 import Chatting from '@/components/Chatting';
+import Skeleton from '@/components/Skeleton';
 
 const Container = styled.div`
   font-weight: 700;
@@ -75,6 +79,57 @@ const SymbolCell = styled.div`
     border-radius: 2rem;
   }
 `;
+
+const FearGreedBlock = styled.div`
+  padding: ${spacing.s};
+  margin-top: ${spacing.s};
+  background-color: ${({ theme }) => theme.color.white};
+  border: 1px solid #d0d0d0;
+  font-weight: 600;
+`;
+
+const FearGreedTitle = styled.span`
+  font-weight: 400;
+`;
+
+const FearGreedValue = styled.span<{ color: string }>`
+  margin-left: ${spacing.xs};
+  color: ${({ color }) => color};
+`;
+
+const FearGreed = () => {
+  const { isLoading, data } = useQuery(
+    ['fear-greed'],
+    async () => {
+      const res = await getFearGreedIndex();
+      const { data } = res.data;
+
+      return data ? data[0] : {};
+    },
+    {
+      refetchIntervalInBackground: true,
+      refetchInterval: 1000 * 50,
+    },
+  );
+
+  return (
+    <FearGreedBlock>
+      {isLoading ? (
+        <Skeleton width="100%" height={20} borderRadius="4px" />
+      ) : (
+        <>
+          <FearGreedTitle>공포 · 탐욕 지수 :</FearGreedTitle>
+          <FearGreedValue
+            color={fearGreedColor[data?.value_classification as FearGreed]}
+          >
+            {data?.value} -{' '}
+            {fearGreedIndex[data?.value_classification as FearGreed]}
+          </FearGreedValue>
+        </>
+      )}
+    </FearGreedBlock>
+  );
+};
 
 const Home: NextPageWithLayout = () => {
   const [coinList, setCoinList] = useState<CombinedTickers[]>([]);
@@ -182,6 +237,7 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <Container>
+      <FearGreed />
       <ExchangeBlock>
         <ExchangeBox>
           <Exchange

@@ -31,6 +31,13 @@ export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
 export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
   api.get(`coin?type=${type}`);
 
+/**
+ * 탐욕 지수 api
+ * @returns
+ */
+export const getFearGreedIndex = () =>
+  axios.get('https://api.alternative.me/fng/?limit=1');
+
 export const getUpbitCandles = ({
   market,
   candleType = 'months',
@@ -46,7 +53,16 @@ export const getUpbitCandles = ({
 };
 
 /**
+ * 두나무 환율 정보
+ */
+export const getUpgitRateExchange = () =>
+  axios.get(
+    'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD',
+  );
+
+/**
  * symbol: xxxBTC
+ *
  * interval:
  * 1s
  * 1m
