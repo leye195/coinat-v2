@@ -7,6 +7,7 @@ import { NextPageWithLayout } from 'types/Page';
 
 import styles from 'styles';
 import MetaTag from '@/components/Metatag';
+import Initialize from '@/components/Initialize';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <EmotionThemeProvider theme={globalTheme}>
       <RecoilRoot>
         <MetaTag />
+        <Initialize />
         <Global styles={styles} />
         {getLayout(<Component {...pageProps} />)}
       </RecoilRoot>

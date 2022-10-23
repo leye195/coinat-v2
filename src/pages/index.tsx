@@ -16,6 +16,7 @@ import type { NextPageWithLayout } from 'types/Page';
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
 import Exchange from '@/components/Exchange';
+import Chatting from '@/components/Chatting';
 
 const Container = styled.div`
   font-weight: 700;
@@ -47,7 +48,11 @@ const BinanceCell = styled.div`
   }
 `;
 
-const ContentsBlock = styled.section``;
+const ContentsBlock = styled.section`
+  ${breakpoint('xl').down`
+    padding-bottom: 20rem;
+  `}
+`;
 
 const CountBox = styled.div`
   p {
@@ -244,7 +249,7 @@ const Home: NextPageWithLayout = () => {
                   {coinList
                     .filter((data) => data.symbol !== 'BTC')
                     .map((data: CombinedTickers) => (
-                      <Table.Row>
+                      <Table.Row key={data.symbol}>
                         <Table.Cell>
                           <SymbolCell>
                             <img
@@ -286,6 +291,7 @@ const Home: NextPageWithLayout = () => {
           />
         </TableBlock>
       </ContentsBlock>
+      <Chatting />
     </Container>
   );
 };
