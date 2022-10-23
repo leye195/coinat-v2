@@ -67,3 +67,8 @@ export const getUpbitCandles = ({
  */
 export const getBinanceCandles = ({ symbol, interval }: BinanceCandlesParams) =>
   binanceApi.get(`/api/v3/uiKlines?symbol=${symbol}&interval=${interval}`);
+
+export const postChat = (message: string) =>
+  api.post('chat', {
+    message,
+  });

@@ -8,37 +8,43 @@ import {
   faPaperPlane,
   faCommentDots,
 } from '@fortawesome/free-solid-svg-icons';
+import { useForm } from 'react-hook-form';
 
+import { postChat } from 'api';
 import { breakpoint, flex } from '@/styles/mixin';
 import { chatSocketState } from 'store/socket';
 
 import Button from '@/components/Button';
+import Form from '@/components/Form';
+import Input from '@/components/Input';
 import Item from './Item';
 import List from './List';
+
+type FormState = {
+  message: string;
+};
 
 const Container = styled.div`
   position: fixed;
   bottom: 1.5rem;
   right: 1rem;
 
-  ${breakpoint('lg').down`
+  ${breakpoint('xl').down`
     left: 0;
     right: 0;
     bottom: 0;
+    top: auto;
   `};
 `;
 
 const ChatIconContainer = styled(Container)`
-  left: auto;
-  right: 0;
-  top: 8rem;
-  bottom: auto;
+  bottom: 1.5rem;
+  right: 1rem;
 
-  ${breakpoint('lg').down`
+  ${breakpoint('xl').down`
     left: auto;
-    right: 0;
-    top: 8rem;
-    bottom: auto;
+    bottom: 1.5rem;
+    right: 1rem;
   `};
 `;
 
@@ -84,8 +90,6 @@ const ChatContents = styled.div`
 `;
 
 const ChatFooter = styled.div`
-  ${flex({ alignItems: 'center' })}
-  gap: ${spacing.xs};
   padding: ${spacing.s} ${spacing.xs} ${spacing.s} ${spacing.xs};
   background-color: #000000cc;
 
@@ -94,10 +98,21 @@ const ChatFooter = styled.div`
     border: none;
     cursor: pointer;
     color: white;
+
+    &:disabled {
+      color: #b2b2b2;
+      cursor: not-allowed;
+    }
   }
 `;
 
-const Input = styled.input`
+const ChatForm = styled(Form)`
+  ${flex({ alignItems: 'center' })}
+  gap: ${spacing.xs};
+  width: 100%;
+`;
+
+const ChatInput = styled(Input)`
   padding: ${spacing.s} ${spacing.xs};
   flex: 1;
   border-radius: 8px;
@@ -110,16 +125,31 @@ const Chatting = () => {
 
   const socketDataState = useRecoilValue(chatSocketState);
 
+  const { register, watch, handleSubmit, resetField } = useForm<FormState>({
+    mode: 'onChange',
+  });
+
+  const { message } = watch();
+
   const handleOpen = (isOpen: boolean) => () => {
     setIsOpened(isOpen);
+  };
+
+  const onSubmit = async (data: FormState) => {
+    try {
+      await postChat(data.message);
+      resetField('message');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
     const { socket, isConnected } = socketDataState;
 
     if (isConnected && socket) {
-      socket?.on('message', (message: any) => {
-        console.log(message);
+      socket?.on('message', (data: any) => {
+        const { message } = data;
         setChat((prev) => [...prev, message]);
       });
     }
@@ -146,16 +176,18 @@ const Chatting = () => {
         </ChatHeader>
         <ChatContents>
           <List>
-            {chat.map((data) => (
-              <Item message={data} />
+            {chat.map((message, idx) => (
+              <Item key={`chat-${idx}`} message={message} nickname="nickName" />
             ))}
           </List>
         </ChatContents>
         <ChatFooter>
-          <Input />
-          <Button>
-            <FontAwesomeIcon icon={faPaperPlane} size="lg" />
-          </Button>
+          <ChatForm onSubmit={handleSubmit(onSubmit)}>
+            <ChatInput {...register('message', { required: true })} />
+            <Button type="submit" disabled={!message}>
+              <FontAwesomeIcon icon={faPaperPlane} size="lg" />
+            </Button>
+          </ChatForm>
         </ChatFooter>
       </ChatWrapper>
     </Container>

@@ -48,7 +48,11 @@ const BinanceCell = styled.div`
   }
 `;
 
-const ContentsBlock = styled.section``;
+const ContentsBlock = styled.section`
+  ${breakpoint('xl').down`
+    padding-bottom: 20rem;
+  `}
+`;
 
 const CountBox = styled.div`
   p {
