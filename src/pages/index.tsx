@@ -321,12 +321,14 @@ const Home: NextPageWithLayout = () => {
                       <Table.Row key={data.symbol}>
                         <Table.Cell>
                           <SymbolCell>
-                            <img
-                              alt={data.symbol}
-                              src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                              width={20}
-                              height={20}
-                            />
+                            <picture>
+                              <img
+                                alt={data.symbol}
+                                src={`https://static.upbit.com/logos/${data.symbol}.png`}
+                                width={20}
+                                height={20}
+                              />
+                            </picture>
                             {data.symbol}
                           </SymbolCell>
                         </Table.Cell>

@@ -25,7 +25,7 @@ const Tab = ({ tabs }: Props) => {
     } else {
       setCoinType('KRW');
     }
-  }, [router]);
+  }, [router, setCoinType]);
 
   return (
     <TabGroup>

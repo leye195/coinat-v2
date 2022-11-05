@@ -12,6 +12,8 @@ export const initSort = {
   per: false,
 };
 
-export default (data: CombinedTickers[], column: string, sortType: boolean) => {
+const sort = (data: CombinedTickers[], column: string, sortType: boolean) => {
   return sortType ? sortBy(data, column).reverse() : sortBy(data, column);
 };
+
+export default sort;

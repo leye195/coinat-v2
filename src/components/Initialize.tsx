@@ -35,7 +35,7 @@ const Initialize = () => {
         socket.disconnect();
       };
     }
-  }, []);
+  }, [setSocket]);
 
   return <></>;
 };

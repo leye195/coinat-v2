@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 import { RecoilRoot } from 'recoil';
 import { globalTheme } from '@/styles/theme';
@@ -6,7 +6,7 @@ import Header from '@/components/Layout/Header';
 
 describe('<Header/>', () => {
   it('should render Header component', () => {
-    const { getByText } = render(
+    render(
       <EmotionThemeProvider theme={globalTheme}>
         <RecoilRoot>
           <Header />
@@ -14,6 +14,6 @@ describe('<Header/>', () => {
       </EmotionThemeProvider>,
     );
 
-    expect(getByText(/CoinAT/)).toBeInTheDocument();
+    expect(screen.getByText(/CoinAT/)).toBeInTheDocument();
   });
 });

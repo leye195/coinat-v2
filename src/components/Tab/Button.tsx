@@ -1,7 +1,5 @@
 import { flex } from '@/styles/mixin';
 import styled from '@emotion/styled';
-import { useRouter } from 'next/router';
-import { useMemo } from 'react';
 import Button, { ButtonProps } from '../Button';
 
 type Props = {
@@ -24,8 +22,6 @@ const ButtonBox = styled.div<{ isActive?: boolean }>`
 `;
 
 const TabButton = ({ children, isActive, ...rest }: Props) => {
-  const router = useRouter();
-
   return (
     <ButtonBox isActive={isActive}>
       <Button

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import type { ComponentPropsWithoutRef, CSSProperties } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import type { Spacing } from 'types/Style';
 
 export type ButtonProps = {
