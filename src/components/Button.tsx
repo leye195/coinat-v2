@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties } from 'react';
 import type { Spacing } from 'types/Style';
 
-type Props = {
+export type ButtonProps = {
   onClick?: () => void;
   bgColor?: string;
   color?: string;
@@ -20,6 +20,12 @@ const Container = styled.button<{
     }rem ${padding?.left ?? '0.5'}rem `};
   background-color: ${({ bgColor }) => bgColor ?? '#ffffff'};
   color: ${({ color }) => color ?? '#000000'};
+
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 const Button = ({
@@ -30,7 +36,7 @@ const Button = ({
   padding,
   type = 'button',
   ...rest
-}: Props) => {
+}: ButtonProps) => {
   return (
     <Container
       bgColor={bgColor}
