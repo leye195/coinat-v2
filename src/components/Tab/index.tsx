@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { typeState } from 'store/coin';
 import TabButton from './Button';
 import TabGroup from './Group';
@@ -13,9 +14,18 @@ const Tab = ({ tabs }: Props) => {
   const router = useRouter();
 
   const handleClick = (name: string) => () => {
-    router.push(`/?type=${name}`);
-    setCoinType(name);
+    router.push(`?type=${name}`);
   };
+
+  useEffect(() => {
+    const path = router.asPath;
+
+    if (path === '/?type=BTC') {
+      setCoinType('BTC');
+    } else {
+      setCoinType('KRW');
+    }
+  }, [router]);
 
   return (
     <TabGroup>
