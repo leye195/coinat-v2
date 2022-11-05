@@ -210,9 +210,9 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
             ? 0
             : tickers.upbit.btc[name].tradePrice,
         blast:
-          tickers.binance.btc[name] === undefined
+          tickers.binance.btc[name]?.tradePrice === undefined
             ? 0
-            : tickers.upbit.btc[name].tradePrice,
+            : tickers.binance.btc[name].tradePrice,
         convertedBlast: undefined,
         per:
           tickers.upbit.btc[name] === undefined ||
