@@ -217,7 +217,7 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
         per:
           tickers.upbit.btc[name] === undefined ||
           tickers.binance.btc[name] === undefined
-            ? undefined
+            ? 0
             : getPercent(
                 tickers.upbit.btc[name].tradePrice,
                 tickers.binance.btc[name].tradePrice,
