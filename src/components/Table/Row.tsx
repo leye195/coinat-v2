@@ -4,6 +4,7 @@ import type { ComponentProps } from 'react';
 
 const Container = styled.div`
   ${flex({ alignItems: 'center' })}
+  min-height: 54px;
   border-bottom: 1px solid ${({ theme }) => theme.color.gray};
 
   &:last-child {
