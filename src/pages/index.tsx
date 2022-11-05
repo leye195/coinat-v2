@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import Image from 'next/future/image';
@@ -21,6 +21,7 @@ import Table from '@/components/Table';
 import Exchange from '@/components/Exchange';
 import Chatting from '@/components/Chatting';
 import Skeleton from '@/components/Skeleton';
+import Tab from '@/components/Tab';
 
 const Container = styled.div`
   font-weight: 700;
@@ -169,6 +170,7 @@ const Home: NextPageWithLayout = () => {
         coinType === 'KRW' ? krwCoinData.data : btcCoinData.data,
         coinType,
       );
+
       const { data: currencyData } = await getCurrencyInfo();
 
       const btc = data.find((data) => data.symbol === 'BTC');
@@ -191,13 +193,6 @@ const Home: NextPageWithLayout = () => {
       );
     } catch (err) {
       console.error(err);
-    } finally {
-      if (!timeRef.current) {
-        timeRef.current = setTimeout(() => {
-          timeRef.current = null;
-          getTickers();
-        }, 2000);
-      }
     }
   };
 
@@ -219,7 +214,6 @@ const Home: NextPageWithLayout = () => {
         ]);
 
         if (krwCoins.status === 'fulfilled' && krwCoins.value) {
-          initSocket(krwCoins.value);
           setKrwCoinList({
             isLoading: false,
             data: krwCoins.value,
@@ -229,16 +223,29 @@ const Home: NextPageWithLayout = () => {
         if (btcCoins.status === 'fulfilled' && btcCoins.value) {
           setBtcCoinList({ isLoading: false, data: btcCoins.value });
         }
+
+        if (
+          krwCoins.status === 'fulfilled' &&
+          krwCoins.value &&
+          btcCoins.status === 'fulfilled' &&
+          btcCoins.value
+        )
+          initSocket([...krwCoins.value, ...btcCoins.value]);
       })();
     }
     setIsMounted(true);
   }, [isMounted]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (timeRef.current) {
+      clearInterval(timeRef.current);
+    }
+
     if (!krwCoinData.isLoading && !btcCoinData.isLoading) {
       getTickers();
+      timeRef.current = setInterval(getTickers, 2000);
     }
-  }, [krwCoinData, btcCoinData]);
+  }, [krwCoinData, btcCoinData, coinType]);
 
   return (
     <Container>
@@ -274,6 +281,7 @@ const Home: NextPageWithLayout = () => {
       </ExchangeBlock>
       <ContentsBlock>
         <TableBlock>
+          <Tab tabs={['KRW', 'BTC']} />
           <CountBox>
             <p>암호화폐 - {coinList.length}개</p>
           </CountBox>
@@ -322,7 +330,11 @@ const Home: NextPageWithLayout = () => {
                             {data.symbol}
                           </SymbolCell>
                         </Table.Cell>
-                        <Table.Cell>{setComma(data.last)}₩</Table.Cell>
+                        <Table.Cell>
+                          {coinType === 'KRW'
+                            ? `${setComma(data.last)}₩`
+                            : data.last}
+                        </Table.Cell>
                         <Table.Cell>
                           <BinanceCell>
                             <p>{data.blast}</p>
