@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 /**
  * @description 퍼센트 비율을 구하는 함수
  * @param x  숫자
@@ -36,3 +38,11 @@ export const areEqual = (a: object, b: object) => {
     keys.every((key) => Reflect.get(a, key) === Reflect.get(b, key))
   );
 };
+
+/**
+ * @description 객체에 포함된 값들을 url에 query로 변경합니다 ex) a={a}&b={b}
+ * @param param object
+ * @returns string
+ */
+export const queryStringify = (param: object) =>
+  qs.stringify(param, { skipNulls: true });
