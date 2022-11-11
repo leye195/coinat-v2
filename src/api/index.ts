@@ -29,7 +29,7 @@ export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
   api.get('currency');
 
 export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
-  api.get(`coin?type=${type}`);
+  api.get(`coin-v2?type=${type}`);
 
 /**
  * 탐욕 지수 api
