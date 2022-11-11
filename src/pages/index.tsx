@@ -63,11 +63,31 @@ const CountBox = styled.div`
   p {
     margin: 0.5rem;
   }
+
+  ${breakpoint('md').down`
+    font-size: 12px;
+
+    p {
+      margin: 0.25rem;
+    }
+  `}
+
+  ${breakpoint('sm').down`
+    font-size: 10px;
+  `}
 `;
 
 const TableBlock = styled.div`
   max-width: 768px;
   margin: ${spacing.m} auto 0 auto;
+
+  ${breakpoint('md').down`
+    margin-top: ${spacing.xxs};
+  `}
+
+  ${breakpoint('sm').down`
+    margin-top: ${spacing.xxxs};
+  `}
 `;
 
 const PercentCell = styled(BinanceCell)``;
@@ -83,14 +103,19 @@ const SymbolCell = styled.div`
 
 const FearGreedBlock = styled.div`
   padding: ${spacing.s};
-  margin-top: ${spacing.s};
+  margin-top: ${spacing.xs};
   background-color: ${({ theme }) => theme.color.white};
   border: 1px solid #d0d0d0;
   font-weight: 600;
 
   ${breakpoint('md').down`
       padding: ${spacing.xs};
+      margin-top: ${spacing.xxs};
       font-size: 14px;
+   `}
+
+  ${breakpoint('sm').down`
+    font-size: 11px;
    `}
 `;
 

@@ -11,12 +11,19 @@ type Props = {
 
 const HeaderBlock = styled.div<{ width?: string }>`
   ${flex({ alignItems: 'center' })}
+  width: ${({ width }) => width ?? '25%'};
   padding: ${spacing.s} ${spacing.xs};
+
   font-weight: 400;
+
   cursor: pointer;
 
   ${breakpoint('md').down`
     font-size: 12px;
+  `}
+
+  ${breakpoint('sm').down`
+    font-size: 10px;
   `}
 `;
 

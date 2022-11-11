@@ -13,10 +13,6 @@ type Props = {
 const TableHeaderBox = styled.div`
   ${flex({ alignItems: 'center' })}
   border-bottom: 1px solid ${({ theme }) => theme.color.gray};
-
-  div {
-    width: 30%;
-  }
 `;
 
 const TableBodyBox = styled.div``;

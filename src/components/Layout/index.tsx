@@ -23,6 +23,10 @@ const MainBox = styled.div`
   ${breakpoint('md').down`
     padding: 0 0.5rem;
   `}
+
+  ${breakpoint('sm').down`
+    padding: 0 0.25rem;
+  `}
 `;
 
 const Layout = ({ children, headerColor, isHideHeader }: Props) => {

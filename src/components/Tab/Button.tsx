@@ -1,4 +1,4 @@
-import { flex } from '@/styles/mixin';
+import { breakpoint, flex } from '@/styles/mixin';
 import styled from '@emotion/styled';
 import Button, { ButtonProps } from '../Button';
 
@@ -19,6 +19,19 @@ const ButtonBox = styled.div<{ isActive?: boolean }>`
     background-color: ${({ isActive }) =>
       isActive ? '#f8b64c' : 'transparent'};
   }
+
+  ${breakpoint('md').down`
+     button {
+      padding: 0.5rem;
+      font-size: 12px;
+     }
+  `}
+
+  ${breakpoint('sm').down`
+    button {
+      padding: 0.35rem;
+    }
+  `}
 `;
 
 const TabButton = ({ children, isActive, ...rest }: Props) => {
@@ -27,8 +40,8 @@ const TabButton = ({ children, isActive, ...rest }: Props) => {
       <Button
         {...rest}
         padding={{
-          top: '1',
-          bottom: '1',
+          top: '0.75',
+          bottom: '0.75',
           left: '1',
           right: '1',
         }}
