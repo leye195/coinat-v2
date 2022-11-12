@@ -13,6 +13,8 @@ export type CombinedTickers = {
   blast: number;
   convertedBlast?: number;
   per?: number;
+  upbitWarning: boolean;
+  binanceWarning: boolean;
 };
 
 type OpenCallback = (socket: WebSocket) => void;
@@ -39,7 +41,7 @@ const BINANCE_SOCKET = 'wss://stream.binance.com:9443/stream?streams=';
 
 const onUpbitOpen = async (socket: WebSocket) => {
   const upbitList = (
-    await api.get('https://api.upbit.com/v1/market/all')
+    await api.get('https://api.upbit.com/v1/market/all?isDetails=true')
   ).data.filter(
     (coin: UpbitCoin) =>
       coin.market.includes('KRW-') || coin.market.includes('BTC-'),
@@ -67,9 +69,12 @@ const handleUpbitMessage = (e: any) => {
     opening_price: openPrice,
     high_price: highPrice,
     low_price: lowPrice,
+    market_warning: marketWarning,
   } = JSON.parse(enc.decode(arr));
 
   const symbol = code.slice(code.indexOf('-') + 1, code.length);
+
+  // console.log(JSON.parse(enc.decode(arr)));
 
   if (code === 'KRW-BTC' && symbol === 'BTC') {
     btcKrw.upbit = tradePrice;
@@ -81,6 +86,7 @@ const handleUpbitMessage = (e: any) => {
       highPrice,
       lowPrice,
       openPrice,
+      marketWarning,
     };
   }
 
@@ -90,6 +96,7 @@ const handleUpbitMessage = (e: any) => {
       highPrice,
       lowPrice,
       openPrice,
+      marketWarning,
     };
   }
 };
@@ -111,6 +118,7 @@ const handleBinanceMessage = (e: any) => {
       highPrice: h ?? 0,
       lowPrice: l ?? 0,
       openPrice: o ?? 0,
+      marketWarning: 'None',
     };
   } else {
     tickers.binance.btc[symbol] = {
@@ -118,6 +126,7 @@ const handleBinanceMessage = (e: any) => {
       highPrice: h ?? 0,
       lowPrice: l ?? 0,
       openPrice: o ?? 0,
+      marketWarning: 'None',
     };
   }
 };
@@ -200,6 +209,10 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
                   tickers.upbit.krw[name].tradePrice,
                   tickers.binance.btc[name].tradePrice * btcKrw.upbit,
                 ),
+          upbitWarning:
+            tickers.upbit.krw[name]?.marketWarning === 'CAUTION' ?? false,
+          binanceWarning:
+            tickers.binance.btc[name]?.marketWarning === 'CAUTION' ?? false,
         };
       }
 
@@ -222,6 +235,10 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
                 tickers.upbit.btc[name].tradePrice,
                 tickers.binance.btc[name].tradePrice,
               ),
+        upbitWarning:
+          tickers.upbit.btc[name]?.marketWarning === 'CAUTION' ?? false,
+        binanceWarning:
+          tickers.binance.btc[name]?.marketWarning === 'CAUTION' ?? false,
       };
     },
   );

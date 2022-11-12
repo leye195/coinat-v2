@@ -2,7 +2,7 @@ import { Router } from 'next/router';
 import { atom } from 'recoil';
 import type { Coin } from 'types/Coin';
 
-type CoinState = {
+export type CoinState = {
   isLoading: boolean;
   data: Coin[];
 };

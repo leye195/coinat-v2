@@ -17,7 +17,7 @@ app.get(async (req, res) => {
 
     // upbit coin data
     const upbitResponse = await (
-      await fetch('https://api.upbit.com/v1/market/all')
+      await fetch('https://api.upbit.com/v1/market/all?isDetails=true')
     ).json();
     const upbitKrwCoins = upbitResponse.filter((coin: UpbitCoin) =>
       coin.market.includes('KRW-'),

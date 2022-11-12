@@ -13,9 +13,7 @@ const HeaderBlock = styled.div<{ width?: string }>`
   ${flex({ alignItems: 'center' })}
   width: ${({ width }) => width ?? '25%'};
   padding: ${spacing.s} ${spacing.xs};
-
   font-weight: 400;
-
   cursor: pointer;
 
   ${breakpoint('md').down`
@@ -30,6 +28,14 @@ const HeaderBlock = styled.div<{ width?: string }>`
 const RightBox = styled.div`
   ${flex({})}
   margin-left: ${spacing.s};
+
+  ${breakpoint('md').down`
+    margin-left: ${spacing.xs};
+  `}
+
+  ${breakpoint('sm').down`
+    margin-left: ${spacing.xxs};
+  `}
 `;
 
 const Header = ({ name, width, right, onClick }: Props) => {

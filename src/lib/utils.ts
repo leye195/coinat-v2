@@ -46,3 +46,11 @@ export const areEqual = (a: object, b: object) => {
  */
 export const queryStringify = (param: object) =>
   qs.stringify(param, { skipNulls: true });
+
+/**
+ * @description breakpoint의 미디어 쿼리 조건만 반환합니다(useMedia에 사용)
+ * @param mediaQuery 미디어 쿼리
+ */
+export const getBreakpointQuery = (mediaQuery: string): string => {
+  return mediaQuery.replace(/@media /, '');
+};

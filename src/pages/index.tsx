@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
-import Image from 'next/future/image';
 import { useQuery } from 'react-query';
 
 import { getCoins, getCurrencyInfo, getFearGreedIndex } from 'api';
@@ -10,18 +9,18 @@ import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { setComma } from '@/lib/utils';
 import { CombinedTickers, combineTickers, initSocket } from '@/lib/socket';
-import sort, { initSort, Sort, sortColumn } from '@/lib/sort';
+import sort, { initSort, Sort } from '@/lib/sort';
 import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
 import type { FearGreed } from 'types/FearGreed';
 
 import Layout from '@/components/Layout';
-import Table from '@/components/Table';
 import Exchange from '@/components/Exchange';
 import Chatting from '@/components/Chatting';
 import Skeleton from '@/components/Skeleton';
 import Tab from '@/components/Tab';
+import CoinTable from '@/components/CoinTable';
 
 const Container = styled.div`
   font-weight: 700;
@@ -43,14 +42,6 @@ const ExchangeBox = styled.div`
     margin: ${spacing.xs} 0;
     gap: ${spacing.xxxs};
   `}
-`;
-
-const BinanceCell = styled.div`
-  ${flex({ direction: 'column' })};
-
-  p {
-    margin: 0;
-  }
 `;
 
 const ContentsBlock = styled.section`
@@ -88,17 +79,6 @@ const TableBlock = styled.div`
   ${breakpoint('sm').down`
     margin-top: ${spacing.xxxs};
   `}
-`;
-
-const PercentCell = styled(BinanceCell)``;
-
-const SymbolCell = styled.div`
-  ${flex({ alignItems: 'center' })}
-  gap: ${spacing.xs};
-
-  img {
-    border-radius: 2rem;
-  }
 `;
 
 const FearGreedBlock = styled.div`
@@ -310,84 +290,11 @@ const Home: NextPageWithLayout = () => {
           <CountBox>
             <p>암호화폐 - {coinList.length}개</p>
           </CountBox>
-          <Table
-            header={
-              <>
-                {['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'].map(
-                  (name, idx) => (
-                    <Table.Header
-                      key={name}
-                      name={name}
-                      right={
-                        <Image
-                          src="/assets/updown.png"
-                          alt=""
-                          width={6}
-                          height={12}
-                        />
-                      }
-                      width="25%"
-                      onClick={handleSort(sortColumn[idx])}
-                    />
-                  ),
-                )}
-              </>
-            }
-            body={
-              krwCoinData.isLoading ||
-              btcCoinData.isLoading ||
-              exchangeData.isLoading ? (
-                <Table.Skeleton />
-              ) : (
-                <>
-                  {coinList
-                    .filter((data) => data.symbol !== 'BTC')
-                    .map((data: CombinedTickers) => (
-                      <Table.Row key={data.symbol}>
-                        <Table.Cell>
-                          <SymbolCell>
-                            <picture>
-                              <img
-                                alt={data.symbol}
-                                src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                                width={20}
-                                height={20}
-                              />
-                            </picture>
-                            {data.symbol}
-                          </SymbolCell>
-                        </Table.Cell>
-                        <Table.Cell>
-                          {coinType === 'KRW'
-                            ? `${setComma(data.last)}₩`
-                            : data.last}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <BinanceCell>
-                            <p>{data.blast}</p>
-                            {data.convertedBlast && (
-                              <p>{setComma(data.convertedBlast ?? 0)}₩</p>
-                            )}
-                          </BinanceCell>
-                        </Table.Cell>
-                        <Table.Cell
-                          color={
-                            data.per
-                              ? data.per > 0
-                                ? '#ef5350'
-                                : '#42a5f5'
-                              : '#000000'
-                          }
-                        >
-                          <PercentCell>
-                            <p>{(data?.per ?? 0).toFixed(3)}%</p>
-                          </PercentCell>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                </>
-              )
-            }
+          <CoinTable
+            krwCoinData={krwCoinData}
+            btcCoinData={btcCoinData}
+            coinList={coinList}
+            handleSort={handleSort}
           />
         </TableBlock>
       </ContentsBlock>
