@@ -3,8 +3,15 @@
  */
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type BreakPoints = Record<Size, number>;
-export const breakpoints: BreakPoints = {
+export type BreakPointsValue = Record<Size, number>;
+export type BreakPoints = {
+  up: (key: Size) => string;
+  down: (key: Size) => string;
+  between: (start: Size, end: Size) => string;
+  not: (key: Size) => string;
+  values: (key: Size) => number;
+};
+export const breakpointsValue: BreakPointsValue = {
   xs: 0,
   sm: 480,
   md: 753,

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { breakpoints, Size } from '@/styles/variables';
+import { BreakPoints, breakpointsValue, Size } from '@/styles/variables';
 
 type Flex = {
   display?: 'flex' | 'inline-flex';
@@ -38,13 +38,13 @@ export const flex = ({
 
 export const breakpoint = (key: Size) => {
   const breakUp = (...args: any) => css`
-    @media (min-width: ${breakpoints[key as Size]}px) {
+    @media (min-width: ${breakpointsValue[key as Size]}px) {
       ${css(...args)};
     }
   `;
 
   const breakDown = (...args: any) => css`
-    @media (max-width: ${breakpoints[key as Size]}px) {
+    @media (max-width: ${breakpointsValue[key as Size]}px) {
       ${css(...args)};
     }
   `;
@@ -54,3 +54,18 @@ export const breakpoint = (key: Size) => {
     down: breakDown,
   };
 };
+
+const breakpointsValueList = Object.values(breakpointsValue);
+export const breakpoints: BreakPoints = {
+  up: (key: Size) => `@media (min-width: ${breakpointsValue[key]}px)`,
+  down: (key: Size) => `@media (max-width: ${breakpointsValue[key]}px)`,
+  values: (key: Size) => breakpointsValue[key],
+  between: (start: Size, end: Size) => {
+    const endIndex = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].indexOf(end);
+    const startIndex = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].indexOf(start);
+
+    return `@media (min-width: ${
+      breakpointsValueList[startIndex]
+    }px) and (max-width: ${breakpointsValueList[endIndex] - 1}px)`;
+  },
+} as BreakPoints;
