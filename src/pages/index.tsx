@@ -28,7 +28,7 @@ const Container = styled.div`
   font-weight: 700;
 `;
 
-const ExchangeBlock = styled.div`
+const ExchangeBlock = styled.section`
   ${breakpoint('md').down`
     overflow: auto;
   `}
@@ -90,7 +90,7 @@ const TableBlock = styled.div`
   `}
 `;
 
-const FearGreedBlock = styled.div`
+const FearGreedBlock = styled.section`
   padding: ${spacing.s};
   margin-top: ${spacing.xs};
   background-color: ${({ theme }) => theme.color.white};

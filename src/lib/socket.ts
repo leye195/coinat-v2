@@ -60,7 +60,7 @@ const onUpbitOpen = async (socket: WebSocket) => {
   socket.send(JSON.stringify(data));
 };
 
-const handleUpbitMessage = (e: any) => {
+const handleUpbitMessage = (cb?: () => void) => (e: any) => {
   const enc = new TextDecoder('utf-8');
   const arr = new Uint8Array(e.data);
   const {
@@ -70,11 +70,11 @@ const handleUpbitMessage = (e: any) => {
     high_price: highPrice,
     low_price: lowPrice,
     market_warning: marketWarning,
+    signed_change_price: changePrice,
+    signed_change_rate: changeRate,
   } = JSON.parse(enc.decode(arr));
 
   const symbol = code.slice(code.indexOf('-') + 1, code.length);
-
-  // console.log(JSON.parse(enc.decode(arr)));
 
   if (code === 'KRW-BTC' && symbol === 'BTC') {
     btcKrw.upbit = tradePrice;
@@ -87,6 +87,8 @@ const handleUpbitMessage = (e: any) => {
       lowPrice,
       openPrice,
       marketWarning,
+      changePrice,
+      changeRate,
     };
   }
 
@@ -97,6 +99,8 @@ const handleUpbitMessage = (e: any) => {
       lowPrice,
       openPrice,
       marketWarning,
+      changePrice,
+      changeRate,
     };
   }
 };
@@ -105,10 +109,12 @@ const onBinanceOpen = async (socket: WebSocket) => {
   console.log('binance connected');
 };
 
-const handleBinanceMessage = (e: any) => {
+const handleBinanceMessage = (cb?: () => void) => (e: any) => {
   const {
-    data: { s, c, h, l, o },
+    data: { s, c, h, l, o, p, P },
   } = JSON.parse(e.data);
+
+  console.log(JSON.parse(e.data));
 
   const symbol = s.slice(0, s.length - 3);
   if (symbol === 'BTCU') {
@@ -119,6 +125,8 @@ const handleBinanceMessage = (e: any) => {
       lowPrice: l ?? 0,
       openPrice: o ?? 0,
       marketWarning: 'None',
+      changePrice: p,
+      changeRate: P,
     };
   } else {
     tickers.binance.btc[symbol] = {
@@ -127,6 +135,8 @@ const handleBinanceMessage = (e: any) => {
       lowPrice: l ?? 0,
       openPrice: o ?? 0,
       marketWarning: 'None',
+      changePrice: p,
+      changeRate: P,
     };
   }
 };
@@ -167,16 +177,24 @@ const connect = (
   };
 };
 
-export const initSocket = (coinList: Coin[]) => {
-  //upbit
-  connect(UPBIT_SOCKET, onUpbitOpen, handleUpbitMessage, 'arraybuffer');
+export const connectUpbitSocket = () => {
+  connect(UPBIT_SOCKET, onUpbitOpen, handleUpbitMessage(), 'arraybuffer');
+};
 
-  // binance
+export const connectBinanceSocket = (coinList: Coin[]) => {
   const streams = `${coinList
     .map((coin: Coin) => `${coin.name.toLowerCase()}btc@ticker/`)
     .join('')}btcusdt@ticker`;
 
-  connect(`${BINANCE_SOCKET}${streams}`, onBinanceOpen, handleBinanceMessage);
+  connect(`${BINANCE_SOCKET}${streams}`, onBinanceOpen, handleBinanceMessage());
+};
+
+export const initSocket = (coinList: Coin[]) => {
+  //upbit
+  connectUpbitSocket();
+
+  // binance
+  connectBinanceSocket(coinList);
 };
 
 export const combineTickers = (coinList: Coin[], type?: string) => {
@@ -209,6 +227,10 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
                   tickers.upbit.krw[name].tradePrice,
                   tickers.binance.btc[name].tradePrice * btcKrw.upbit,
                 ),
+          upbitChangePrice: tickers.upbit.krw[name]?.changePrice,
+          upbitChangeRate: tickers.upbit.krw[name]?.changeRate,
+          binanceChangePrice: tickers.binance.btc[name]?.changePrice,
+          binanceChangeRate: tickers.binance.btc[name]?.changeRate,
           upbitWarning:
             tickers.upbit.krw[name]?.marketWarning === 'CAUTION' ?? false,
           binanceWarning:
@@ -235,6 +257,10 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
                 tickers.upbit.btc[name].tradePrice,
                 tickers.binance.btc[name].tradePrice,
               ),
+        upbitChangePrice: tickers.upbit.btc[name]?.changePrice,
+        upbitChangeRate: tickers.upbit.btc[name]?.changeRate,
+        binanceChangePrice: tickers.binance.btc[name]?.changePrice,
+        binanceChangeRate: tickers.binance.btc[name]?.changeRate,
         upbitWarning:
           tickers.upbit.btc[name]?.marketWarning === 'CAUTION' ?? false,
         binanceWarning:
