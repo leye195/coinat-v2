@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import Image from 'next/future/image';
-import { flex } from '@/styles/mixin';
+import { breakpoint, flex } from '@/styles/mixin';
 
 type Props = {
   headerColor?: string;
@@ -11,6 +11,10 @@ const Container = styled.header<{ color?: string }>`
   width: 100%;
   height: 3rem;
   background-color: ${({ color }) => color ?? '#000000cc'};
+
+  ${breakpoint('md').down`
+    height: 2.25rem;
+  `}
 `;
 
 const Nav = styled.nav`
@@ -27,6 +31,10 @@ const Logo = styled.div`
   color: #ffffff;
   font-weight: 700;
   font-size: 1.5rem;
+
+  ${breakpoint('md').down`
+    font-size: 1rem;
+  `}
 
   img {
     position: absolute;
