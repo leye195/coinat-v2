@@ -48,6 +48,7 @@ const ExchangeBox = styled.div`
   `}
 
   ${breakpoint('sm').down`
+    margin: ${spacing.xxs} 0;
     padding: 0 ${spacing.xxs};
   `}
 `;
@@ -97,10 +98,10 @@ const FearGreedBlock = styled.div`
   font-weight: 600;
 
   ${breakpoint('md').down`
-      padding: ${spacing.xs};
-      margin-top: ${spacing.xxs};
-      font-size: 14px;
-   `}
+    padding: ${spacing.xs};
+    margin-top: ${spacing.xxs};
+    font-size: 14px;
+  `}
 
   ${breakpoint('sm').down`
     font-size: 11px;
@@ -308,7 +309,7 @@ const Home: NextPageWithLayout = () => {
           />
         </TableBlock>
       </ContentsBlock>
-      <Chatting />
+      {!isSmDown && <Chatting />}
     </Container>
   );
 };
