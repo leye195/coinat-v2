@@ -1,16 +1,17 @@
 import Image from 'next/future/image';
 import { useRecoilValue } from 'recoil';
+import { useMedia } from 'react-use';
+import styled from '@emotion/styled';
 
 import { CoinState, typeState } from 'store/coin';
 import { exchangeSelector } from 'store/exchange';
+import { breakpoint, breakpoints, flex } from '@/styles/mixin';
+import { spacing } from '@/styles/variables';
 import { CombinedTickers } from '@/lib/socket';
+import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { sortColumn } from '@/lib/sort';
 
 import Table from '@/components/Table';
-import styled from '@emotion/styled';
-import { breakpoint, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
-import { setComma } from '@/lib/utils';
-import { sortColumn } from '@/lib/sort';
 
 type Props = {
   krwCoinData: CoinState;
@@ -37,6 +38,10 @@ const SymbolCell = styled.div`
   ${flex({ alignItems: 'center' })}
   gap: ${spacing.xs};
 
+  ${breakpoint('sm').down`
+    gap: ${spacing.xxxs};
+  `}
+
   img {
     border-radius: 2rem;
   }
@@ -62,6 +67,7 @@ const CoinTable = ({
 }: Props) => {
   const coinType = useRecoilValue(typeState);
   const exchangeData = useRecoilValue(exchangeSelector);
+  const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
 
   return (
     <Table
@@ -104,8 +110,8 @@ const CoinTable = ({
                         <img
                           alt={data.symbol}
                           src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                          width={20}
-                          height={20}
+                          width={isSmDown ? 16 : 20}
+                          height={isSmDown ? 16 : 20}
                         />
                       </picture>
                       {data.symbol}
