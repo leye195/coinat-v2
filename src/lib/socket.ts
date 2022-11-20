@@ -114,8 +114,6 @@ const handleBinanceMessage = (cb?: () => void) => (e: any) => {
     data: { s, c, h, l, o, p, P },
   } = JSON.parse(e.data);
 
-  console.log(JSON.parse(e.data));
-
   const symbol = s.slice(0, s.length - 3);
   if (symbol === 'BTCU') {
     btcKrw.binance = parseFloat(c ?? 0);
