@@ -21,8 +21,10 @@ const ExchangeBlock = styled.div`
   white-space: pre;
 
   ${breakpoint('md').down`
-    width: 10rem;
+    width: auto;
     padding: ${spacing.xs} ${spacing.xxs};
+    border: none;
+    border-radius: 0;
   `}
 `;
 

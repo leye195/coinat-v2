@@ -1,15 +1,17 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import { useQuery } from 'react-query';
+import { useMedia } from 'react-use';
 
 import { getCoins, getCurrencyInfo, getFearGreedIndex } from 'api';
 import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
-import { breakpoint, flex } from '@/styles/mixin';
+import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import { setComma } from '@/lib/utils';
+import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { CombinedTickers, combineTickers, initSocket } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
+import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
@@ -40,7 +42,13 @@ const ExchangeBox = styled.div`
   ${breakpoint('md').down`
     width: 100vw;
     margin: ${spacing.xs} 0;
-    gap: ${spacing.xxxs};
+    gap: 0;
+    border: 1px solid #d0d0d0;
+    background-color: white;
+  `}
+
+  ${breakpoint('sm').down`
+    padding: 0 ${spacing.xxs};
   `}
 `;
 
@@ -160,6 +168,8 @@ const Home: NextPageWithLayout = () => {
   const exchangeData = useRecoilValue(exchangeSelector);
   const setExchangeState = useSetRecoilState(exchangeState);
 
+  const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+
   const fetchCoins = (type: 'KRW' | 'BTC') => async () => {
     try {
       const { data } = await getCoins(type);
@@ -241,7 +251,7 @@ const Home: NextPageWithLayout = () => {
     setIsMounted(true);
   }, [isMounted]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (timeRef.current) {
       clearInterval(timeRef.current);
     }
@@ -258,22 +268,22 @@ const Home: NextPageWithLayout = () => {
       <ExchangeBlock>
         <ExchangeBox>
           <Exchange
-            title="환율(USD/KRW)"
+            title={isSmDown ? 'USD/KRW' : '환율(USD/KRW)'}
             value={setComma(exchangeData.usdToKrw)}
             isLoading={exchangeData.isLoading || !exchangeData.usdToKrw}
           />
           <Exchange
-            title="환율(USDT/KRW)"
+            title={isSmDown ? 'USDT/KRW' : '환율(USDT/KRW)'}
             value={setComma(exchangeData.usdtToKrw)}
             isLoading={exchangeData.isLoading || !exchangeData.usdtToKrw}
           />
           <Exchange
-            title="업비트(BTC/KRW)"
+            title="업비트(BTC)"
             value={setComma(exchangeData.upbitBit)}
             isLoading={exchangeData.isLoading || !exchangeData.upbitBit}
           />
           <Exchange
-            title="바이낸스(BTC/KRW)"
+            title="바이낸스(BTC)"
             value={setComma(exchangeData.binanceBit)}
             isLoading={exchangeData.isLoading || !exchangeData.binanceBit}
           />
