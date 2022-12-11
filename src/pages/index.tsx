@@ -4,10 +4,11 @@ import styled from '@emotion/styled';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 
-import { getCoins, getCurrencyInfo, getFearGreedIndex } from 'api';
+import { getCurrencyInfo, getFearGreedIndex } from 'api';
 import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
+import { getCoins } from '@/lib/coin';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { CombinedTickers, combineTickers, initSocket } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
@@ -173,7 +174,7 @@ const Home: NextPageWithLayout = () => {
 
   const fetchCoins = (type: 'KRW' | 'BTC') => async () => {
     try {
-      const { data } = await getCoins(type);
+      const data = await getCoins(type);
       return data ?? [];
     } catch (err) {
       console.error(err);
@@ -228,6 +229,8 @@ const Home: NextPageWithLayout = () => {
           fetchCoins('KRW')(),
           fetchCoins('BTC')(),
         ]);
+
+        console.log(krwCoins);
 
         if (krwCoins.status === 'fulfilled' && krwCoins.value) {
           setKrwCoinList({
