@@ -54,3 +54,7 @@ export const queryStringify = (param: object) =>
 export const getBreakpointQuery = (mediaQuery: string): string => {
   return mediaQuery.replace(/@media /, '');
 };
+
+export const classnames = (...classnames: string[]) => {
+  return classnames.join(' ');
+};
