@@ -20,7 +20,6 @@ import type { FearGreed } from 'types/FearGreed';
 
 import Layout from '@/components/Layout';
 import Exchange from '@/components/Exchange';
-import Chatting from '@/components/Chatting';
 import Skeleton from '@/components/Skeleton';
 import Tab from '@/components/Tab';
 import CoinTable from '@/components/CoinTable';
@@ -312,7 +311,6 @@ const Home: NextPageWithLayout = () => {
           />
         </TableBlock>
       </ContentsBlock>
-      {!isSmDown && <Chatting />}
     </Container>
   );
 };
