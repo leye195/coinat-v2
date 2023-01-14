@@ -6,6 +6,7 @@ const Container = styled.div`
   ${flex({ alignItems: 'center' })};
   background-color: white;
   border: 1px solid #d0d0d0;
+  position: relative;
 
   * {
     flex: 1;
