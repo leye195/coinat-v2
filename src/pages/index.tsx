@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
-import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 
-import { getCurrencyInfo, getFearGreedIndex } from 'api';
-import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
+import { getCurrencyInfo } from 'api';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { getCoins } from '@/lib/coin';
@@ -16,13 +14,12 @@ import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
-import type { FearGreed } from 'types/FearGreed';
 
 import Layout from '@/components/Layout';
 import Exchange from '@/components/Exchange';
-import Skeleton from '@/components/Skeleton';
 import Tab from '@/components/Tab';
 import CoinTable from '@/components/CoinTable';
+import FearGreed from '@/components/FearGreed';
 
 const Container = styled.div`
   font-weight: 700;
@@ -89,67 +86,6 @@ const TableBlock = styled.div`
     margin-top: ${spacing.xxxs};
   `}
 `;
-
-const FearGreedBlock = styled.section`
-  padding: ${spacing.s};
-  margin-top: ${spacing.xs};
-  background-color: ${({ theme }) => theme.color.white};
-  border: 1px solid #d0d0d0;
-  font-weight: 600;
-
-  ${breakpoint('md').down`
-    padding: ${spacing.xs};
-    margin-top: ${spacing.xxs};
-    font-size: 14px;
-  `}
-
-  ${breakpoint('sm').down`
-    font-size: 11px;
-   `}
-`;
-
-const FearGreedTitle = styled.span`
-  font-weight: 400;
-`;
-
-const FearGreedValue = styled.span<{ color: string }>`
-  margin-left: ${spacing.xs};
-  color: ${({ color }) => color};
-`;
-
-const FearGreed = () => {
-  const { isLoading, data } = useQuery(
-    ['fear-greed'],
-    async () => {
-      const res = await getFearGreedIndex();
-      const { data } = res.data;
-
-      return data ? data[0] : {};
-    },
-    {
-      refetchIntervalInBackground: true,
-      refetchInterval: 1000 * 50,
-    },
-  );
-
-  return (
-    <FearGreedBlock>
-      {isLoading ? (
-        <Skeleton width="100%" height={20} borderRadius="4px" />
-      ) : (
-        <>
-          <FearGreedTitle>공포 · 탐욕 지수 :</FearGreedTitle>
-          <FearGreedValue
-            color={fearGreedColor[data?.value_classification as FearGreed]}
-          >
-            {data?.value} -{' '}
-            {fearGreedIndex[data?.value_classification as FearGreed]}
-          </FearGreedValue>
-        </>
-      )}
-    </FearGreedBlock>
-  );
-};
 
 const Home: NextPageWithLayout = () => {
   const [coinList, setCoinList] = useState<CombinedTickers[]>([]);
@@ -228,8 +164,6 @@ const Home: NextPageWithLayout = () => {
           fetchCoins('KRW')(),
           fetchCoins('BTC')(),
         ]);
-
-        console.log(krwCoins);
 
         if (krwCoins.status === 'fulfilled' && krwCoins.value) {
           setKrwCoinList({
