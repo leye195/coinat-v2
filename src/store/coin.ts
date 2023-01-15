@@ -7,6 +7,11 @@ export type CoinState = {
   data: Coin[];
 };
 
+export type WatchListState = {
+  krw: string[];
+  btc: string[];
+};
+
 export const typeState = atom({
   key: 'typeState',
   default: 'KRW',
@@ -42,5 +47,13 @@ export const btcCoinListState = atom<CoinState>({
   default: {
     isLoading: true,
     data: [],
+  },
+});
+
+export const watchListState = atom<WatchListState>({
+  key: 'watchListState',
+  default: {
+    krw: [],
+    btc: [],
   },
 });
