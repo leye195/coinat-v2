@@ -58,3 +58,13 @@ export const getBreakpointQuery = (mediaQuery: string): string => {
 export const classnames = (...classnames: string[]) => {
   return classnames.join(' ');
 };
+
+export const findIndex = <T>(data: T[], prediticate: (val: T) => boolean) => {
+  return data.findIndex(prediticate);
+};
+
+export const filter = <T>(data: T[], prediticate: (val: T) => boolean) => {
+  return data.filter(prediticate);
+};
+
+export const equal = <T>(target: T, val: T) => target === val;
