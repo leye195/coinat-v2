@@ -145,7 +145,7 @@ const CoinTable = ({
                     }
                   >
                     <PercentCell>
-                      <p>{(data?.per ?? 0).toFixed(3)}%</p>
+                      <p>{(data?.per ?? 0).toFixed(2)}%</p>
                     </PercentCell>
                   </Table.Cell>
                 </Table.Row>
