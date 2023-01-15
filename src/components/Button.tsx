@@ -7,12 +7,16 @@ export type ButtonProps = {
   bgColor?: string;
   color?: string;
   padding?: Spacing;
+  border?: string;
+  borderRadius?: string;
 } & ComponentPropsWithoutRef<'button'>;
 
 const Container = styled.button<{
   bgColor?: string;
   color?: string;
   padding?: Spacing;
+  border: string;
+  borderRadius: string;
 }>`
   padding: ${({ padding }) =>
     `${padding?.top ?? `0.5`}rem ${padding?.right ?? '0.5'}rem ${
@@ -20,6 +24,8 @@ const Container = styled.button<{
     }rem ${padding?.left ?? '0.5'}rem `};
   background-color: ${({ bgColor }) => bgColor ?? '#ffffff'};
   color: ${({ color }) => color ?? '#000000'};
+  border: ${({ border }) => border};
+  border-radius: ${({ borderRadius }) => borderRadius};
 
   cursor: pointer;
 
@@ -34,11 +40,15 @@ const Button = ({
   bgColor,
   color,
   padding,
+  border = 'none',
+  borderRadius = '0',
   type = 'button',
   ...rest
 }: ButtonProps) => {
   return (
     <Container
+      border={border}
+      borderRadius={borderRadius}
       bgColor={bgColor}
       color={color}
       type={type}
