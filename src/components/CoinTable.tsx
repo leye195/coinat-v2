@@ -1,17 +1,27 @@
 import Image from 'next/future/image';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useMedia } from 'react-use';
 import styled from '@emotion/styled';
+import { faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { CoinState, typeState } from 'store/coin';
+import { CoinState, typeState, watchListState } from 'store/coin';
 import { exchangeSelector } from 'store/exchange';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { CombinedTickers } from '@/lib/socket';
-import { getBreakpointQuery, setComma } from '@/lib/utils';
+import {
+  equal,
+  filter,
+  findIndex,
+  getBreakpointQuery,
+  setComma,
+} from '@/lib/utils';
 import { sortColumn } from '@/lib/sort';
 
 import Table from '@/components/Table';
+import Button from '@/components/Button';
 
 type Props = {
   krwCoinData: CoinState;
@@ -45,6 +55,10 @@ const SymbolCell = styled.div`
   img {
     border-radius: 2rem;
   }
+
+  svg {
+    color: ${({ theme }) => theme.color.yellow};
+  }
 `;
 
 const Warning = styled.div`
@@ -65,9 +79,34 @@ const CoinTable = ({
   krwCoinData,
   handleSort,
 }: Props) => {
+  const [watchList, setWatchList] = useRecoilState(watchListState);
   const coinType = useRecoilValue(typeState);
   const exchangeData = useRecoilValue(exchangeSelector);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+
+  const handleFav = (symbol: string) => () => {
+    const { krw, btc } = watchList;
+    const type = coinType?.toLowerCase() ?? 'krw';
+
+    setWatchList({
+      btc: equal(type, 'btc')
+        ? !equal(
+            findIndex(watchList.btc, (val: string) => equal(val, symbol)),
+            -1,
+          )
+          ? filter(watchList.btc, (val: string) => !equal(val, symbol))
+          : [...watchList.btc, symbol]
+        : btc,
+      krw: !equal(type, 'btc')
+        ? !equal(
+            findIndex(watchList.krw, (val: string) => equal(val, symbol)),
+            -1,
+          )
+          ? filter(watchList.krw, (val: string) => !equal(val, symbol))
+          : [...watchList.krw, symbol]
+        : krw,
+    });
+  };
 
   return (
     <Table
@@ -101,11 +140,28 @@ const CoinTable = ({
         ) : (
           <>
             {coinList
-              .filter((data) => data.symbol !== 'BTC')
+              .filter((data) => !equal(data.symbol, 'BTC'))
               .map((data: CombinedTickers) => (
                 <Table.Row key={data.symbol}>
                   <Table.Cell>
                     <SymbolCell>
+                      <Button onClick={handleFav(data.symbol)}>
+                        <FontAwesomeIcon
+                          icon={
+                            equal(
+                              findIndex(
+                                watchList[
+                                  coinType.toLowerCase() as 'btc' | 'krw'
+                                ],
+                                (val: string) => equal(val, data.symbol),
+                              ),
+                              -1,
+                            )
+                              ? faStar
+                              : faSolidStar
+                          }
+                        />
+                      </Button>
                       <picture>
                         <img
                           alt={data.symbol}
