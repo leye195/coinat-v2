@@ -7,12 +7,17 @@ export const getCoins = async (type: Currency) => {
   try {
     // upbit coin data
     const { data: upbitData } = await getUpbitCoins();
-    const upbitKrwCoins = upbitData.filter((coin: UpbitCoin) =>
+    const upbitKrwCoins: UpbitCoin[] = upbitData.filter((coin: UpbitCoin) =>
       coin.market.includes('KRW-'),
     );
-    const upbitBtcCoins = upbitData.filter((coin: UpbitCoin) =>
-      coin.market.includes('BTC-'),
-    );
+    const upbitBtcCoins: UpbitCoin[] = upbitData
+      .filter((coin: UpbitCoin) => coin.market.includes('BTC-'))
+      .filter((coin: UpbitCoin) => {
+        const symbol = coin.market.replace(/BTC-/, '');
+        return !upbitKrwCoins.some((coin: UpbitCoin) =>
+          coin.market.includes(symbol),
+        );
+      });
 
     // binance coin data
     const { data: binanceData } = await getBinanceCoins();
