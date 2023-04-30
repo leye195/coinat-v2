@@ -68,3 +68,5 @@ export const filter = <T>(data: T[], prediticate: (val: T) => boolean) => {
 };
 
 export const equal = <T>(target: T, val: T) => target === val;
+
+export const removeDuplicate = <T>(data: T[]) => [...new Set(data)];
