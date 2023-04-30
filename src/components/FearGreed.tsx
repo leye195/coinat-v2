@@ -18,7 +18,7 @@ const FearGreedBlock = styled.section`
 
   ${breakpoint('md').down`
     padding: ${spacing.xs};
-    margin-top: ${spacing.xxs};
+    margin-top: 0;
     font-size: 14px;
   `}
 

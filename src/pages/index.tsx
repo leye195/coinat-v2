@@ -34,18 +34,17 @@ const ExchangeBlock = styled.section`
 const ExchangeBox = styled.div`
   ${flex({})};
   gap: ${spacing.xxs};
-  margin: ${spacing.s} 0;
+  margin: ${spacing.xs} 0;
 
   ${breakpoint('md').down`
     width: 100vw;
-    margin: ${spacing.xs} 0;
     gap: 0;
+    margin: ${spacing.xxs} 0;
     border: 1px solid #d0d0d0;
     background-color: white;
   `}
 
   ${breakpoint('sm').down`
-    margin: ${spacing.xxs} 0;
     padding: 0 ${spacing.xxs};
   `}
 `;
@@ -76,13 +75,9 @@ const CountBox = styled.div`
 
 const TableBlock = styled.div`
   max-width: 768px;
-  margin: ${spacing.m} auto 0 auto;
+  margin: 0 auto;
 
   ${breakpoint('md').down`
-    margin-top: ${spacing.xxs};
-  `}
-
-  ${breakpoint('sm').down`
     margin-top: ${spacing.xxxs};
   `}
 `;
