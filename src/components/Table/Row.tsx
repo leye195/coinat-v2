@@ -11,8 +11,12 @@ const Container = styled.div`
     border-bottom: none;
   }
 
-  ${breakpoint('md').down`
+  ${breakpoint('lg').down`
     min-height: 45px;
+    font-size: 14px;
+  `}
+
+  ${breakpoint('md').down`
     font-size: 12px;
   `}
 

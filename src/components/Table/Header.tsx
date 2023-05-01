@@ -16,6 +16,10 @@ const HeaderBlock = styled.div<{ width?: string }>`
   font-weight: 400;
   cursor: pointer;
 
+  ${breakpoint('lg').down`
+    font-size: 14px;
+  `}
+
   ${breakpoint('md').down`
     font-size: 12px;
   `}
