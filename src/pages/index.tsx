@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRef, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import { useMedia } from 'react-use';
 
 import { getCurrencyInfo } from 'api';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import { getCoins } from '@/lib/coin';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
-import { CombinedTickers, combineTickers, initSocket } from '@/lib/socket';
+import { CombinedTickers, combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
+import useCoinList from '@/hooks/useCoinList';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
-import { btcCoinListState, krCoinListState, typeState } from 'store/coin';
+import { typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
 
@@ -95,21 +95,11 @@ const Home: NextPageWithLayout = () => {
   const timeRef = useRef<NodeJS.Timeout | null>(null);
 
   const coinType = useRecoilValue(typeState);
-  const [krwCoinData, setKrwCoinList] = useRecoilState(krCoinListState);
-  const [btcCoinData, setBtcCoinList] = useRecoilState(btcCoinListState);
   const exchangeData = useRecoilValue(exchangeSelector);
   const setExchangeState = useSetRecoilState(exchangeState);
 
+  const { krwCoinData, btcCoinData } = useCoinList();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
-
-  const fetchCoins = (type: 'KRW' | 'BTC') => async () => {
-    try {
-      const data = await getCoins(type);
-      return data ?? [];
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const getTickers = async () => {
     try {
@@ -151,37 +141,6 @@ const Home: NextPageWithLayout = () => {
 
     selectedType.current = type;
   };
-
-  useEffect(() => {
-    if (isMounted) {
-      (async () => {
-        const [krwCoins, btcCoins] = await Promise.allSettled([
-          fetchCoins('KRW')(),
-          fetchCoins('BTC')(),
-        ]);
-
-        if (krwCoins.status === 'fulfilled' && krwCoins.value) {
-          setKrwCoinList({
-            isLoading: false,
-            data: krwCoins.value,
-          });
-        }
-
-        if (btcCoins.status === 'fulfilled' && btcCoins.value) {
-          setBtcCoinList({ isLoading: false, data: btcCoins.value });
-        }
-
-        if (
-          krwCoins.status === 'fulfilled' &&
-          krwCoins.value &&
-          btcCoins.status === 'fulfilled' &&
-          btcCoins.value
-        )
-          initSocket([...krwCoins.value, ...btcCoins.value]);
-      })();
-    }
-    setIsMounted(true);
-  }, [isMounted]);
 
   useIsomorphicLayoutEffect(() => {
     if (timeRef.current) {
