@@ -2,16 +2,21 @@ import Image from 'next/future/image';
 import { useRecoilValue } from 'recoil';
 import { useMedia } from 'react-use';
 import styled from '@emotion/styled';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
+import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 
 import { CoinState, typeState } from 'store/coin';
 import { exchangeSelector } from 'store/exchange';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { palette, spacing } from '@/styles/variables';
 import { CombinedTickers } from '@/lib/socket';
-import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { sortColumn } from '@/lib/sort';
 
 import Table from '@/components/Table';
+import Button from '@/components/Button';
 
 type Props = {
   krwCoinData: CoinState;
@@ -45,6 +50,10 @@ const SymbolCell = styled.div`
   img {
     border-radius: 2rem;
   }
+
+  svg {
+    color: #e2be1b;
+  }
 `;
 
 const Warning = styled.div`
@@ -68,6 +77,52 @@ const CoinTable = ({
   const coinType = useRecoilValue(typeState);
   const exchangeData = useRecoilValue(exchangeSelector);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+
+  const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage({
+    key: 'krwfav',
+    defaultValue: [],
+  });
+
+  const { value: btcFavList, updateValue: updateBtcFavList } = useLocalStorage({
+    key: 'btcfav',
+    defaultValue: [],
+  });
+
+  const isFavSymbol = (symbol: string) => {
+    if (coinType === 'KRW') return krwFavList.includes(symbol);
+    return btcFavList.includes(symbol);
+  };
+
+  const toggleFav = (symbol: string) => () => {
+    if (isFavSymbol(symbol)) {
+      handleUnFav(symbol);
+      return;
+    }
+
+    handleFav(symbol);
+  };
+
+  const handleFav = (symbol: string) => {
+    if (coinType === 'KRW') {
+      updateKrwFavList(removeDuplicate([...krwFavList, symbol]));
+      return;
+    }
+
+    updateBtcFavList(removeDuplicate([...btcFavList, symbol]));
+  };
+
+  const handleUnFav = (symbol: string) => {
+    if (coinType === 'KRW') {
+      updateKrwFavList(
+        krwFavList.filter((coinSymbol: string) => symbol !== coinSymbol),
+      );
+      return;
+    }
+
+    updateBtcFavList(
+      btcFavList.filter((coinSymbol: string) => symbol !== coinSymbol),
+    );
+  };
 
   return (
     <Table
@@ -100,56 +155,74 @@ const CoinTable = ({
           <Table.Skeleton />
         ) : (
           <>
-            {coinList
-              .filter((data) => data.symbol !== 'BTC')
-              .map((data: CombinedTickers) => (
-                <Table.Row key={data.symbol}>
-                  <Table.Cell>
-                    <SymbolCell>
-                      <picture>
-                        <img
-                          alt={data.symbol}
-                          src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                          width={isSmDown ? 16 : 20}
-                          height={isSmDown ? 16 : 20}
-                        />
-                      </picture>
-                      {data.symbol}
-                    </SymbolCell>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <UpbitCell>
-                      <p>
-                        {coinType === 'KRW'
-                          ? `${setComma(data.last)}₩`
-                          : data.last}
-                      </p>
-                      {data.upbitWarning && <Warning>투자 유의</Warning>}
-                    </UpbitCell>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <BinanceCell>
-                      <p>{data.blast}</p>
-                      {data.convertedBlast && (
-                        <p>{setComma(data.convertedBlast ?? 0)}₩</p>
-                      )}
-                    </BinanceCell>
-                  </Table.Cell>
-                  <Table.Cell
-                    color={
-                      data.per
-                        ? data.per > 0
-                          ? '#ef5350'
-                          : '#42a5f5'
-                        : '#000000'
-                    }
-                  >
-                    <PercentCell>
-                      <p>{(data?.per ?? 0).toFixed(2)}%</p>
-                    </PercentCell>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+            {[
+              ...coinList.filter(
+                (data) => data.symbol !== 'BTC' && isFavSymbol(data.symbol),
+              ),
+              ...coinList.filter(
+                (data) => data.symbol !== 'BTC' && !isFavSymbol(data.symbol),
+              ),
+            ].map((data: CombinedTickers) => (
+              <Table.Row key={data.symbol}>
+                <Table.Cell>
+                  <SymbolCell>
+                    <picture>
+                      <img
+                        alt={data.symbol}
+                        src={`https://static.upbit.com/logos/${data.symbol}.png`}
+                        width={isSmDown ? 16 : 20}
+                        height={isSmDown ? 16 : 20}
+                      />
+                    </picture>
+                    {data.symbol}
+                    <Button
+                      padding={{
+                        top: '0',
+                        bottom: '0',
+                        left: '0',
+                        right: '0',
+                      }}
+                      onClick={toggleFav(data.symbol)}
+                    >
+                      <FontAwesomeIcon
+                        icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
+                      />
+                    </Button>
+                  </SymbolCell>
+                </Table.Cell>
+                <Table.Cell>
+                  <UpbitCell>
+                    <p>
+                      {coinType === 'KRW'
+                        ? `${setComma(data.last)}₩`
+                        : data.last}
+                    </p>
+                    {data.upbitWarning && <Warning>투자 유의</Warning>}
+                  </UpbitCell>
+                </Table.Cell>
+                <Table.Cell>
+                  <BinanceCell>
+                    <p>{data.blast}</p>
+                    {data.convertedBlast && (
+                      <p>{setComma(data.convertedBlast ?? 0)}₩</p>
+                    )}
+                  </BinanceCell>
+                </Table.Cell>
+                <Table.Cell
+                  color={
+                    data.per
+                      ? data.per > 0
+                        ? palette.red
+                        : palette.blue
+                      : palette.black
+                  }
+                >
+                  <PercentCell>
+                    <p>{setComma(data?.per ?? 0)}%</p>
+                  </PercentCell>
+                </Table.Cell>
+              </Table.Row>
+            ))}
           </>
         )
       }
