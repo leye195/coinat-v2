@@ -19,7 +19,7 @@ export type UpbitCandle = {
 
 export type UpbitCandlesParams = {
   market: string;
-  candleType: string;
+  candleType: 'minutes' | 'days' | 'weeks' | 'months';
   count: number;
   minute: number;
 };
