@@ -4,7 +4,6 @@ import type { ComponentProps } from 'react';
 
 const Container = styled.div`
   ${flex({ alignItems: 'center' })}
-  min-height: 50px;
   border-bottom: 1px solid ${({ theme }) => theme.color.gray};
 
   &:last-child {
@@ -12,7 +11,6 @@ const Container = styled.div`
   }
 
   ${breakpoint('lg').down`
-    min-height: 45px;
     font-size: 14px;
   `}
 
@@ -21,7 +19,6 @@ const Container = styled.div`
   `}
 
   ${breakpoint('sm').down`
-    min-height: 40px;
     font-size: 10px;
   `}
 `;

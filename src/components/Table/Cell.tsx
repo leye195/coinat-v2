@@ -6,7 +6,7 @@ import { spacing } from '@/styles/variables';
 
 const Container = styled.div<{ color?: string }>`
   ${flex({ alignItems: 'center' })};
-  padding: ${spacing.xs};
+  padding: ${spacing.xxs} ${spacing.xs};
   width: 30%;
   height: 100%;
   font-weight: 400;
