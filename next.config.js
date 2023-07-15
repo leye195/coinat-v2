@@ -6,6 +6,12 @@ const nextConfig = {
     emotion: true,
     removeConsole: process.env.NEXT_PUBLIC_ENV === 'production',
   },
+  images: {
+    domains: ['static.upbit.com'],
+    path: '/_next/image',
+    loader: 'default',
+    minimumCacheTTL: 3600,
+  },
   async headers() {
     return [
       {
