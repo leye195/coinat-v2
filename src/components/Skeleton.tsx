@@ -5,6 +5,8 @@ type Props = {
   fadeDuration?: number;
   startColor?: string;
   endColor?: string;
+  children?: React.ReactNode;
+  isLoaded?: boolean;
 } & CSSProperties;
 
 const fade = (startColor?: string, endColor?: string) => keyframes`
@@ -27,12 +29,16 @@ const Skeleton = (props: Props) => {
         backgroundColor: props.backgroundColor ?? 'transparent',
         opacity: props.opacity ?? 0.7,
       }}
-      css={{
-        animation: `${fade(props.startColor, props.endColor)} ${
-          props.fadeDuration ?? 0.8
-        }s infinite alternate`,
-      }}
-    />
+      css={
+        !props.isLoaded && {
+          animation: `${fade(props.startColor, props.endColor)} ${
+            props.fadeDuration ?? 0.8
+          }s infinite alternate`,
+        }
+      }
+    >
+      {props.children}
+    </div>
   );
 };
 
