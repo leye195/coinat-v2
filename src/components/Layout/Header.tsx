@@ -52,7 +52,12 @@ const Header = ({ headerColor }: Props) => {
         <LeftSide>
           <Logo>
             CoinAT
-            <Image src="/assets/coin.svg" alt="coin" width={14} height={14} />
+            <Image
+              src="/assets/icons/coin.svg"
+              alt="coin"
+              width={14}
+              height={14}
+            />
           </Logo>
         </LeftSide>
         <RightSide></RightSide>
