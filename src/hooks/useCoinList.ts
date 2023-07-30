@@ -1,11 +1,12 @@
-import { initSocket } from '@/lib/socket';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { btcCoinListState, krCoinListState } from 'store/coin';
+import useMount from '@/hooks/useMount';
+import { initSocket } from '@/lib/socket';
 import { getCoins } from '@/lib/coin';
 
 const useCoinList = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useMount();
   const [krwCoinData, setKrwCoinList] = useRecoilState(krCoinListState);
   const [btcCoinData, setBtcCoinList] = useRecoilState(btcCoinListState);
 
@@ -46,8 +47,7 @@ const useCoinList = () => {
           initSocket([...krwCoins.value, ...btcCoins.value]);
       })();
     }
-    setIsMounted(true);
-  }, [isMounted]);
+  }, [isMounted, setBtcCoinList, setKrwCoinList]);
 
   return { krwCoinData, btcCoinData };
 };

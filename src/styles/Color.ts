@@ -66,4 +66,6 @@ class Color {
   }
 }
 
-export default (color: string): Color => new Color(color);
+const colorInstance = (color: string): Color => new Color(color);
+
+export default colorInstance;

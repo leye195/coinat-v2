@@ -9,8 +9,7 @@ type Props = {
 };
 
 const Icon = ({ name, width, height, borderRadius = '8px' }: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ref = useRef<any>(null);
+  const ref = useRef<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
