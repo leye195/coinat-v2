@@ -1,3 +1,11 @@
+export type Candle = {
+  date: string;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+};
+
 export type UpbitCandle = {
   market: string;
   candle_date_time_utc: string;
