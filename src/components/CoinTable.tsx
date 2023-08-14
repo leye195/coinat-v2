@@ -2,6 +2,7 @@ import Image from 'next/future/image';
 import { useRecoilValue } from 'recoil';
 import { useMedia } from 'react-use';
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
@@ -74,6 +75,7 @@ const CoinTable = ({
   krwCoinData,
   handleSort,
 }: Props) => {
+  const router = useRouter();
   const coinType = useRecoilValue(typeState);
   const exchangeData = useRecoilValue(exchangeSelector);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
@@ -124,6 +126,10 @@ const CoinTable = ({
     );
   };
 
+  const handleLink = (symbol: string) => () => {
+    router.push(`/chart?symbol=${symbol}`);
+  };
+
   return (
     <Table
       header={
@@ -166,7 +172,7 @@ const CoinTable = ({
               <Table.Row key={data.symbol}>
                 <Table.Cell>
                   <SymbolCell>
-                    <picture>
+                    <picture onClick={handleLink(data.symbol)}>
                       <img
                         alt={data.symbol}
                         src={`https://static.upbit.com/logos/${data.symbol}.png`}
