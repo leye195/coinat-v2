@@ -94,3 +94,12 @@ export const postChat = (message: string) =>
   api.post('chat', {
     message,
   });
+
+// csv
+export const getCSV = () =>
+  axios.get(
+    'https://gist.githubusercontent.com/tompiler/6045b80d2164077faaf96e0304531bba/raw/2bb2d76dc01a55a2c10e6428c10f7c2dada3c661/FTSE.csv',
+    {
+      responseType: 'blob',
+    },
+  );
