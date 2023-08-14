@@ -70,3 +70,21 @@ export const filter = <T>(data: T[], prediticate: (val: T) => boolean) => {
 export const equal = <T>(target: T, val: T) => target === val;
 
 export const removeDuplicate = <T>(data: T[]) => [...new Set(data)];
+
+export const csvToJson = (csv: string) => {
+  const lines = csv.split('\n');
+  const headers = lines[0].split(',');
+
+  const result = lines.slice(1, lines.length - 1).map((line) => {
+    const currentLine = line.split(',');
+    const obj = headers.reduce((prev, current, index) => {
+      return {
+        ...prev,
+        [current.toLowerCase()]: currentLine[index],
+      };
+    }, {});
+    return obj;
+  });
+
+  return result;
+};
