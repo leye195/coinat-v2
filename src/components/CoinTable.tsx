@@ -18,6 +18,7 @@ import { sortColumn } from '@/lib/sort';
 
 import Table from '@/components/Table';
 import Button from '@/components/Button';
+import Accordion from './Accordion';
 
 type Props = {
   krwCoinData: CoinState;
@@ -169,65 +170,72 @@ const CoinTable = ({
                 (data) => data.symbol !== 'BTC' && !isFavSymbol(data.symbol),
               ),
             ].map((data: CombinedTickers) => (
-              <Table.Row key={data.symbol}>
-                <Table.Cell>
-                  <SymbolCell>
-                    <picture onClick={handleLink(data.symbol)}>
-                      <img
-                        alt={data.symbol}
-                        src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                        width={isSmDown ? 16 : 20}
-                        height={isSmDown ? 16 : 20}
-                      />
-                    </picture>
-                    {data.symbol}
-                    <Button
-                      padding={{
-                        top: '0',
-                        bottom: '0',
-                        left: '0',
-                        right: '0',
-                      }}
-                      onClick={toggleFav(data.symbol)}
+              <Accordion
+                key={data.symbol}
+                title={
+                  <Table.Row>
+                    <Table.Cell>
+                      <SymbolCell>
+                        <picture onClick={handleLink(data.symbol)}>
+                          <img
+                            alt={data.symbol}
+                            src={`https://static.upbit.com/logos/${data.symbol}.png`}
+                            width={isSmDown ? 16 : 20}
+                            height={isSmDown ? 16 : 20}
+                          />
+                        </picture>
+                        {data.symbol}
+                        <Button
+                          padding={{
+                            top: '0',
+                            bottom: '0',
+                            left: '0',
+                            right: '0',
+                          }}
+                          onClick={toggleFav(data.symbol)}
+                        >
+                          <FontAwesomeIcon
+                            icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
+                          />
+                        </Button>
+                      </SymbolCell>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <UpbitCell>
+                        <p>
+                          {coinType === 'KRW'
+                            ? `${setComma(data.last)}₩`
+                            : data.last}
+                        </p>
+                        {data.upbitWarning && <Warning>투자 유의</Warning>}
+                      </UpbitCell>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <BinanceCell>
+                        <p>{data.blast}</p>
+                        {data.convertedBlast && (
+                          <p>{setComma(data.convertedBlast ?? 0)}₩</p>
+                        )}
+                      </BinanceCell>
+                    </Table.Cell>
+                    <Table.Cell
+                      color={
+                        data.per
+                          ? data.per > 0
+                            ? palette.red
+                            : palette.blue
+                          : palette.black
+                      }
                     >
-                      <FontAwesomeIcon
-                        icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
-                      />
-                    </Button>
-                  </SymbolCell>
-                </Table.Cell>
-                <Table.Cell>
-                  <UpbitCell>
-                    <p>
-                      {coinType === 'KRW'
-                        ? `${setComma(data.last)}₩`
-                        : data.last}
-                    </p>
-                    {data.upbitWarning && <Warning>투자 유의</Warning>}
-                  </UpbitCell>
-                </Table.Cell>
-                <Table.Cell>
-                  <BinanceCell>
-                    <p>{data.blast}</p>
-                    {data.convertedBlast && (
-                      <p>{setComma(data.convertedBlast ?? 0)}₩</p>
-                    )}
-                  </BinanceCell>
-                </Table.Cell>
-                <Table.Cell
-                  color={
-                    data.per
-                      ? data.per > 0
-                        ? palette.red
-                        : palette.blue
-                      : palette.black
-                  }
-                >
-                  <PercentCell>
-                    <p>{setComma(data?.per ?? 0)}%</p>
-                  </PercentCell>
-                </Table.Cell>
-              </Table.Row>
+                      <PercentCell>
+                        <p>{setComma(data?.per ?? 0)}%</p>
+                      </PercentCell>
+                    </Table.Cell>
+                  </Table.Row>
+                }
+              >
+                <div>test</div>
+              </Accordion>
             ))}
           </>
         )

@@ -1,10 +1,10 @@
-import useMountTransition from '@/hooks/useMountTransition';
-import { classnames } from '@/lib/utils';
 import styled from '@emotion/styled';
 import React, { ComponentProps, useRef } from 'react';
+import useMountTransition from '@/hooks/useMountTransition';
+import { classnames } from '@/lib/utils';
+import { useAccordionContext } from '.';
 
 type Props = {
-  isOpen: boolean;
   children: React.ReactElement;
 } & ComponentProps<'div'>;
 
@@ -20,7 +20,8 @@ const Container = styled.div`
   height: auto;
 `;
 
-const AccordionPanel = ({ isOpen, children, ...props }: Props) => {
+const AccordionPanel = ({ children, ...props }: Props) => {
+  const { isOpen } = useAccordionContext();
   const isTransitioning = useMountTransition(isOpen, 250);
   const ref = useRef<HTMLDivElement>(null);
 
