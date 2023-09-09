@@ -7,10 +7,6 @@ const Container = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.color.gray};
   width: inherit;
 
-  &:last-child {
-    border-bottom: none;
-  }
-
   ${breakpoint('lg').down`
     font-size: 14px;
   `}
