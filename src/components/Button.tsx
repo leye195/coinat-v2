@@ -53,7 +53,10 @@ const Button = ({
       color={color}
       type={type}
       padding={padding}
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick?.();
+      }}
       {...rest}
     >
       {children}
