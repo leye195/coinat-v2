@@ -5,6 +5,7 @@ import type { ComponentProps } from 'react';
 const Container = styled.div`
   ${flex({ alignItems: 'center' })}
   border-bottom: 1px solid ${({ theme }) => theme.color.gray};
+  width: inherit;
 
   &:last-child {
     border-bottom: none;
