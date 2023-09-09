@@ -48,6 +48,7 @@ const ContentsBox = styled.div`
   padding-bottom: 1.25rem;
   width: inherit;
   min-height: 1020px;
+  border-radius: 10px;
   background-color: ${palette.white};
 `;
 

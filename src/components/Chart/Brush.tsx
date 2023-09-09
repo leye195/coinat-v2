@@ -105,6 +105,13 @@ const BrushChart = ({
             initialBrushPosition={initialPosition}
             useWindowMoveEvents
             onChange={handleBrushChange}
+            selectedBoxStyle={{
+              fill: '#5e738f',
+              fillOpacity: 0.25,
+              strokeOpacity: 1,
+              strokeWidth: 1,
+              stroke: '#5364a4b1',
+            }}
             renderBrushHandle={(props) => <BrushHandle {...props} />}
           />
         </AreaChart>
