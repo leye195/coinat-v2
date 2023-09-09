@@ -9,6 +9,7 @@ type Props<T> = {
   width: number;
   height: number;
   data: T[];
+
   hideAxisX?: boolean;
   hideAxisY?: boolean;
   children?: React.ReactNode;
@@ -50,6 +51,7 @@ const BarChart = ({
         range: [yMax, 10],
         domain: [0, Math.max(...data.map(({ volume }) => volume))],
         round: true,
+        nice: true,
       }),
     [data, yMax],
   );
@@ -77,7 +79,11 @@ const BarChart = ({
         {children}
       </Group>
       {!hideAxisY && <AxisRight scale={yScale} left={xMax} top={0} />}
-      {!hideAxisX && <AxisBottom top={yMax + margin.top - 10} scale={xScale} />}
+      {!hideAxisX && (
+        <Group>
+          <AxisBottom top={yMax + margin.top - 10} scale={xScale} />
+        </Group>
+      )}
     </svg>
   );
 };

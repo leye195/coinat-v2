@@ -1,12 +1,15 @@
-import { type BrushHandleRenderProps } from '@visx/brush/lib/BrushHandle';
-import { Group } from '@visx/group';
-import { Bounds } from '@visx/brush/lib/types';
-import { useMemo, useRef } from 'react';
-import { scaleTime, scaleLinear } from '@visx/scale';
+import { useEffect, useMemo, useRef } from 'react';
 import { extent, max } from 'd3';
-import BaseBrush from '@visx/brush/lib/BaseBrush';
-import BarChart from './Bar';
+import { scaleTime, scaleLinear } from '@visx/scale';
+import { Group } from '@visx/group';
+import BaseBrush, {
+  type BaseBrushState,
+  type UpdateBrush,
+} from '@visx/brush/lib/BaseBrush';
 import { Brush } from '@visx/brush';
+import { type Bounds } from '@visx/brush/lib/types';
+import { type BrushHandleRenderProps } from '@visx/brush/lib/BrushHandle';
+import AreaChart from './Area';
 
 type Props<T> = {
   width: number;
@@ -31,8 +34,8 @@ const BrushChart = ({
   },
   handleBrushChange,
 }: Props<any>) => {
-  const xMax = Math.max(width - margin.left - margin.right, 0);
-  const yMax = 100;
+  const xMax = Math.max(width - 40, 0);
+  const yMax = height;
 
   const brushRef = useRef<BaseBrush | null>(null);
   const dateScale = useMemo(
@@ -60,10 +63,35 @@ const BrushChart = ({
     [data, dateScale],
   );
 
+  useEffect(() => {
+    const updater: UpdateBrush = (prevBrush) => {
+      const newExtent = brushRef.current!.getExtent(
+        initialPosition.start,
+        initialPosition.end,
+      );
+
+      const newState: BaseBrushState = {
+        ...prevBrush,
+        start: { y: newExtent.y0, x: newExtent.x0 },
+        end: { y: newExtent.y1, x: newExtent.x1 },
+        extent: newExtent,
+      };
+
+      return newState;
+    };
+    brushRef?.current?.updateBrush(updater);
+  }, [initialPosition]);
+
   return (
-    <svg width={width} height={height}>
+    <svg width={xMax} height={yMax}>
       <Group>
-        <BarChart width={width} height={height} data={data} hideAxisY>
+        <AreaChart
+          width={xMax}
+          height={yMax}
+          xScale={dateScale}
+          yScale={stockScale}
+          data={data}
+        >
           <Brush
             innerRef={brushRef}
             xScale={dateScale}
@@ -79,7 +107,7 @@ const BrushChart = ({
             onChange={handleBrushChange}
             renderBrushHandle={(props) => <BrushHandle {...props} />}
           />
-        </BarChart>
+        </AreaChart>
       </Group>
     </svg>
   );
