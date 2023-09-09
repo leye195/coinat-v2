@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Image from 'next/future/image';
 import { breakpoint, flex } from '@/styles/mixin';
+import Link from 'next/link';
 
 type Props = {
   headerColor?: string;
@@ -19,7 +20,7 @@ const Container = styled.header<{ color?: string }>`
 
 const Nav = styled.nav`
   ${flex({ alignItems: 'center', justifyContents: 'space-between' })};
-  max-width: 1410px;
+  max-width: 1500px;
   width: 100%;
   height: 100%;
   margin: 0 auto;
@@ -50,15 +51,17 @@ const Header = ({ headerColor }: Props) => {
     <Container color={headerColor}>
       <Nav>
         <LeftSide>
-          <Logo>
-            CoinAT
-            <Image
-              src="/assets/icons/coin.svg"
-              alt="coin"
-              width={14}
-              height={14}
-            />
-          </Logo>
+          <Link href="/">
+            <Logo>
+              CoinAT
+              <Image
+                src="/assets/icons/coin.svg"
+                alt="coin"
+                width={14}
+                height={14}
+              />
+            </Logo>
+          </Link>
         </LeftSide>
         <RightSide></RightSide>
       </Nav>
