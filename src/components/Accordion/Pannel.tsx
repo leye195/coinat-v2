@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
 import React, { ComponentProps, useRef } from 'react';
+import styled from '@emotion/styled';
 import useMountTransition from '@/hooks/useMountTransition';
 import { classnames } from '@/lib/utils';
-import { useAccordionContext } from '.';
+import { useAccordionContext } from './Context';
 
 type Props = {
   children: React.ReactElement;

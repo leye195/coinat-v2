@@ -1,16 +1,12 @@
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useState,
-} from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 
 import { flex } from '@/styles/mixin';
 import AccordionButton from '@/components/Accordion/Button';
+import { AccordionContext } from '@/components/Accordion/Context';
 import AccordionPanel from '@/components/Accordion/Pannel';
-import Header from './Header';
+import AccordionWrapper from '@/components/Accordion/Wrapper';
+import AccordionHeader from '@/components/Accordion/Header';
 
 type Props = {
   title: string | JSX.Element | JSX.Element[];
@@ -18,17 +14,8 @@ type Props = {
   defaultIsOpen?: boolean;
   headerIcon?: JSX.Element;
   disabled?: boolean;
+  index?: number;
 };
-
-type AccordionConextType = {
-  isOpen: boolean;
-  setIsOpen?: Dispatch<SetStateAction<boolean>>;
-};
-
-export const AccordionContext = createContext<AccordionConextType>({
-  isOpen: false,
-});
-export const useAccordionContext = () => useContext(AccordionContext);
 
 const HeaderBox = styled.div`
   ${flex({ alignItems: 'center', justifyContents: 'space-between' })};
@@ -47,22 +34,24 @@ const Accordion = ({
   children,
   defaultIsOpen = false,
   disabled = false,
+  index = -1,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(defaultIsOpen);
   const value = {
     isOpen,
+    index,
     setIsOpen,
   };
 
   return (
     <AccordionContext.Provider value={value}>
       <Container>
-        <Header disabled={disabled}>
+        <AccordionHeader disabled={disabled}>
           <HeaderBox>
             {title}
             {!!headerIcon && headerIcon}
           </HeaderBox>
-        </Header>
+        </AccordionHeader>
         <AccordionPanel>{children}</AccordionPanel>
       </Container>
     </AccordionContext.Provider>
@@ -71,5 +60,6 @@ const Accordion = ({
 
 Accordion.Button = AccordionButton;
 Accordion.Panel = AccordionPanel;
+Accordion.Wrapper = AccordionWrapper;
 
 export default Accordion;
