@@ -1,4 +1,5 @@
-import { useAccordionContext } from '.';
+import { useCallback, useEffect } from 'react';
+import { useAccordionGlobalContext, useAccordionContext } from './Context';
 import AccordionButton from './Button';
 
 type Props = {
@@ -7,12 +8,33 @@ type Props = {
 };
 
 const Header = ({ children, disabled = false }: Props) => {
-  const { isOpen, setIsOpen } = useAccordionContext();
+  const { allowMulti, handleItem } = useAccordionGlobalContext();
+  const { index, isOpen, setIsOpen } = useAccordionContext();
+  const { isOpen: isItemOpen, onChange } = handleItem?.(index) ?? {};
+
+  const handleClick = useCallback(
+    (isOpen: boolean) => {
+      if (index == null) return;
+
+      if (allowMulti) {
+        setIsOpen?.(isOpen);
+        return;
+      }
+
+      onChange?.(isOpen);
+    },
+    [index, allowMulti, onChange, setIsOpen],
+  );
+
+  useEffect(() => {
+    if (!allowMulti) setIsOpen?.(!!isItemOpen);
+  }, [allowMulti, isItemOpen, setIsOpen]);
+
   return (
     <AccordionButton
       className="accordion__button"
       disabled={disabled}
-      onClick={() => setIsOpen?.((prev) => !prev)}
+      onClick={() => handleClick(!isOpen)}
       aria-expanded={isOpen ? 'true' : 'false'}
     >
       {children}

@@ -161,7 +161,7 @@ const CoinTable = ({
         exchangeData.isLoading ? (
           <Table.Skeleton />
         ) : (
-          <>
+          <Accordion.Wrapper>
             {[
               ...coinList.filter(
                 (data) => data.symbol !== 'BTC' && isFavSymbol(data.symbol),
@@ -169,9 +169,10 @@ const CoinTable = ({
               ...coinList.filter(
                 (data) => data.symbol !== 'BTC' && !isFavSymbol(data.symbol),
               ),
-            ].map((data: CombinedTickers) => (
+            ].map((data: CombinedTickers, index) => (
               <Accordion
                 key={data.symbol}
+                index={index}
                 title={
                   <Table.Row>
                     <Table.Cell>
@@ -237,7 +238,7 @@ const CoinTable = ({
                 <div>test</div>
               </Accordion>
             ))}
-          </>
+          </Accordion.Wrapper>
         )
       }
     />
