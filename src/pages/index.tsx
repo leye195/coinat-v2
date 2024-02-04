@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import { useMedia } from 'react-use';
+import { RxCollection } from 'rxdb';
 
 import { getCurrencyInfo } from 'api';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
@@ -9,6 +10,7 @@ import { spacing } from '@/styles/variables';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { CombinedTickers, combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
+import { getCollections, convertToJSON } from '@/lib/localDB';
 import useCoinList from '@/hooks/useCoinList';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import { typeState } from 'store/coin';
@@ -83,6 +85,10 @@ const TableBlock = styled.div`
 `;
 
 const Home: NextPageWithLayout = () => {
+  const [collections, setCollections] = useState<{
+    krwCoins: RxCollection;
+    btcCoins: RxCollection;
+  }>();
   const [coinList, setCoinList] = useState<CombinedTickers[]>([]);
   const selectedType = useRef<string | null>(null);
   const sortType = useRef({
@@ -106,6 +112,14 @@ const Home: NextPageWithLayout = () => {
         coinType === 'KRW' ? krwCoinData.data : btcCoinData.data,
         coinType,
       );
+
+      if (coinType === 'KRW') {
+        await collections?.krwCoins?.bulkUpsert([...data]);
+      }
+
+      if (coinType === 'BTC') {
+        await collections?.btcCoins?.bulkUpsert([...data]);
+      }
 
       const { data: currencyData } = await getCurrencyInfo();
 
@@ -140,6 +154,21 @@ const Home: NextPageWithLayout = () => {
 
     selectedType.current = type;
   };
+
+  useIsomorphicLayoutEffect(() => {
+    getCollections().then(async (collections) => {
+      const { krwCoins, btcCoins } = collections;
+
+      const docs = convertToJSON(
+        coinType === 'BTC'
+          ? await btcCoins.find().exec()
+          : await krwCoins.find().exec(),
+      ) as CombinedTickers[];
+      setCoinList(docs);
+
+      setCollections(collections);
+    });
+  }, []);
 
   useIsomorphicLayoutEffect(() => {
     if (timeRef.current) {

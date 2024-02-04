@@ -149,9 +149,7 @@ const CoinTable = ({
         </>
       }
       body={
-        krwCoinData.isLoading ||
-        btcCoinData.isLoading ||
-        exchangeData.isLoading ? (
+        !coinList.length ? (
           <Table.Skeleton />
         ) : (
           <>
