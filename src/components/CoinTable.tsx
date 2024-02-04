@@ -1,4 +1,4 @@
-import Image from 'next/future/image';
+import Image from 'next/image';
 import { useRecoilValue } from 'recoil';
 import { useMedia } from 'react-use';
 import styled from '@emotion/styled';

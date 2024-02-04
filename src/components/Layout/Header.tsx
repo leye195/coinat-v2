@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import { breakpoint, flex } from '@/styles/mixin';
 
 type Props = {
