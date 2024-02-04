@@ -1,16 +1,16 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import { useMedia } from 'react-use';
+import { useQuery } from 'react-query';
 
 import { getCurrencyInfo } from 'api';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
-import { CombinedTickers, combineTickers } from '@/lib/socket';
+import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
 import useCoinList from '@/hooks/useCoinList';
-import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import { typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
@@ -83,7 +83,6 @@ const TableBlock = styled.div`
 `;
 
 const Home: NextPageWithLayout = () => {
-  const [coinList, setCoinList] = useState<CombinedTickers[]>([]);
   const selectedType = useRef<string | null>(null);
   const sortType = useRef({
     symbol: false,
@@ -91,7 +90,6 @@ const Home: NextPageWithLayout = () => {
     blast: false,
     per: false,
   });
-  const timeRef = useRef<NodeJS.Timeout | null>(null);
 
   const coinType = useRecoilValue(typeState);
   const exchangeData = useRecoilValue(exchangeSelector);
@@ -99,6 +97,13 @@ const Home: NextPageWithLayout = () => {
 
   const { krwCoinData, btcCoinData } = useCoinList();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+
+  const { data } = useQuery({
+    queryKey: ['coins', coinType, krwCoinData.data, btcCoinData.data],
+    queryFn: () => getTickers(),
+    refetchInterval: 2000,
+    refetchIntervalInBackground: true,
+  });
 
   const getTickers = async () => {
     try {
@@ -120,13 +125,12 @@ const Home: NextPageWithLayout = () => {
         isLoading: false,
       });
 
-      setCoinList(
-        sort(
-          data,
-          selectedType.current ?? 'symbol',
-          sortType.current[selectedType.current as Sort],
-        ),
+      const result = sort(
+        data,
+        selectedType.current ?? 'symbol',
+        sortType.current[selectedType.current as Sort],
       );
+      return result;
     } catch (err) {
       console.error(err);
     }
@@ -140,17 +144,6 @@ const Home: NextPageWithLayout = () => {
 
     selectedType.current = type;
   };
-
-  useIsomorphicLayoutEffect(() => {
-    if (timeRef.current) {
-      clearInterval(timeRef.current);
-    }
-
-    if (!krwCoinData.isLoading && !btcCoinData.isLoading) {
-      getTickers();
-      timeRef.current = setInterval(getTickers, 2000);
-    }
-  }, [krwCoinData, btcCoinData, coinType]);
 
   return (
     <Container>
@@ -188,12 +181,12 @@ const Home: NextPageWithLayout = () => {
         <TableBlock>
           <Tab tabs={['KRW', 'BTC']} />
           <CountBox>
-            <p>암호화폐 - {coinList.length}개</p>
+            <p>암호화폐 - {data?.length}개</p>
           </CountBox>
           <CoinTable
             krwCoinData={krwCoinData}
             btcCoinData={btcCoinData}
-            coinList={coinList}
+            coinList={data ?? []}
             handleSort={handleSort}
           />
         </TableBlock>
