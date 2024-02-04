@@ -84,7 +84,6 @@ const TableBlock = styled.div`
 
 const Home: NextPageWithLayout = () => {
   const [coinList, setCoinList] = useState<CombinedTickers[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
   const selectedType = useRef<string | null>(null);
   const sortType = useRef({
     symbol: false,
