@@ -1,5 +1,6 @@
 import { Router } from 'next/router';
 import { atom } from 'recoil';
+import { generateUid } from '@/lib/utils';
 import type { Coin } from 'types/Coin';
 
 export type CoinState = {
@@ -13,7 +14,7 @@ export type WatchListState = {
 };
 
 export const typeState = atom({
-  key: 'typeState',
+  key: `typeState/${generateUid()}`,
   default: 'KRW',
   effects: [
     ({ setSelf, resetSelf }) => {
@@ -35,7 +36,7 @@ export const typeState = atom({
 });
 
 export const krCoinListState = atom<CoinState>({
-  key: 'krCoinListState',
+  key: `krCoinListState/${generateUid()}`,
   default: {
     isLoading: true,
     data: [],
@@ -43,7 +44,7 @@ export const krCoinListState = atom<CoinState>({
 });
 
 export const btcCoinListState = atom<CoinState>({
-  key: 'btcCoinListState',
+  key: `btcCoinListState/${generateUid()}`,
   default: {
     isLoading: true,
     data: [],
@@ -51,7 +52,7 @@ export const btcCoinListState = atom<CoinState>({
 });
 
 export const watchListState = atom<WatchListState>({
-  key: 'watchListState',
+  key: `watchListState/${generateUid()}`,
   default: {
     krw: [],
     btc: [],

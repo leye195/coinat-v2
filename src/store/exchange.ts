@@ -1,4 +1,5 @@
 import { atom, selector } from 'recoil';
+import { generateUid } from '@/lib/utils';
 
 type ExchangeState = {
   upbitBit: number;
@@ -8,7 +9,7 @@ type ExchangeState = {
 };
 
 export const exchangeState = atom<ExchangeState>({
-  key: 'exchangeState',
+  key: `exchangeState/${generateUid()}`,
   default: {
     upbitBit: 0,
     binanceBit: 0,
@@ -18,7 +19,7 @@ export const exchangeState = atom<ExchangeState>({
 });
 
 export const exchangeSelector = selector({
-  key: 'exchangeSelector',
+  key: `exchangeSelector/${generateUid()}`,
   get: ({ get }) => {
     const { upbitBit, binanceBit, usdToKrw, isLoading } = get(exchangeState);
     const convertedToKrw = binanceBit * usdToKrw;
