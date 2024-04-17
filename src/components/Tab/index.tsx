@@ -9,7 +9,7 @@ import { flex } from '@/styles/mixin';
 import TabButton from './Button';
 import TabGroup from './Group';
 
-const ActiveBar = styled.div<{ left: string }>`
+export const ActiveBar = styled.div<{ left: string; width: string }>`
   ${flex({ alignItems: 'center', justifyContents: 'center' })};
   position: absolute;
   left: ${({ left }) => left};
@@ -18,7 +18,7 @@ const ActiveBar = styled.div<{ left: string }>`
   background-color: #f8b64c;
   color: white;
   height: 3px;
-  width: 50%;
+  width: ${({ width }) => width};
   z-index: 0;
 `;
 
@@ -59,7 +59,10 @@ const Tab = ({ tabs }: Props) => {
           {tab}
         </TabButton>
       ))}
-      <ActiveBar left={`${(100 / tabs.length) * activeIdx}%`} />
+      <ActiveBar
+        left={`${(100 / tabs.length) * activeIdx}%`}
+        width={`${100 / tabs.length}%`}
+      />
     </TabGroup>
   );
 };

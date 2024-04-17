@@ -1,4 +1,6 @@
 import qs from 'qs';
+import { formatDistanceToNow } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 /**
  * @description 퍼센트 비율을 구하는 함수
@@ -75,4 +77,9 @@ export const generateUid = () => {
   const url = URL.createObjectURL(new Blob());
   const uuid = url.slice(-36);
   return uuid;
+};
+
+export const relativeTime = (datetime: string) => {
+  const targetTime = new Date(datetime);
+  return formatDistanceToNow(targetTime, { addSuffix: true, locale: ko });
 };

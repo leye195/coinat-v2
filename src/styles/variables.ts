@@ -62,4 +62,5 @@ export const palette = {
   blue: '#42a5f5',
   black: '#000000',
   white: '#ffffff',
+  gray: '#999',
 };
