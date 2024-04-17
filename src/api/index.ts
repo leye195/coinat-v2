@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { queryStringify } from '@/lib/utils';
 import type { Coin } from 'types/Coin';
 import type { Currency } from 'types/Currency';
 import {
@@ -38,6 +39,16 @@ export const getBinanceCoins = () =>
   axios.get('https://api.binance.com/api/v3/exchangeInfo');
 
 /**
+ * news api
+ */
+export const getNews = (category?: string) =>
+  axios.get(
+    `https://api-manager.upbit.com/api/v1/coin_news?${queryStringify({
+      category,
+    })}`,
+  );
+
+/**
  * 탐욕 지수 api
  * @returns
  */
@@ -60,7 +71,8 @@ export const getUpbitCandles = ({
 
 /**
  * 두나무 환율 정보
- */
+ * https://crix-api-cdn.upbit.com/v1/forex/recent?codes=FRX.KRWUSD
+ **/
 export const getUpgitRateExchange = () =>
   axios.get(
     'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD',
