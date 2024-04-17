@@ -3,7 +3,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
 import { useMedia } from 'react-use';
 import { useQuery } from 'react-query';
-
 import { getCurrencyInfo } from 'api';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
@@ -14,75 +13,13 @@ import useCoinList from '@/hooks/useCoinList';
 import { typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
 import type { NextPageWithLayout } from 'types/Page';
-
 import Layout from '@/components/Layout';
 import Exchange from '@/components/Exchange';
 import Tab from '@/components/Tab';
 import CoinTable from '@/components/CoinTable';
 import FearGreed from '@/components/FearGreed';
 
-const Container = styled.div`
-  font-weight: 700;
-`;
-
-const ExchangeBlock = styled.section`
-  ${breakpoint('md').down`
-    overflow: auto;
-  `}
-`;
-
-const ExchangeBox = styled.div`
-  ${flex({})};
-  gap: ${spacing.xxs};
-  margin: ${spacing.xs} 0;
-
-  ${breakpoint('md').down`
-    width: 100vw;
-    gap: 0;
-    margin: ${spacing.xxs} 0;
-    border: 1px solid #d0d0d0;
-    background-color: white;
-  `}
-
-  ${breakpoint('sm').down`
-    padding: 0 ${spacing.xxs};
-  `}
-`;
-
-const ContentsBlock = styled.section`
-  ${breakpoint('xl').down`
-    padding-bottom: 20rem;
-  `}
-`;
-
-const CountBox = styled.div`
-  p {
-    margin: 0.5rem;
-  }
-
-  ${breakpoint('md').down`
-    font-size: 12px;
-
-    p {
-      margin: 0.25rem;
-    }
-  `}
-
-  ${breakpoint('sm').down`
-    font-size: 10px;
-  `}
-`;
-
-const TableBlock = styled.div`
-  max-width: 768px;
-  margin: 0 auto;
-
-  ${breakpoint('md').down`
-    margin-top: ${spacing.xxxs};
-  `}
-`;
-
-const Home: NextPageWithLayout = () => {
+const HomePage: NextPageWithLayout = () => {
   const selectedType = useRef<string | null>(null);
   const sortType = useRef({
     symbol: false,
@@ -195,8 +132,69 @@ const Home: NextPageWithLayout = () => {
   );
 };
 
-Home.getLayout = (page) => {
+const Container = styled.div`
+  font-weight: 700;
+`;
+
+const ExchangeBlock = styled.section`
+  ${breakpoint('md').down`
+    overflow: auto;
+  `}
+`;
+
+const ExchangeBox = styled.div`
+  ${flex({})};
+  gap: ${spacing.xxs};
+  margin: ${spacing.xs} 0;
+
+  ${breakpoint('md').down`
+    width: 100vw;
+    gap: 0;
+    margin: ${spacing.xxs} 0;
+    border: 1px solid #d0d0d0;
+    background-color: white;
+  `}
+
+  ${breakpoint('sm').down`
+    padding: 0 ${spacing.xxs};
+  `}
+`;
+
+const ContentsBlock = styled.section`
+  ${breakpoint('xl').down`
+    padding-bottom: 20rem;
+  `}
+`;
+
+const CountBox = styled.div`
+  p {
+    margin: 0.5rem;
+  }
+
+  ${breakpoint('md').down`
+    font-size: 12px;
+
+    p {
+      margin: 0.25rem;
+    }
+  `}
+
+  ${breakpoint('sm').down`
+    font-size: 10px;
+  `}
+`;
+
+const TableBlock = styled.div`
+  max-width: 768px;
+  margin: 0 auto;
+
+  ${breakpoint('md').down`
+    margin-top: ${spacing.xxxs};
+  `}
+`;
+
+HomePage.getLayout = (page) => {
   return <Layout>{page}</Layout>;
 };
 
-export default Home;
+export default HomePage;
