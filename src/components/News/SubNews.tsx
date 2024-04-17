@@ -11,8 +11,17 @@ type SubNewsProps = {
 };
 
 const SubNews = ({ data }: SubNewsProps) => {
+  const onClick = () => {
+    window.open(data.url);
+  };
+
   return (
-    <Container alignItems="center" justifyContent="space-between" gap="6px">
+    <Container
+      alignItems="center"
+      justifyContent="space-between"
+      gap="6px"
+      onClick={onClick}
+    >
       <Title fontSize="12px" fontWeight={800}>
         {data.title}
       </Title>

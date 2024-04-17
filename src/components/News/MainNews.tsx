@@ -10,11 +10,16 @@ type MainNewsProps = {
 };
 
 const MainNews = ({ data }: MainNewsProps) => {
+  const onClick = () => {
+    window.open(data.url);
+  };
+
   return (
     <Flex
       style={{
         flex: 1,
       }}
+      onClick={onClick}
     >
       <Flex flexDirection="column" gap="8px">
         <Title fontSize="14px" fontWeight={800}>
