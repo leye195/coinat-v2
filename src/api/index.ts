@@ -42,8 +42,8 @@ export const getBinanceCoins = () =>
  * news api
  */
 export const getNews = (category?: string) =>
-  axios.get(
-    `https://api-manager.upbit.com/api/v1/coin_news?${queryStringify({
+  api.get(
+    `news?${queryStringify({
       category,
     })}`,
   );
