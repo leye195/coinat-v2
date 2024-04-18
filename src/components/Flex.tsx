@@ -5,7 +5,7 @@ type FlexProps = {
   display?: 'flex' | 'inline-flex';
   alignItems?: CSSProperties['alignItems'];
   justifyContent?: CSSProperties['justifyContent'];
-  gap?: CSSProperties['gap'];
+  gap?: string;
   flexDirection?: CSSProperties['flexDirection'];
   isFull?: boolean;
 };

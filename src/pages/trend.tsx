@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
-import { useId, useState } from 'react';
+import { Suspense, useId, useState } from 'react';
 import { useQuery } from 'react-query';
 import { getNews } from 'api';
 import { NewsResponse } from 'types/News';
 import { NextPageWithLayout } from 'types/Page';
+import { breakpoints } from '@/styles/mixin';
+import { palette } from '@/styles/variables';
 import Layout from '@/components/Layout';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
@@ -11,18 +13,20 @@ import Tab, { ActiveBar } from '@/components/Tab';
 import { Divider } from '@/components/Divider';
 import MainNews from '@/components/News/MainNews';
 import SubNews from '@/components/News/SubNews';
-import { breakpoints } from '@/styles/mixin';
+import MarketCapTable from '@/components/MarketCapTable';
+import TableSkeleton from '@/components/Table/Skeleton';
 
 const tabs = [
   { name: '전체', value: 'all' },
   { name: '일반', value: 'general' },
   { name: '규제', value: 'policy' },
   { name: '테크', value: 'tech' },
+  { name: '칼럼', value: 'column' },
 ];
 
 const TrendPage: NextPageWithLayout = () => {
   const id = useId();
-  const [page, setPage] = useState(1);
+  const [offset] = useState(0);
   const [activeTab, setActiveTab] = useState({
     name: 'all',
     index: 0,
@@ -68,7 +72,7 @@ const TrendPage: NextPageWithLayout = () => {
       </HeaderBox>
       <ContentBox flexDirection="column" gap="12px">
         <MainNewsBox gap="8px">
-          {data?.featured_list.slice(0, 2).map((news) => (
+          {data?.featured_list.slice(offset, offset + 2).map((news) => (
             <MainNews key={news.id} data={news} />
           ))}
         </MainNewsBox>
@@ -81,17 +85,40 @@ const TrendPage: NextPageWithLayout = () => {
           }}
         />
         <SubNewsBox gap="16px">
-          {data?.list.slice(0, 20).map((news) => (
+          {data?.list.slice(offset, offset + 20).map((news) => (
             <SubNews key={news.id} data={news} />
           ))}
         </SubNewsBox>
+      </ContentBox>
+      <ContentBox flexDirection="column">
+        <Flex alignItems="center" gap="4px">
+          <Text fontWeight={800} fontSize="18px">
+            디지털 자산 시총
+          </Text>
+          <Text fontSize="12px" color={palette.gray}>
+            (업비트 기준)
+          </Text>
+        </Flex>
+
+        <Divider
+          type="horizontal"
+          size="1px"
+          style={{
+            width: '100%',
+            marginBlock: '12px',
+          }}
+        />
+        <Suspense fallback={<TableSkeleton />}>
+          <MarketCapTable />
+        </Suspense>
       </ContentBox>
     </Container>
   );
 };
 
 const Container = styled(Flex)`
-  margin-top: 8px;
+  margin: 8px auto 0 auto;
+  max-width: 1024px;
 `;
 
 const HeaderBox = styled(Flex)`
@@ -103,7 +130,7 @@ const HeaderBox = styled(Flex)`
 const ContentBox = styled(Flex)`
   padding: 24px 12px;
   background-color: white;
-  min-height: calc(100vh - 180px);
+  min-height: 500px;
   width: 100%;
 `;
 

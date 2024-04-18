@@ -7,7 +7,6 @@ import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 
 import { CoinState, typeState } from 'store/coin';
-import { exchangeSelector } from 'store/exchange';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { palette, spacing } from '@/styles/variables';
@@ -68,14 +67,8 @@ const Warning = styled.div`
   `}
 `;
 
-const CoinTable = ({
-  btcCoinData,
-  coinList,
-  krwCoinData,
-  handleSort,
-}: Props) => {
+const CoinTable = ({ coinList, handleSort }: Props) => {
   const coinType = useRecoilValue(typeState);
-  const exchangeData = useRecoilValue(exchangeSelector);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
 
   const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage({

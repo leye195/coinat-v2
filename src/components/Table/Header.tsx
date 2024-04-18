@@ -3,7 +3,7 @@ import { spacing } from '@/styles/variables';
 import styled from '@emotion/styled';
 
 type Props = {
-  name: string;
+  name: React.ReactNode;
   width?: string;
   right?: JSX.Element | React.ReactNode;
   onClick?: () => void;

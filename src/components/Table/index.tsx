@@ -21,6 +21,7 @@ const TableContainer = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   border-radius: 0.5rem;
   border: 1px solid ${({ theme }) => theme.color.gray};
+  width: 100%;
 `;
 
 const Table = ({ header, body }: Props) => {

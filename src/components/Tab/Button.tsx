@@ -40,10 +40,10 @@ const TabButton = ({ children, isActive, ...rest }: Props) => {
       <Button
         {...rest}
         padding={{
-          top: '0.75',
-          bottom: '0.75',
-          left: '1',
-          right: '1',
+          top: '0.75rem',
+          bottom: '0.75rem',
+          left: '1rem',
+          right: '1rem',
         }}
       >
         {children}

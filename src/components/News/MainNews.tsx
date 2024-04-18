@@ -15,12 +15,7 @@ const MainNews = ({ data }: MainNewsProps) => {
   };
 
   return (
-    <Flex
-      style={{
-        flex: 1,
-      }}
-      onClick={onClick}
-    >
+    <Container onClick={onClick}>
       <Flex flexDirection="column" gap="8px">
         <Title fontSize="14px" fontWeight={800}>
           {data.title}
@@ -35,7 +30,7 @@ const MainNews = ({ data }: MainNewsProps) => {
           </Text>
         </Flex>
       </Flex>
-    </Flex>
+    </Container>
   );
 };
 
@@ -60,6 +55,15 @@ const Content = styled(Text)`
   word-wrap: break-word;
   word-break: break-all;
   line-height: 20px;
+`;
+
+const Container = styled(Flex)`
+  flex: 1;
+  cursor: pointer;
+
+  &:hover ${Title} {
+    text-decoration: underline;
+  }
 `;
 
 export default MainNews;

@@ -32,8 +32,20 @@ const SubNews = ({ data }: SubNewsProps) => {
   );
 };
 
+const Title = styled(Text)`
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 const Container = styled(Flex)`
   width: 49%;
+  cursor: pointer;
+
+  &:hover ${Title} {
+    text-decoration: underline;
+  }
 
   ${breakpoints.down('lg')} {
     width: 100%;
@@ -43,13 +55,6 @@ const Container = styled(Flex)`
     flex-direction: column;
     align-items: flex-start;
   }
-`;
-
-const Title = styled(Text)`
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `;
 
 export default SubNews;

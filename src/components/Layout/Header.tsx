@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import { breakpoint, flex } from '@/styles/mixin';
+import Link from 'next/link';
+import { Text } from '../Text';
+import { palette } from '@/styles/variables';
 
 type Props = {
   headerColor?: string;
@@ -50,17 +53,25 @@ const Header = ({ headerColor }: Props) => {
     <Container color={headerColor}>
       <Nav>
         <LeftSide>
-          <Logo>
-            CoinAT
-            <Image
-              src="/assets/icons/coin.svg"
-              alt="coin"
-              width={14}
-              height={14}
-            />
-          </Logo>
+          <Link href="/">
+            <Logo>
+              CoinAT
+              <Image
+                src="/assets/icons/coin.svg"
+                alt="coin"
+                width={14}
+                height={14}
+              />
+            </Logo>
+          </Link>
         </LeftSide>
-        <RightSide></RightSide>
+        <RightSide>
+          <Link href="/trend">
+            <Text fontSize="14px" color={palette.white}>
+              코인동향
+            </Text>
+          </Link>
+        </RightSide>
       </Nav>
     </Container>
   );

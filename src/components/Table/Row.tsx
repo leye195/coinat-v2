@@ -23,8 +23,8 @@ const Container = styled.div`
   `}
 `;
 
-const Row = ({ children }: ComponentProps<'div'>) => {
-  return <Container>{children}</Container>;
+const Row = ({ children, style }: ComponentProps<'div'>) => {
+  return <Container style={style}>{children}</Container>;
 };
 
 export default Row;
