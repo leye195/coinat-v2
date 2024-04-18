@@ -15,6 +15,7 @@ import MainNews from '@/components/News/MainNews';
 import SubNews from '@/components/News/SubNews';
 import MarketCapTable from '@/components/MarketCapTable';
 import TableSkeleton from '@/components/Table/Skeleton';
+import NewsSkeleton from '@/components/News/NewsSkeleton';
 
 const tabs = [
   { name: '전체', value: 'all' },
@@ -32,7 +33,7 @@ const TrendPage: NextPageWithLayout = () => {
     index: 0,
   });
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['news', activeTab.name],
     queryFn: ({ queryKey }) =>
       getNews(queryKey[1] === 'all' ? undefined : queryKey[1]),
@@ -70,26 +71,30 @@ const TrendPage: NextPageWithLayout = () => {
           />
         </Tab.Group>
       </HeaderBox>
-      <ContentBox flexDirection="column" gap="12px">
-        <MainNewsBox gap="8px">
-          {data?.featured_list.slice(offset, offset + 2).map((news) => (
-            <MainNews key={news.id} data={news} />
-          ))}
-        </MainNewsBox>
-        <Divider
-          type="horizontal"
-          size="1px"
-          style={{
-            width: '100%',
-            marginBlock: '8px',
-          }}
-        />
-        <SubNewsBox gap="16px">
-          {data?.list.slice(offset, offset + 20).map((news) => (
-            <SubNews key={news.id} data={news} />
-          ))}
-        </SubNewsBox>
-      </ContentBox>
+      {isLoading ? (
+        <NewsSkeleton />
+      ) : (
+        <ContentBox flexDirection="column" gap="12px">
+          <MainNewsBox gap="8px">
+            {data?.featured_list.slice(offset, offset + 2).map((news) => (
+              <MainNews key={news.id} data={news} />
+            ))}
+          </MainNewsBox>
+          <Divider
+            type="horizontal"
+            size="1px"
+            style={{
+              width: '100%',
+              marginBlock: '8px',
+            }}
+          />
+          <SubNewsBox gap="16px">
+            {data?.list.slice(offset, offset + 20).map((news) => (
+              <SubNews key={news.id} data={news} />
+            ))}
+          </SubNewsBox>
+        </ContentBox>
+      )}
       <ContentBox flexDirection="column">
         <Flex alignItems="center" gap="4px">
           <Text fontWeight={800} fontSize="18px">
