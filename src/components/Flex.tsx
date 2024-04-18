@@ -7,6 +7,7 @@ type FlexProps = {
   justifyContent?: CSSProperties['justifyContent'];
   gap?: CSSProperties['gap'];
   flexDirection?: CSSProperties['flexDirection'];
+  isFull?: boolean;
 };
 
 export const Flex = styled.div<FlexProps>`
@@ -15,4 +16,5 @@ export const Flex = styled.div<FlexProps>`
   justify-content: ${({ justifyContent }) => justifyContent ?? 'flex-start'};
   gap: ${({ gap }) => gap ?? 0};
   flex-direction: ${({ flexDirection }) => flexDirection ?? 'row'};
+  width: ${({ isFull }) => (isFull ? '100%' : 'auto')};
 `;
