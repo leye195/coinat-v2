@@ -48,6 +48,9 @@ export const getNews = (category?: string) =>
     })}`,
   );
 
+export const getMarketcap = () =>
+  axios.get('https://crix-api-cdn.upbit.com/v1/crix/marketcap?currency=KRW');
+
 /**
  * 탐욕 지수 api
  * @returns
