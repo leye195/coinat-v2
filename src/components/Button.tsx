@@ -9,6 +9,7 @@ export type ButtonProps = {
   padding?: Spacing;
   border?: string;
   borderRadius?: string;
+  width?: string;
 } & ComponentPropsWithoutRef<'button'>;
 
 const Container = styled.button<{
@@ -17,16 +18,17 @@ const Container = styled.button<{
   padding?: Spacing;
   border: string;
   borderRadius: string;
+  width?: string;
 }>`
   padding: ${({ padding }) =>
-    `${padding?.top ?? `0.5`}rem ${padding?.right ?? '0.5'}rem ${
-      padding?.bottom ?? '0.5'
-    }rem ${padding?.left ?? '0.5'}rem `};
+    `${padding?.top ?? `0.5rem`} ${padding?.right ?? '0.5rem'} ${
+      padding?.bottom ?? '0.5rem'
+    } ${padding?.left ?? '0.5rem'}`};
   background-color: ${({ bgColor }) => bgColor ?? '#ffffff'};
   color: ${({ color }) => color ?? '#000000'};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
-
+  width: ${({ width }) => width ?? 'auto'};
   cursor: pointer;
 
   &:disabled {
@@ -40,6 +42,7 @@ const Button = ({
   bgColor,
   color,
   padding,
+  width,
   border = 'none',
   borderRadius = '0',
   type = 'button',
@@ -53,6 +56,7 @@ const Button = ({
       color={color}
       type={type}
       padding={padding}
+      width={width}
       onClick={onClick}
       {...rest}
     >
