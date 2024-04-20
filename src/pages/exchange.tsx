@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState, useId } from 'react';
 import { useQuery } from 'react-query';
 import { palette } from '@/styles/variables';
 import { setComma } from '@/lib/utils';
@@ -14,12 +14,31 @@ import { Text } from '@/components/Text';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
 import { Divider } from '@/components/Divider';
+import { Spacing } from '@/components/Spacing';
+import ExchangeChart from '@/components/ExchangeChart';
+import Tab, { ActiveBar } from '@/components/Tab';
+
+const tabs = [
+  { name: '1달', value: 'months' },
+  { name: '1주', value: 'weeks' },
+  { name: '1일', value: 'days' },
+  /*{ name: '15분', value: 'minutes' },
+  { name: '5분', value: 'minutes' },
+  { name: '3분', value: 'minutes' },
+  { name: '1분', value: 'minutes' },*/
+];
 
 const ExchangePage: NextPageWithLayout = ({
   isSSRError,
   code,
   coinList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const id = useId();
+  const [activeTab, setActiveTab] = useState({
+    value: 'months',
+    index: 0,
+  });
+
   const navigate = useRouter();
   const { data } = useQuery({
     queryKey: ['exchange', code],
@@ -49,6 +68,13 @@ const ExchangePage: NextPageWithLayout = ({
     };
   }, [data]);
 
+  const onClickTab = (value: string, index: number) => {
+    setActiveTab({
+      value,
+      index,
+    });
+  };
+
   useEffect(() => {
     if (isSSRError) {
       navigate.replace('/');
@@ -60,10 +86,8 @@ const ExchangePage: NextPageWithLayout = ({
     initSocket(coinList);
   }, [coinList]);
 
-  console.log(data);
-
   return (
-    <Container>
+    <Container flexDirection="column">
       <MetaTag title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />
       <HeaderBox flexDirection="column" justifyContent="center">
         <Flex alignItems="center" gap="4px">
@@ -130,6 +154,32 @@ const ExchangePage: NextPageWithLayout = ({
           </Flex>
         </Flex>
       </HeaderBox>
+      <Spacing size="16px" type="vertical" />
+      <ContentBox flexDirection="column" gap="12px">
+        <Flex isFull>
+          <Tab.Group>
+            {tabs.map(({ name, value }, idx) => (
+              <Tab.Button
+                key={`${id}-${name}`}
+                onClick={() => onClickTab(value, idx)}
+              >
+                <Text fontSize="14px">{name}</Text>
+              </Tab.Button>
+            ))}
+            <ActiveBar
+              width={`${100 / tabs.length}%`}
+              left={`${(100 / tabs.length) * activeTab.index}%`}
+            />
+          </Tab.Group>
+        </Flex>
+        {code && data && (
+          <ExchangeChart
+            code={`KRW-${code}`}
+            type={activeTab.value}
+            newData={data}
+          />
+        )}
+      </ContentBox>
     </Container>
   );
 };
@@ -147,6 +197,12 @@ const HeaderBox = styled(Flex)`
   width: 100%;
   padding: 12px;
   background-color: white;
+`;
+
+const ContentBox = styled(Flex)`
+  padding: 24px 12px;
+  background-color: white;
+  width: 100%;
 `;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {

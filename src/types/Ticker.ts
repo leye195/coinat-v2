@@ -20,6 +20,7 @@ export type Ticker = {
     changeRate: number;
     change?: string;
     marketState?: string;
+    volume?: number;
     timestamp?: number;
   };
 };

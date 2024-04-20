@@ -73,6 +73,7 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
     signed_change_price: changePrice,
     signed_change_rate: changeRate,
     market_state: marketState,
+    acc_trade_volume: volume,
     change,
     timestamp,
   } = JSON.parse(enc.decode(arr));
@@ -94,6 +95,8 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
       changeRate,
       change,
       marketState,
+      volume,
+      timestamp,
     };
   }
 
@@ -108,6 +111,7 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
       changeRate,
       change,
       marketState,
+      volume,
       timestamp,
     };
   }
