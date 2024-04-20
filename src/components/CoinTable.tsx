@@ -166,15 +166,11 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       onClick={() =>
                         navigate.push(`/exchange?code=${data.symbol}`)
                       }
+                      style={{
+                        cursor: 'pointer',
+                      }}
                     >
-                      <picture
-                        style={{
-                          cursor: 'pointer',
-                        }}
-                        onClick={() =>
-                          navigate.push(`/exchange?code=${data.symbol}`)
-                        }
-                      >
+                      <picture>
                         <img
                           alt={data.symbol}
                           src={`https://static.upbit.com/logos/${data.symbol}.png`}
