@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState, useId } from 'react';
 import { useQuery } from 'react-query';
 import { palette } from '@/styles/variables';
+import { getCoins } from '@/lib/coin';
 import { setComma } from '@/lib/utils';
 import { getTickers, initSocket } from '@/lib/socket';
 import { Coin } from 'types/Coin';
@@ -213,9 +214,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       throw new Error('code invalid');
     }
 
-    const response = await (
-      await fetch('https://coinat-v2.vercel.app/api/coin-v2')
-    ).json();
+    const response = await getCoins('KRW');
 
     const data = response.find(
       (item: Coin) => item.name === code.toUpperCase(),
