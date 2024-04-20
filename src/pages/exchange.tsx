@@ -18,6 +18,7 @@ import { Divider } from '@/components/Divider';
 import { Spacing } from '@/components/Spacing';
 import ExchangeChart from '@/components/ExchangeChart';
 import Tab, { ActiveBar } from '@/components/Tab';
+import Skeleton from '@/components/Skeleton';
 
 const tabs = [
   { name: '1달', value: 'months' },
@@ -32,7 +33,6 @@ const tabs = [
 const ExchangePage: NextPageWithLayout = ({
   isSSRError,
   code,
-  coinList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const id = useId();
   const [activeTab, setActiveTab] = useState({
@@ -41,7 +41,7 @@ const ExchangePage: NextPageWithLayout = ({
   });
 
   const navigate = useRouter();
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['exchange', code],
     queryFn: getTickers,
     enabled: !isSSRError,
@@ -83,9 +83,19 @@ const ExchangePage: NextPageWithLayout = ({
   }, [isSSRError, code, navigate]);
 
   useEffect(() => {
-    if (!coinList) return;
-    initSocket(coinList);
-  }, [coinList]);
+    const checkCodeValidation = async () => {
+      const response = await getCoins('KRW');
+      const data = response.find((item: Coin) => item.name === code);
+
+      if (!data) {
+        navigate.replace('/');
+        return;
+      }
+      initSocket(response);
+    };
+
+    checkCodeValidation();
+  }, [code, navigate]);
 
   return (
     <Container flexDirection="column">
@@ -122,7 +132,7 @@ const ExchangePage: NextPageWithLayout = ({
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {data?.changePrice})
+              {data?.changePrice ?? 0})
             </Text>
           </Flex>
           <Flex
@@ -134,9 +144,13 @@ const ExchangePage: NextPageWithLayout = ({
           >
             <Flex alignItems="center" justifyContent="space-between">
               <Text fontSize="12px">고가</Text>
-              <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                {data?.highPrice}
-              </Text>
+              {data?.highPrice ? (
+                <Text fontSize="12px" fontWeight={800} color={palette.red}>
+                  {data?.highPrice}
+                </Text>
+              ) : (
+                <Skeleton height={12} width={32} />
+              )}
             </Flex>
             <Divider
               type="horizontal"
@@ -148,9 +162,13 @@ const ExchangePage: NextPageWithLayout = ({
             />
             <Flex alignItems="center" justifyContent="space-between">
               <Text fontSize="12px">저가</Text>
-              <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                {data?.lowPrice}
-              </Text>
+              {data?.lowPrice ? (
+                <Text fontSize="12px" fontWeight={800} color={palette.blue}>
+                  {data?.lowPrice}
+                </Text>
+              ) : (
+                <Skeleton height={12} width={32} />
+              )}
             </Flex>
           </Flex>
         </Flex>
@@ -173,12 +191,15 @@ const ExchangePage: NextPageWithLayout = ({
             />
           </Tab.Group>
         </Flex>
-        {code && data && (
+
+        {code && data ? (
           <ExchangeChart
             code={`KRW-${code}`}
             type={activeTab.value}
             newData={data}
           />
+        ) : (
+          <Skeleton width="100%" height={500} borderRadius={12} />
         )}
       </ContentBox>
     </Container>
@@ -214,20 +235,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       throw new Error('code invalid');
     }
 
-    const response = await getCoins('KRW');
-
-    const data = response.find(
-      (item: Coin) => item.name === code.toUpperCase(),
-    );
-
-    if (!data) {
-      throw new Error('code invalid');
-    }
-
     return {
       props: {
-        code: data.name,
-        coinList: response,
+        code: code.toUpperCase(),
         isSSRError: false,
       },
     };
@@ -235,7 +245,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
       props: {
         code,
-        coinList: [],
         isSSRError: true,
       },
     };
