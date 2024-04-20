@@ -21,7 +21,7 @@ export type UpbitCandlesParams = {
   market: string;
   candleType: 'minutes' | 'days' | 'weeks' | 'months';
   count: number;
-  minute: number;
+  minute?: number;
 };
 
 /*
@@ -46,4 +46,12 @@ export type UpbitCandlesParams = {
 export type BinanceCandlesParams = {
   symbol: string;
   interval: string;
+};
+
+export type ChartData = {
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  timestamp: number;
 };
