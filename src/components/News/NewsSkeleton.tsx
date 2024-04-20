@@ -148,6 +148,7 @@ const MainNewsBox = styled(Flex)`
 
 const SubNewsBox = styled(Flex)`
   flex-wrap: wrap;
+  width: 100%;
 `;
 
 export default NewsSkeleton;
