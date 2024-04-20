@@ -214,7 +214,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     }
 
     const response = await (
-      await fetch('http://localhost:3000/api/coin-v2')
+      await fetch('https://coinat-v2.vercel.app/api/coin-v2')
     ).json();
 
     const data = response.find(
