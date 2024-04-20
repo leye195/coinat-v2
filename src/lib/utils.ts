@@ -83,3 +83,6 @@ export const relativeTime = (datetime: string) => {
   const targetTime = new Date(datetime);
   return formatDistanceToNow(targetTime, { addSuffix: true, locale: ko });
 };
+
+export const reCalculateTimeStamp = (timestamp: number) =>
+  Math.floor(timestamp / 24 / 60 / 60 / 1000) * 24 * 60 * 60 * 1000;

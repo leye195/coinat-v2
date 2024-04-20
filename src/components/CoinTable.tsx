@@ -1,11 +1,11 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useRecoilValue } from 'recoil';
 import { useMedia } from 'react-use';
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
-
 import { CoinState, typeState } from 'store/coin';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
@@ -13,9 +13,11 @@ import { palette, spacing } from '@/styles/variables';
 import { CombinedTickers } from '@/lib/socket';
 import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { sortColumn } from '@/lib/sort';
-
 import Table from '@/components/Table';
 import Button from '@/components/Button';
+import { Flex } from '@/components/Flex';
+import { Text } from '@/components/Text';
+import { Spacing } from '@/components/Spacing';
 
 type Props = {
   krwCoinData: CoinState;
@@ -70,6 +72,7 @@ const Warning = styled.div`
 const CoinTable = ({ coinList, handleSort }: Props) => {
   const coinType = useRecoilValue(typeState);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+  const navigate = useRouter();
 
   const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage({
     key: 'krwfav',
@@ -157,15 +160,27 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
               <Table.Row key={data.symbol}>
                 <Table.Cell>
                   <SymbolCell>
-                    <picture>
-                      <img
-                        alt={data.symbol}
-                        src={`https://static.upbit.com/logos/${data.symbol}.png`}
-                        width={isSmDown ? 16 : 20}
-                        height={isSmDown ? 16 : 20}
-                      />
-                    </picture>
-                    {data.symbol}
+                    <Flex
+                      alignItems="center"
+                      gap="4px"
+                      onClick={() =>
+                        navigate.push(`/exchange?code=${data.symbol}`)
+                      }
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <picture>
+                        <img
+                          alt={data.symbol}
+                          src={`https://static.upbit.com/logos/${data.symbol}.png`}
+                          width={isSmDown ? 16 : 20}
+                          height={isSmDown ? 16 : 20}
+                        />
+                      </picture>
+                      <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
+                    </Flex>
+                    <Spacing size="4px" />
                     <Button
                       padding={{
                         top: '0',

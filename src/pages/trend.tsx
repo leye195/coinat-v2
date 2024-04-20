@@ -104,7 +104,6 @@ const TrendPage: NextPageWithLayout = () => {
             (업비트 기준)
           </Text>
         </Flex>
-
         <Divider
           type="horizontal"
           size="1px"
