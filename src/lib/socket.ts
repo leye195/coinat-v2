@@ -74,6 +74,7 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
     signed_change_rate: changeRate,
     market_state: marketState,
     change,
+    timestamp,
   } = JSON.parse(enc.decode(arr));
 
   const symbol = code.slice(code.indexOf('-') + 1, code.length);
@@ -107,6 +108,7 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
       changeRate,
       change,
       marketState,
+      timestamp,
     };
   }
 };
