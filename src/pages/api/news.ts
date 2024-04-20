@@ -6,14 +6,6 @@ const app = createHandler();
 app.get(async (req, res) => {
   try {
     const { category = undefined } = req.query;
-    console.log(
-      category,
-      ';:',
-      queryStringify({
-        category,
-      }),
-    );
-
     const response = await (
       await fetch(
         `https://api-manager.upbit.com/api/v1/coin_news?${queryStringify({
