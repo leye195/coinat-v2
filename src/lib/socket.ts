@@ -20,7 +20,7 @@ export type CombinedTickers = {
 type OpenCallback = (socket: WebSocket) => void;
 type MessageCallback = (e: MessageEvent<any>) => void;
 
-const tickers: Exchange = {
+export const tickers: Exchange = {
   upbit: {
     krw: {},
     btc: {},
@@ -72,6 +72,8 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
     market_warning: marketWarning,
     signed_change_price: changePrice,
     signed_change_rate: changeRate,
+    market_state: marketState,
+    change,
   } = JSON.parse(enc.decode(arr));
 
   const symbol = code.slice(code.indexOf('-') + 1, code.length);
@@ -89,6 +91,8 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
       marketWarning,
       changePrice,
       changeRate,
+      change,
+      marketState,
     };
   }
 
@@ -101,6 +105,8 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
       marketWarning,
       changePrice,
       changeRate,
+      change,
+      marketState,
     };
   }
 };
@@ -193,6 +199,10 @@ export const initSocket = (coinList: Coin[]) => {
 
   // binance
   connectBinanceSocket(coinList);
+};
+
+export const getTickers = () => {
+  return tickers;
 };
 
 export const combineTickers = (coinList: Coin[], type?: string) => {

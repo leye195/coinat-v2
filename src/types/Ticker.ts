@@ -18,5 +18,7 @@ export type Ticker = {
     marketWarning: string;
     changePrice: number;
     changeRate: number;
+    change?: string;
+    marketState?: string;
   };
 };
