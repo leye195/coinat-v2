@@ -4,9 +4,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState, useId } from 'react';
 import { useQuery } from 'react-query';
+import { useMedia } from 'react-use';
 import { palette } from '@/styles/variables';
+import { breakpoints } from '@/styles/mixin';
 import { getCoins } from '@/lib/coin';
-import { setComma } from '@/lib/utils';
+import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { getTickers, initSocket } from '@/lib/socket';
 import { Coin } from 'types/Coin';
 import { NextPageWithLayout } from 'types/Page';
@@ -24,10 +26,6 @@ const tabs = [
   { name: '1달', value: 'months' },
   { name: '1주', value: 'weeks' },
   { name: '1일', value: 'days' },
-  /*{ name: '15분', value: 'minutes' },
-  { name: '5분', value: 'minutes' },
-  { name: '3분', value: 'minutes' },
-  { name: '1분', value: 'minutes' },*/
 ];
 
 const ExchangePage: NextPageWithLayout = ({
@@ -40,8 +38,9 @@ const ExchangePage: NextPageWithLayout = ({
     index: 0,
   });
 
+  const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const navigate = useRouter();
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['exchange', code],
     queryFn: getTickers,
     enabled: !isSSRError,
@@ -122,17 +121,23 @@ const ExchangePage: NextPageWithLayout = ({
           }}
         />
         <Flex alignItems="center" justifyContent="space-between" isFull>
-          <Flex alignItems="flex-end" gap="2px">
-            <Text fontSize="24px" fontWeight={800} color={status.color}>
-              {data?.tradePrice ?? 0}
-            </Text>
-            <Text fontSize="12px" color={status.color}>
-              KRW
-            </Text>
+          <Flex
+            flexDirection={isSmDown ? 'column' : 'row'}
+            alignItems={isSmDown ? 'flex-start' : 'flex-end'}
+            gap={isSmDown ? '8px' : '2px'}
+          >
+            <Flex alignItems="flex-end" gap="2px">
+              <Text fontSize="24px" fontWeight={800} color={status.color}>
+                {setComma(data?.tradePrice ?? 0)}
+              </Text>
+              <Text fontSize="12px" color={status.color}>
+                KRW
+              </Text>
+            </Flex>
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {data?.changePrice ?? 0})
+              {setComma(data?.changePrice ?? 0)})
             </Text>
           </Flex>
           <Flex
@@ -146,7 +151,7 @@ const ExchangePage: NextPageWithLayout = ({
               <Text fontSize="12px">고가</Text>
               {data?.highPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                  {data?.highPrice}
+                  {setComma(data.highPrice)}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -164,7 +169,7 @@ const ExchangePage: NextPageWithLayout = ({
               <Text fontSize="12px">저가</Text>
               {data?.lowPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                  {data?.lowPrice}
+                  {setComma(data.lowPrice)}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
