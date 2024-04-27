@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { btcCoinListState, krCoinListState } from 'store/coin';
 import useMount from '@/hooks/useMount';
-import { initSocket } from '@/lib/socket';
 import { getCoins } from '@/lib/coin';
+import { initSocket } from '@/lib/socket';
+import { btcCoinListState, krCoinListState } from 'store/coin';
 
 const useCoinList = () => {
   const isMounted = useMount();

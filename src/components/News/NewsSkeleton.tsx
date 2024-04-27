@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { breakpoints } from '@/styles/mixin';
 import { Divider } from '@/components/Divider';
+import { breakpoints } from '@/styles/mixin';
 import { Flex } from '../Flex';
 import Skeleton from '../Skeleton';
 

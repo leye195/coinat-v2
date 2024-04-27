@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import Skeleton from '@/components/Skeleton';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import Skeleton from '@/components/Skeleton';
 
 type Props = {
   title: string;

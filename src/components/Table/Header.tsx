@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import styled from '@emotion/styled';
 
 type Props = {
   name: React.ReactNode;

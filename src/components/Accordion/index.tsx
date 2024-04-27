@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
-
-import { flex } from '@/styles/mixin';
+import { useState } from 'react';
 
 import AccordionButton from '@/components/Accordion/Button';
 import AccordionPanel from '@/components/Accordion/Pannel';
+import { flex } from '@/styles/mixin';
 
 type Props = {
   title: string | JSX.Element | JSX.Element[];

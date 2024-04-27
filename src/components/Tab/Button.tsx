@@ -1,5 +1,5 @@
-import { breakpoint, flex } from '@/styles/mixin';
 import styled from '@emotion/styled';
+import { breakpoint, flex } from '@/styles/mixin';
 import Button, { ButtonProps } from '../Button';
 
 type Props = {

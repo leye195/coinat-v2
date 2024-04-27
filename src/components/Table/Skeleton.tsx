@@ -1,5 +1,5 @@
-import { spacing } from '@/styles/variables';
 import styled from '@emotion/styled';
+import { spacing } from '@/styles/variables';
 import Skeleton from '../Skeleton';
 
 const Container = styled.div`

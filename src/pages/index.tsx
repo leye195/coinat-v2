@@ -1,23 +1,23 @@
-import { useRef } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from '@emotion/styled';
-import { useMedia } from 'react-use';
+import { useRef } from 'react';
 import { useQuery } from 'react-query';
-import { getCurrencyInfo } from 'api';
-import { breakpoint, breakpoints, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
-import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { useMedia } from 'react-use';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import CoinTable from '@/components/CoinTable';
+import Exchange from '@/components/Exchange';
+import FearGreed from '@/components/FearGreed';
+import Layout from '@/components/Layout';
+import Tab from '@/components/Tab';
+import useCoinList from '@/hooks/useCoinList';
 import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
-import useCoinList from '@/hooks/useCoinList';
+import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { breakpoint, breakpoints, flex } from '@/styles/mixin';
+import { spacing } from '@/styles/variables';
+import type { NextPageWithLayout } from '@/types/Page';
+import { getCurrencyInfo } from 'api';
 import { typeState } from 'store/coin';
 import { exchangeSelector, exchangeState } from 'store/exchange';
-import type { NextPageWithLayout } from 'types/Page';
-import Layout from '@/components/Layout';
-import Exchange from '@/components/Exchange';
-import Tab from '@/components/Tab';
-import CoinTable from '@/components/CoinTable';
-import FearGreed from '@/components/FearGreed';
 
 const HomePage: NextPageWithLayout = () => {
   const selectedType = useRef<string | null>(null);

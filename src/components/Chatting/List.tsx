@@ -1,6 +1,5 @@
-import { ComponentProps } from 'react';
 import styled from '@emotion/styled';
-
+import { ComponentProps } from 'react';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 

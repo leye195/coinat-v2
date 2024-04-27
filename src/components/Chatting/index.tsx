@@ -1,22 +1,20 @@
-import { spacing } from '@/styles/variables';
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronDown,
   faPaperPlane,
   faCommentDots,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-
-import { postChat } from 'api';
-import { breakpoint, flex } from '@/styles/mixin';
-import { chatSocketState } from 'store/socket';
-
+import { useRecoilValue } from 'recoil';
 import Button from '@/components/Button';
 import Form from '@/components/Form';
 import Input from '@/components/Input';
+import { breakpoint, flex } from '@/styles/mixin';
+import { spacing } from '@/styles/variables';
+import { postChat } from 'api';
+import { chatSocketState } from 'store/socket';
 import Item from './Item';
 import List from './List';
 

@@ -1,6 +1,6 @@
-import qs from 'qs';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import qs from 'qs';
 
 /**
  * @description 퍼센트 비율을 구하는 함수

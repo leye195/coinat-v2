@@ -5,22 +5,22 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState, useId } from 'react';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
-import { palette } from '@/styles/variables';
-import { breakpoints } from '@/styles/mixin';
-import { getCoins } from '@/lib/coin';
-import { getBreakpointQuery, setComma } from '@/lib/utils';
-import { getTickers, initSocket } from '@/lib/socket';
-import { Coin } from 'types/Coin';
-import { NextPageWithLayout } from 'types/Page';
-import MetaTag from '@/components/Metatag';
-import { Text } from '@/components/Text';
+import { Divider } from '@/components/Divider';
+import ExchangeChart from '@/components/ExchangeChart';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
-import { Divider } from '@/components/Divider';
-import { Spacing } from '@/components/Spacing';
-import ExchangeChart from '@/components/ExchangeChart';
-import Tab, { ActiveBar } from '@/components/Tab';
+import MetaTag from '@/components/Metatag';
 import Skeleton from '@/components/Skeleton';
+import { Spacing } from '@/components/Spacing';
+import Tab, { ActiveBar } from '@/components/Tab';
+import { Text } from '@/components/Text';
+import { getCoins } from '@/lib/coin';
+import { getTickers, initSocket } from '@/lib/socket';
+import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { breakpoints } from '@/styles/mixin';
+import { palette } from '@/styles/variables';
+import { Coin } from '@/types/Coin';
+import { NextPageWithLayout } from '@/types/Page';
 
 const tabs = [
   { name: '1달', value: 'months' },

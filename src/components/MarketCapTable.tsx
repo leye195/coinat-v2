@@ -1,16 +1,16 @@
+import styled from '@emotion/styled';
+import Image from 'next/image';
 import { useId, useState } from 'react';
 import { useQuery } from 'react-query';
-import Image from 'next/image';
-import styled from '@emotion/styled';
-import { getMarketcap } from 'api';
-import { MarketCap } from 'types/Marketcap';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
+import { MarketCap } from '@/types/Marketcap';
+import { getMarketcap } from 'api';
+import Button from './Button';
+import { Flex } from './Flex';
 import { Spacing } from './Spacing';
 import Table from './Table';
-import { Flex } from './Flex';
 import { Text } from './Text';
-import Button from './Button';
 
 const MarketCapTable = () => {
   const id = useId();

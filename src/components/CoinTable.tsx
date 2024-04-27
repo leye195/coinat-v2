@@ -1,23 +1,23 @@
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useRecoilValue } from 'recoil';
-import { useMedia } from 'react-use';
 import styled from '@emotion/styled';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
-import { CoinState, typeState } from 'store/coin';
-import useLocalStorage from '@/hooks/useLocalStorage';
-import { breakpoint, breakpoints, flex } from '@/styles/mixin';
-import { palette, spacing } from '@/styles/variables';
-import { CombinedTickers } from '@/lib/socket';
-import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
-import { sortColumn } from '@/lib/sort';
-import Table from '@/components/Table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useMedia } from 'react-use';
+import { useRecoilValue } from 'recoil';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
-import { Text } from '@/components/Text';
 import { Spacing } from '@/components/Spacing';
+import Table from '@/components/Table';
+import { Text } from '@/components/Text';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { CombinedTickers } from '@/lib/socket';
+import { sortColumn } from '@/lib/sort';
+import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
+import { breakpoint, breakpoints, flex } from '@/styles/mixin';
+import { palette, spacing } from '@/styles/variables';
+import { CoinState, typeState } from 'store/coin';
 
 type Props = {
   krwCoinData: CoinState;

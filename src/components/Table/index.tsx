@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { flex } from '@/styles/mixin';
+import Cell from '@/components/Table/Cell';
 import Header from '@/components/Table/Header';
 import Row from '@/components/Table/Row';
-import Cell from '@/components/Table/Cell';
 import Skeleton from '@/components/Table/Skeleton';
+import { flex } from '@/styles/mixin';
 
 type Props = {
   header: JSX.Element | React.ReactElement;

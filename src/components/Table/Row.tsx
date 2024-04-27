@@ -1,6 +1,6 @@
-import { breakpoint, flex } from '@/styles/mixin';
 import styled from '@emotion/styled';
 import type { ComponentProps } from 'react';
+import { breakpoint, flex } from '@/styles/mixin';
 
 const Container = styled.div`
   ${flex({ alignItems: 'center' })}

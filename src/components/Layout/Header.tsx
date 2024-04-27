@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
-import { breakpoint, flex } from '@/styles/mixin';
 import Link from 'next/link';
-import { Text } from '../Text';
+import { breakpoint, flex } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
+import { Text } from '../Text';
 
 type Props = {
   headerColor?: string;

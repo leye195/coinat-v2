@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
-import { globalTheme } from '@/styles/theme';
+import { render, screen } from '@testing-library/react';
 import Exchange from '@/components/Exchange';
+import { globalTheme } from '@/styles/theme';
 
 describe('<Exchange/>', () => {
   it('should render', () => {

@@ -1,9 +1,9 @@
-import { News } from 'types/News';
+import styled from '@emotion/styled';
+import { relativeTime } from '@/lib/utils';
+import { palette } from '@/styles/variables';
+import { News } from '@/types/News';
 import { Flex } from '../Flex';
 import { Text } from '../Text';
-import styled from '@emotion/styled';
-import { palette } from '@/styles/variables';
-import { relativeTime } from '@/lib/utils';
 
 type MainNewsProps = {
   data: News;

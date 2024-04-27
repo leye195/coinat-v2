@@ -1,21 +1,22 @@
 import styled from '@emotion/styled';
 import { Suspense, useId, useState } from 'react';
 import { useQuery } from 'react-query';
-import { getNews } from 'api';
-import { NewsResponse } from 'types/News';
-import { NextPageWithLayout } from 'types/Page';
+import { Divider } from '@/components/Divider';
+import { Flex } from '@/components/Flex';
+import Layout from '@/components/Layout';
+import MarketCapTable from '@/components/MarketCapTable';
+import MainNews from '@/components/News/MainNews';
+import NewsSkeleton from '@/components/News/NewsSkeleton';
+import SubNews from '@/components/News/SubNews';
+import Tab, { ActiveBar } from '@/components/Tab';
+import TableSkeleton from '@/components/Table/Skeleton';
+import { Text } from '@/components/Text';
+import usePrefetch from '@/hooks/usePrefetch';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-import Layout from '@/components/Layout';
-import { Flex } from '@/components/Flex';
-import { Text } from '@/components/Text';
-import Tab, { ActiveBar } from '@/components/Tab';
-import { Divider } from '@/components/Divider';
-import MainNews from '@/components/News/MainNews';
-import SubNews from '@/components/News/SubNews';
-import MarketCapTable from '@/components/MarketCapTable';
-import TableSkeleton from '@/components/Table/Skeleton';
-import NewsSkeleton from '@/components/News/NewsSkeleton';
+import { NewsResponse } from '@/types/News';
+import { NextPageWithLayout } from '@/types/Page';
+import { getMarketcap, getNews } from 'api';
 
 const tabs = [
   { name: '전체', value: 'all' },
@@ -32,7 +33,6 @@ const TrendPage: NextPageWithLayout = () => {
     name: 'all',
     index: 0,
   });
-
   const { data, isLoading } = useQuery({
     queryKey: ['news', activeTab.name],
     queryFn: ({ queryKey }) =>
@@ -41,6 +41,11 @@ const TrendPage: NextPageWithLayout = () => {
       const { data } = response;
       return data.data as NewsResponse;
     },
+  });
+
+  usePrefetch({
+    queryKey: ['marketcap'],
+    queryFn: getMarketcap,
   });
 
   const onClickTab = (name: string, index: number) => {

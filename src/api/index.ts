@@ -1,12 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
 import { queryStringify } from '@/lib/utils';
-import type { Coin } from 'types/Coin';
-import type { Currency } from 'types/Currency';
 import {
   BinanceCandlesParams,
   UpbitCandle,
   UpbitCandlesParams,
-} from 'types/Candle';
+} from '@/types/Candle';
+import type { Coin } from '@/types/Coin';
+import type { Currency } from '@/types/Currency';
 
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;

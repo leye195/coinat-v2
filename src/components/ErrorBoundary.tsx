@@ -1,9 +1,8 @@
-import React from 'react';
 import styled from '@emotion/styled';
-
-import Button from './Button';
-import Color from 'styles/Color';
+import React from 'react';
 import { spacing } from '@/styles/variables';
+import Color from 'styles/Color';
+import Button from './Button';
 
 type Props = {
   children: React.ReactNode;

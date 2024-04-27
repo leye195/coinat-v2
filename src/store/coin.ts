@@ -1,7 +1,7 @@
 import { Router } from 'next/router';
 import { atom } from 'recoil';
 import { generateUid } from '@/lib/utils';
-import type { Coin } from 'types/Coin';
+import type { Coin } from '@/types/Coin';
 
 export type CoinState = {
   isLoading: boolean;

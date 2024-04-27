@@ -3,12 +3,12 @@ import { useState } from 'react';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import { getLocalStorageData, setLocalStorageData } from '@/lib/storage';
 
-type Props = {
+type UseLocalStorageProps = {
   key: string;
   defaultValue?: any;
 };
 
-const useLocalStorage = ({ key, defaultValue }: Props) => {
+const useLocalStorage = ({ key, defaultValue }: UseLocalStorageProps) => {
   const [value, setValue] = useState(defaultValue);
 
   const updateValue = (value: any) => {

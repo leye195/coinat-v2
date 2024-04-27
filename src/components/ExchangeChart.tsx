@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
-import { useMedia } from 'react-use';
 import { Chart, Nullable } from 'klinecharts';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import { getUpbitCandles } from 'api';
-import { CandleType, ChartData } from 'types/Candle';
-import { Ticker } from 'types/Ticker';
-import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
+import { useMedia } from 'react-use';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
+import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
+import { CandleType, ChartData } from '@/types/Candle';
+import { Ticker } from '@/types/Ticker';
+import { getUpbitCandles } from 'api';
 import { Flex } from './Flex';
 
 type ExchangeChartProps = {
