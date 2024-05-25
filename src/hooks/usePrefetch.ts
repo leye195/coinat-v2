@@ -10,10 +10,13 @@ const usePrefetch = ({ queryKey, queryFn }: UsePrefetchProps) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    queryClient.prefetchQuery({
-      queryKey,
-      queryFn,
-    });
+    const prefetch = async () => {
+      await queryClient.prefetchQuery({
+        queryKey,
+        queryFn,
+      });
+    };
+    prefetch();
   }, [queryClient, queryKey, queryFn]);
 };
 

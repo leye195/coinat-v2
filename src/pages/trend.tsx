@@ -11,12 +11,11 @@ import SubNews from '@/components/News/SubNews';
 import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
 import { Text } from '@/components/Text';
-import usePrefetch from '@/hooks/usePrefetch';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import { NewsResponse } from '@/types/News';
 import { NextPageWithLayout } from '@/types/Page';
-import { getMarketcap, getNews } from 'api';
+import { getNews } from 'api';
 
 const tabs = [
   { name: '전체', value: 'all' },
@@ -41,11 +40,6 @@ const TrendPage: NextPageWithLayout = () => {
       const { data } = response;
       return data.data as NewsResponse;
     },
-  });
-
-  usePrefetch({
-    queryKey: ['marketcap'],
-    queryFn: getMarketcap,
   });
 
   const onClickTab = (name: string, index: number) => {

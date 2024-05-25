@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
+import usePrefetch from '@/hooks/usePrefetch';
 import { breakpoint, flex } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
+import { getMarketcap } from 'api';
 import { Text } from '../Text';
 
 type Props = {
@@ -49,6 +51,11 @@ const LeftSide = styled.div``;
 const RightSide = styled.div``;
 
 const Header = ({ headerColor }: Props) => {
+  usePrefetch({
+    queryKey: ['marketcap'],
+    queryFn: getMarketcap,
+  });
+
   return (
     <Container color={headerColor}>
       <Nav>
