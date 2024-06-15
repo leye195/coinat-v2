@@ -69,10 +69,10 @@ const ExchangeChart = ({
     if (newData && chartRef.current && isInitialized) {
       const data = {
         timestamp: reCalculateTimeStamp(newData?.timestamp ?? 0),
-        open: +newData.openPrice,
-        close: +newData.tradePrice,
-        high: +newData.highPrice,
-        low: +newData.lowPrice,
+        open: newData.openPrice,
+        close: newData.tradePrice,
+        high: newData.highPrice,
+        low: newData.lowPrice,
         volume: newData.volume,
       };
 
