@@ -164,7 +164,11 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       alignItems="center"
                       gap="4px"
                       onClick={() =>
-                        navigate.push(`/exchange?code=${data.symbol}`)
+                        navigate.push(
+                          `/exchange?code=${
+                            data.symbol
+                          }&type=${coinType.toUpperCase()}`,
+                        )
                       }
                       style={{
                         cursor: 'pointer',

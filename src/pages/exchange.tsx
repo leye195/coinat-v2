@@ -31,6 +31,7 @@ const tabs = [
 const ExchangePage: NextPageWithLayout = ({
   isSSRError,
   code,
+  type,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const id = useId();
   const [activeTab, setActiveTab] = useState({
@@ -41,16 +42,18 @@ const ExchangePage: NextPageWithLayout = ({
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const navigate = useRouter();
   const { data } = useQuery({
-    queryKey: ['exchange', code],
+    queryKey: ['exchange', code, type],
     queryFn: getTickers,
     enabled: !isSSRError,
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
     select: (response) => {
-      const data = response.upbit.krw[code?.toUpperCase()];
-      return data;
+      const data = response.upbit[type === 'KRW' ? 'krw' : 'btc'];
+      return data[code?.toUpperCase()];
     },
   });
+
+  const priceSymbol = type === 'KRW' ? 'KRW' : 'BTC';
 
   const status = useMemo(() => {
     const color =
@@ -61,10 +64,11 @@ const ExchangePage: NextPageWithLayout = ({
         : palette.black;
 
     const changeRate = (data?.changeRate ?? 0) * 100;
+
     return {
       color,
       changeRate: setComma(changeRate),
-      changeSymbol: changeRate > 0 ? '+' : changeRate < 0 ? '-' : '',
+      changeSymbol: changeRate > 0 ? '+' : '',
     };
   }, [data]);
 
@@ -83,7 +87,7 @@ const ExchangePage: NextPageWithLayout = ({
 
   useEffect(() => {
     const checkCodeValidation = async () => {
-      const response = await getCoins('KRW');
+      const response = await getCoins(type == 'KRW' ? 'KRW' : 'BTC');
       const data = response.find((item: Coin) => item.name === code);
 
       if (!data) {
@@ -94,7 +98,7 @@ const ExchangePage: NextPageWithLayout = ({
     };
 
     checkCodeValidation();
-  }, [code, navigate]);
+  }, [code, type, navigate]);
 
   return (
     <Container flexDirection="column">
@@ -128,16 +132,21 @@ const ExchangePage: NextPageWithLayout = ({
           >
             <Flex alignItems="flex-end" gap="2px">
               <Text fontSize="24px" fontWeight={800} color={status.color}>
-                {setComma(data?.tradePrice ?? 0)}
+                {priceSymbol === 'KRW'
+                  ? setComma(data?.tradePrice ?? 0)
+                  : data?.tradePrice}
               </Text>
               <Text fontSize="12px" color={status.color}>
-                KRW
+                {priceSymbol}
               </Text>
             </Flex>
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {setComma(data?.changePrice ?? 0)})
+              {priceSymbol === 'KRW'
+                ? setComma(data?.changePrice ?? 0)
+                : data?.changePrice.toFixed(8) ?? 0}
+              )
             </Text>
           </Flex>
           <Flex
@@ -151,7 +160,9 @@ const ExchangePage: NextPageWithLayout = ({
               <Text fontSize="12px">고가</Text>
               {data?.highPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                  {setComma(data.highPrice)}
+                  {priceSymbol === 'KRW'
+                    ? setComma(data.highPrice)
+                    : data.highPrice.toFixed(8)}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -169,7 +180,9 @@ const ExchangePage: NextPageWithLayout = ({
               <Text fontSize="12px">저가</Text>
               {data?.lowPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                  {setComma(data.lowPrice)}
+                  {priceSymbol === 'KRW'
+                    ? setComma(data.lowPrice)
+                    : data.lowPrice.toFixed(8)}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -199,9 +212,10 @@ const ExchangePage: NextPageWithLayout = ({
 
         {code && data ? (
           <ExchangeChart
-            code={`KRW-${code}`}
+            code={`${priceSymbol}-${code}`}
             type={activeTab.value}
             newData={data}
+            priceSymbol={priceSymbol}
           />
         ) : (
           <Skeleton width="100%" height={500} borderRadius={12} />
@@ -233,7 +247,7 @@ const ContentBox = styled(Flex)`
 `;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { code = '' } = query;
+  const { code = '', type = 'KRW' } = query;
 
   try {
     if (!code || Array.isArray(code)) {
@@ -243,6 +257,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
       props: {
         code: code.toUpperCase(),
+        type,
         isSSRError: false,
       },
     };
@@ -250,6 +265,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
       props: {
         code,
+        type,
         isSSRError: true,
       },
     };
