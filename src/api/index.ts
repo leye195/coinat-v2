@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { queryStringify } from '@/lib/utils';
-import {
+import type {
   BinanceCandlesParams,
   UpbitCandle,
   UpbitCandlesParams,
