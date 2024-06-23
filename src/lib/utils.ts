@@ -1,6 +1,12 @@
+import { ClassValue, clsx } from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import qs from 'qs';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 /**
  * @description 퍼센트 비율을 구하는 함수
