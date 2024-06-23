@@ -3,11 +3,13 @@ import { useRef } from 'react';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+
 import CoinTable from '@/components/CoinTable';
 import Exchange from '@/components/Exchange';
 import FearGreed from '@/components/FearGreed';
 import Layout from '@/components/Layout';
 import Tab from '@/components/Tab';
+
 import useCoinList from '@/hooks/useCoinList';
 import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';

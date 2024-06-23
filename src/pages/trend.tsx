@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Suspense, useId, useState } from 'react';
 import { useQuery } from 'react-query';
+
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
@@ -11,19 +12,13 @@ import SubNews from '@/components/News/SubNews';
 import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
 import { Text } from '@/components/Text';
+
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { NewsResponse } from '@/types/News';
 import type { NextPageWithLayout } from '@/types/Page';
 import { getNews } from 'api';
-
-const tabs = [
-  { name: '전체', value: 'all' },
-  { name: '일반', value: 'general' },
-  { name: '규제', value: 'policy' },
-  { name: '테크', value: 'tech' },
-  { name: '칼럼', value: 'column' },
-];
+import { newsTabs } from 'data/tab';
 
 const TrendPage: NextPageWithLayout = () => {
   const id = useId();
@@ -56,7 +51,7 @@ const TrendPage: NextPageWithLayout = () => {
           디지털 자산 뉴스
         </Text>
         <Tab.Group>
-          {tabs.map(({ name, value }, idx) => (
+          {newsTabs.map(({ name, value }, idx) => (
             <Tab.Button
               key={`${id}-${name}`}
               onClick={() => onClickTab(value, idx)}
@@ -65,8 +60,8 @@ const TrendPage: NextPageWithLayout = () => {
             </Tab.Button>
           ))}
           <ActiveBar
-            width={`${100 / tabs.length}%`}
-            left={`${(100 / tabs.length) * activeTab.index}%`}
+            width={`${100 / newsTabs.length}%`}
+            left={`${(100 / newsTabs.length) * activeTab.index}%`}
           />
         </Tab.Group>
       </HeaderBox>

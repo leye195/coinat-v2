@@ -8,3 +8,11 @@ export const exchangeTabs = [
   { name: 'Upbit', value: 'upbit' },
   { name: 'Binance', value: 'binance' },
 ];
+
+export const newsTabs = [
+  { name: '전체', value: 'all' },
+  { name: '일반', value: 'general' },
+  { name: '규제', value: 'policy' },
+  { name: '테크', value: 'tech' },
+  { name: '칼럼', value: 'column' },
+];
