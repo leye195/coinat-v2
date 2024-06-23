@@ -5,15 +5,17 @@ import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import useMount from '@/hooks/useMount';
+import { btcKrw } from '@/lib/socket';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType, ChartData } from '@/types/Candle';
 import type { Ticker } from '@/types/Ticker';
-import { getUpbitCandles } from 'api';
+import { getBinanceCandles, getUpbitCandles } from 'api';
 import { Flex } from './Flex';
 
 type ExchangeChartProps = {
+  exchange: string;
   code: string;
   type: string;
   priceSymbol: string;
@@ -25,6 +27,7 @@ const ExchangeChart = ({
   type,
   newData,
   priceSymbol,
+  exchange,
 }: ExchangeChartProps) => {
   const chartRef = useRef<Nullable<Chart>>();
   const [isInitialized, setIsInitialized] = useState(false);
@@ -33,13 +36,14 @@ const ExchangeChart = ({
   const isMounted = useMount();
 
   useQuery({
-    queryKey: ['exchange', code, type],
+    queryKey: ['exchange', `${priceSymbol}-${code}`, type, 'upbit'],
     queryFn: ({ queryKey }) =>
       getUpbitCandles({
         market: queryKey[1],
         candleType: queryKey[2] as CandleType,
         count: 200,
       }),
+    enabled: exchange === 'upbit',
     select: ({ data }) => {
       const parsedData = data.map((item) => ({
         close: item.trade_price,
@@ -58,15 +62,44 @@ const ExchangeChart = ({
     },
   });
 
+  useQuery({
+    queryKey: ['exchange', `${code}BTC`, type, 'binance'],
+    queryFn: ({ queryKey }) =>
+      getBinanceCandles({
+        symbol: queryKey[1],
+        interval: queryKey[2] as CandleType,
+      }),
+    enabled: exchange === 'binance',
+    select: ({ data }) => {
+      const exchangeRate = priceSymbol === 'BTC' ? 1 : btcKrw.upbit;
+      const parsedData = data.map((item: Array<string | number>) => ({
+        close: +item[4] * exchangeRate,
+        high: +item[2] * exchangeRate,
+        low: +item[3] * exchangeRate,
+        open: +item[1] * exchangeRate,
+        timestamp: item[0], //reCalculateTimeStamp(item.timestamp),
+        volume: +item[5],
+      }));
+
+      return parsedData;
+    },
+    onSuccess: (data) => {
+      setIsInitialized(false);
+      setChartData(data);
+    },
+  });
+
   useEffect(() => {
     if (!chartRef.current || !isMounted || !isInitialized) return;
 
     chartRef.current?.setPriceVolumePrecision(priceSymbol === 'KRW' ? 2 : 8, 8);
     chartRef.current?.resize();
-  }, [isSmDown, priceSymbol, isMounted, isInitialized]);
+  }, [isSmDown, priceSymbol, isMounted, isInitialized, exchange]);
 
   useIsomorphicLayoutEffect(() => {
     if (newData && chartRef.current && isInitialized) {
+      console.log(newData);
+
       const data = {
         timestamp: reCalculateTimeStamp(newData?.timestamp ?? 0),
         open: newData.openPrice,

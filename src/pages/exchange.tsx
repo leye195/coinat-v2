@@ -15,17 +15,22 @@ import { Spacing } from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
 import { Text } from '@/components/Text';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
-import { getTickers, initSocket } from '@/lib/socket';
+import { btcKrw, getTickers, initSocket } from '@/lib/socket';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { Coin } from '@/types/Coin';
 import type { NextPageWithLayout } from '@/types/Page';
 
-const tabs = [
+const timeTabs = [
   { name: '1달', value: 'months' },
   { name: '1주', value: 'weeks' },
   { name: '1일', value: 'days' },
+];
+
+const exchangeTabs = [
+  { name: 'Upbit', value: 'upbit' },
+  { name: 'Binance', value: 'binance' },
 ];
 
 const ExchangePage: NextPageWithLayout = ({
@@ -34,8 +39,12 @@ const ExchangePage: NextPageWithLayout = ({
   type,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const id = useId();
-  const [activeTab, setActiveTab] = useState({
+  const [activeTimeTab, setActiveTimeTab] = useState({
     value: 'months',
+    index: 0,
+  });
+  const [activeExchangeTab, setActiveExchangeTab] = useState({
+    value: 'upbit',
     index: 0,
   });
 
@@ -48,12 +57,19 @@ const ExchangePage: NextPageWithLayout = ({
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
     select: (response) => {
-      const data = response.upbit[type === 'KRW' ? 'krw' : 'btc'];
+      const exchange = activeExchangeTab.value as 'upbit' | 'binance';
+      const currency = exchange === 'binance' || type !== 'KRW' ? 'btc' : 'krw';
+
+      const data = response[exchange][currency];
       return data[code?.toUpperCase()];
     },
   });
 
   const priceSymbol = type === 'KRW' ? 'KRW' : 'BTC';
+  const exchangeRate =
+    priceSymbol === 'KRW' && activeExchangeTab.value === 'binance'
+      ? btcKrw.upbit
+      : 1;
 
   const status = useMemo(() => {
     const color =
@@ -63,17 +79,26 @@ const ExchangePage: NextPageWithLayout = ({
         ? palette.red
         : palette.black;
 
-    const changeRate = (data?.changeRate ?? 0) * 100;
+    const changeRate =
+      (data?.changeRate ?? 0) *
+      (activeExchangeTab.value === 'binance' ? 1 : 100);
 
     return {
       color,
       changeRate: setComma(changeRate),
       changeSymbol: changeRate > 0 ? '+' : '',
     };
-  }, [data]);
+  }, [data, activeExchangeTab]);
 
-  const onClickTab = (value: string, index: number) => {
-    setActiveTab({
+  const onClickTimeTab = (value: string, index: number) => {
+    setActiveTimeTab({
+      value,
+      index,
+    });
+  };
+
+  const onClickMarketTab = (value: string, index: number) => {
+    setActiveExchangeTab({
       value,
       index,
     });
@@ -99,6 +124,8 @@ const ExchangePage: NextPageWithLayout = ({
 
     checkCodeValidation();
   }, [code, type, navigate]);
+
+  console.log(data);
 
   return (
     <Container flexDirection="column">
@@ -133,8 +160,8 @@ const ExchangePage: NextPageWithLayout = ({
             <Flex alignItems="flex-end" gap="2px">
               <Text fontSize="24px" fontWeight={800} color={status.color}>
                 {priceSymbol === 'KRW'
-                  ? setComma(data?.tradePrice ?? 0)
-                  : data?.tradePrice}
+                  ? setComma((data?.tradePrice ?? 0) * exchangeRate)
+                  : data?.tradePrice ?? 0}
               </Text>
               <Text fontSize="12px" color={status.color}>
                 {priceSymbol}
@@ -144,8 +171,8 @@ const ExchangePage: NextPageWithLayout = ({
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
               {priceSymbol === 'KRW'
-                ? setComma(data?.changePrice ?? 0)
-                : data?.changePrice.toFixed(8) ?? 0}
+                ? setComma((data?.changePrice ?? 0) * exchangeRate)
+                : data?.changePrice ?? 0}
               )
             </Text>
           </Flex>
@@ -161,8 +188,8 @@ const ExchangePage: NextPageWithLayout = ({
               {data?.highPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
                   {priceSymbol === 'KRW'
-                    ? setComma(data.highPrice)
-                    : data.highPrice.toFixed(8)}
+                    ? setComma(data.highPrice * exchangeRate)
+                    : data.highPrice}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -181,8 +208,8 @@ const ExchangePage: NextPageWithLayout = ({
               {data?.lowPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
                   {priceSymbol === 'KRW'
-                    ? setComma(data.lowPrice)
-                    : data.lowPrice.toFixed(8)}
+                    ? setComma(data.lowPrice * exchangeRate)
+                    : data.lowPrice}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -193,27 +220,42 @@ const ExchangePage: NextPageWithLayout = ({
       </HeaderBox>
       <Spacing size="16px" type="vertical" />
       <ContentBox flexDirection="column" gap="12px">
-        <Flex isFull>
+        <Flex isFull justifyContent="space-between">
           <Tab.Group>
-            {tabs.map(({ name, value }, idx) => (
+            {timeTabs.map(({ name, value }, idx) => (
               <Tab.Button
                 key={`${id}-${name}`}
-                onClick={() => onClickTab(value, idx)}
+                onClick={() => onClickTimeTab(value, idx)}
               >
                 <Text fontSize="14px">{name}</Text>
               </Tab.Button>
             ))}
             <ActiveBar
-              width={`${100 / tabs.length}%`}
-              left={`${(100 / tabs.length) * activeTab.index}%`}
+              width={`${100 / timeTabs.length}%`}
+              left={`${(100 / timeTabs.length) * activeTimeTab.index}%`}
+            />
+          </Tab.Group>
+          <Tab.Group>
+            {exchangeTabs.map(({ name, value }, index) => (
+              <Tab.Button
+                key={`${id}-${name}`}
+                onClick={() => onClickMarketTab(value, index)}
+              >
+                <Text fontSize="14px">{name}</Text>
+              </Tab.Button>
+            ))}
+            <ActiveBar
+              width={`${100 / exchangeTabs.length}%`}
+              left={`${(100 / exchangeTabs.length) * activeExchangeTab.index}%`}
             />
           </Tab.Group>
         </Flex>
 
         {code && data ? (
           <ExchangeChart
-            code={`${priceSymbol}-${code}`}
-            type={activeTab.value}
+            code={code}
+            exchange={activeExchangeTab.value}
+            type={activeTimeTab.value}
             newData={data}
             priceSymbol={priceSymbol}
           />

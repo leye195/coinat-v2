@@ -47,7 +47,7 @@ export type UpbitCandlesParams = {
 
 export type BinanceCandlesParams = {
   symbol: string;
-  interval: string;
+  interval: CandleType;
 };
 
 export type ChartData = {

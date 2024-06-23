@@ -31,7 +31,7 @@ export const tickers: Exchange = {
   },
 };
 
-const btcKrw: Rate = {
+export const btcKrw: Rate = {
   upbit: 0, //krw
   binance: 0, // btc
 };

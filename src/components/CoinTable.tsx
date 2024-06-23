@@ -12,6 +12,7 @@ import { Spacing } from '@/components/Spacing';
 import Table from '@/components/Table';
 import { Text } from '@/components/Text';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
 import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
@@ -177,7 +178,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       <picture>
                         <img
                           alt={data.symbol}
-                          src={`https://static.upbit.com/logos/${data.symbol}.png`}
+                          src={getCoinSymbolImage(data.symbol)}
                           width={isSmDown ? 16 : 20}
                           height={isSmDown ? 16 : 20}
                         />

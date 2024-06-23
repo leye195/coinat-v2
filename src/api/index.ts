@@ -102,8 +102,21 @@ export const getUpgitRateExchange = () =>
  * 1w
  * 1M
  */
-export const getBinanceCandles = ({ symbol, interval }: BinanceCandlesParams) =>
-  binanceApi.get(`/api/v3/uiKlines?symbol=${symbol}&interval=${interval}`);
+export const getBinanceCandles = ({
+  symbol,
+  interval,
+}: BinanceCandlesParams) => {
+  const intervalValue = {
+    minutes: '1s',
+    days: '1d',
+    weeks: '1w',
+    months: '1m',
+  };
+
+  return binanceApi.get(
+    `/api/v3/uiKlines?symbol=${symbol}&interval=${intervalValue[interval]}`,
+  );
+};
 
 export const postChat = (message: string) =>
   api.post('chat', {
