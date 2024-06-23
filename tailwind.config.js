@@ -9,7 +9,14 @@ const config = {
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/ownui-system/dist/**/*.{js,jsx,ts,tsx}',
   ],
-  theme: {},
+  theme: {
+    screens: {
+      sm: '480px',
+      md: '753px',
+      lg: '1024px',
+      xl: '1265px',
+    },
+  },
   plugins: [
     plugin(function ({ addUtilities }) {
       // Add your custom styles here
