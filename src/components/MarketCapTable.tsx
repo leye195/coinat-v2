@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import Image from 'next/image';
 import { useId, useState } from 'react';
 import { useQuery } from 'react-query';
+import { getCoinSymbolImage } from '@/lib/coin';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 import type { MarketCap } from '@/types/Marketcap';
@@ -74,7 +75,7 @@ const MarketCapTable = () => {
                       <IconBox>
                         <Image
                           alt={item.symbol}
-                          src={`https://static.upbit.com/logos/${item.symbol}.png`}
+                          src={getCoinSymbolImage(item.symbol)}
                           width={24}
                           height={24}
                           unoptimized

@@ -3,6 +3,9 @@ import { getBinanceCoins, getUpbitCoins } from 'api';
 
 type Currency = 'KRW' | 'BTC';
 
+export const getCoinSymbolImage = (symbol: string) =>
+  `https://static.upbit.com/logos/${symbol}.png`;
+
 export const getCoins = async (type: Currency) => {
   try {
     // upbit coin data

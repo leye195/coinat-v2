@@ -3,7 +3,6 @@ import type { ComponentPropsWithoutRef } from 'react';
 import type { Spacing } from '@/types/Style';
 
 export type ButtonProps = {
-  onClick?: () => void;
   bgColor?: string;
   color?: string;
   padding?: Spacing;

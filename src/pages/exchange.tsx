@@ -14,7 +14,7 @@ import Skeleton from '@/components/Skeleton';
 import { Spacing } from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
 import { Text } from '@/components/Text';
-import { getCoins } from '@/lib/coin';
+import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { getTickers, initSocket } from '@/lib/socket';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
@@ -107,7 +107,7 @@ const ExchangePage: NextPageWithLayout = ({
         <Flex alignItems="center" gap="4px">
           <Image
             alt={code}
-            src={`https://static.upbit.com/logos/${code}.png`}
+            src={getCoinSymbolImage(code)}
             width={24}
             height={24}
             unoptimized
