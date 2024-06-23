@@ -125,8 +125,6 @@ const ExchangePage: NextPageWithLayout = ({
     checkCodeValidation();
   }, [code, type, navigate]);
 
-  console.log(data);
-
   return (
     <Container flexDirection="column">
       <MetaTag title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />

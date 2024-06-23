@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { Chart, Nullable } from 'klinecharts';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -12,7 +11,6 @@ import { palette } from '@/styles/variables';
 import type { CandleType, ChartData } from '@/types/Candle';
 import type { Ticker } from '@/types/Ticker';
 import { getBinanceCandles, getUpbitCandles } from 'api';
-import { Flex } from './Flex';
 
 type ExchangeChartProps = {
   exchange: string;
@@ -98,8 +96,6 @@ const ExchangeChart = ({
 
   useIsomorphicLayoutEffect(() => {
     if (newData && chartRef.current && isInitialized) {
-      console.log(newData);
-
       const data = {
         timestamp: reCalculateTimeStamp(newData?.timestamp ?? 0),
         open: newData.openPrice,
@@ -165,16 +161,7 @@ const ExchangeChart = ({
     });
   }, [chartData]);
 
-  return <Container id="chart"></Container>;
+  return <div id="chart" className="w-full h-[500px] max-sm:h-[400px]"></div>;
 };
-
-const Container = styled(Flex)`
-  width: 100%;
-  height: 500px;
-
-  ${breakpoints.down('sm')} {
-    height: 400px;
-  }
-`;
 
 export default ExchangeChart;

@@ -1,21 +1,12 @@
-import styled from '@emotion/styled';
 import { ComponentProps } from 'react';
-import { flex } from '@/styles/mixin';
+import { cn } from '@/lib/utils';
 
-const Container = styled.div`
-  ${flex({ alignItems: 'center' })};
-  background-color: white;
-  border: 1px solid #d0d0d0;
-  position: relative;
-
-  * {
-    flex: 1;
-    border: none;
-  }
-`;
-
-const Group = ({ children }: ComponentProps<'div'>) => {
-  return <Container>{children}</Container>;
+const Group = ({ children, className }: ComponentProps<'div'>) => {
+  return (
+    <div className={cn('flex items-center bg-white relative [&_*]:flex-1')}>
+      {children}
+    </div>
+  );
 };
 
 export default Group;
