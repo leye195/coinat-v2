@@ -19,8 +19,8 @@ import { getTickers, initSocket } from '@/lib/socket';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-import { Coin } from '@/types/Coin';
-import { NextPageWithLayout } from '@/types/Page';
+import type { Coin } from '@/types/Coin';
+import type { NextPageWithLayout } from '@/types/Page';
 
 const tabs = [
   { name: '1달', value: 'months' },

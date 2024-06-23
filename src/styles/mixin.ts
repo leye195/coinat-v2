@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { BreakPoints, breakpointsValue, Size } from '@/styles/variables';
-import { Flex } from '@/types/Style';
+import type { Flex } from '@/types/Style';
 
 export const flex = ({
   display = 'flex',

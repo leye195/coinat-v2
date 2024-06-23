@@ -1,4 +1,4 @@
-import { Coin, UpbitCoin } from '@/types/Coin';
+import type { Coin, UpbitCoin } from '@/types/Coin';
 import { getBinanceCoins, getUpbitCoins } from 'api';
 
 type Currency = 'KRW' | 'BTC';

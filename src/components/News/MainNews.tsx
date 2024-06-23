@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { relativeTime } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import { News } from '@/types/News';
+import type { News } from '@/types/News';
 import { Flex } from '../Flex';
 import { Text } from '../Text';
 

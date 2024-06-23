@@ -4,7 +4,7 @@ import { useId, useState } from 'react';
 import { useQuery } from 'react-query';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import { MarketCap } from '@/types/Marketcap';
+import type { MarketCap } from '@/types/Marketcap';
 import { getMarketcap } from 'api';
 import Button from './Button';
 import { Flex } from './Flex';

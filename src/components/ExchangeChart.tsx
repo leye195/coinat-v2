@@ -8,8 +8,8 @@ import useMount from '@/hooks/useMount';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-import { CandleType, ChartData } from '@/types/Candle';
-import { Ticker } from '@/types/Ticker';
+import type { CandleType, ChartData } from '@/types/Candle';
+import type { Ticker } from '@/types/Ticker';
 import { getUpbitCandles } from 'api';
 import { Flex } from './Flex';
 

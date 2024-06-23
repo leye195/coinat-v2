@@ -13,8 +13,8 @@ import TableSkeleton from '@/components/Table/Skeleton';
 import { Text } from '@/components/Text';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-import { NewsResponse } from '@/types/News';
-import { NextPageWithLayout } from '@/types/Page';
+import type { NewsResponse } from '@/types/News';
+import type { NextPageWithLayout } from '@/types/Page';
 import { getNews } from 'api';
 
 const tabs = [

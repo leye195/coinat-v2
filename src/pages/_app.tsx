@@ -5,7 +5,7 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import MetaTag from '@/components/Metatag';
 import { globalTheme } from '@/styles/theme';
-import { NextPageWithLayout } from '@/types/Page';
+import type { NextPageWithLayout } from '@/types/Page';
 
 import '@/styles/globals.css';
 

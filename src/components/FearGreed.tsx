@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import Skeleton from '@/components/Skeleton';
 import { breakpoint } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import { FearGreed } from '@/types/FearGreed';
+import type { FearGreed } from '@/types/FearGreed';
 import { getFearGreedIndex } from 'api';
 import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
 
