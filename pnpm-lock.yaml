@@ -86,7 +86,7 @@ devDependencies:
     specifier: ^8.0.1
     version: 8.1.0(typescript@5.5.2)
   '@testing-library/jest-dom':
-    specifier: ^5.16.5
+    specifier: ^5.17.0
     version: 5.17.0
   '@testing-library/react':
     specifier: ^13.4.0

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Text } from '@/components/Text';
 import usePrefetch from '@/hooks/usePrefetch';
 import { breakpoint, flex } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import { getMarketcap } from 'api';
-import { Text } from '../Text';
 
 type Props = {
   headerColor?: string;
@@ -40,15 +40,7 @@ const Logo = styled.div`
   ${breakpoint('md').down`
     font-size: 1rem;
   `}
-
-  img {
-    position: absolute;
-  }
 `;
-
-const LeftSide = styled.div``;
-
-const RightSide = styled.div``;
 
 const Header = ({ headerColor }: Props) => {
   usePrefetch({
@@ -59,11 +51,12 @@ const Header = ({ headerColor }: Props) => {
   return (
     <Container color={headerColor}>
       <Nav>
-        <LeftSide>
+        <div>
           <Link href="/">
             <Logo>
               CoinAT
               <Image
+                className="absolute translate-x-[5rem] translate-y-[-2rem]"
                 src="/assets/icons/coin.svg"
                 alt="coin"
                 width={14}
@@ -71,14 +64,14 @@ const Header = ({ headerColor }: Props) => {
               />
             </Logo>
           </Link>
-        </LeftSide>
-        <RightSide>
+        </div>
+        <div>
           <Link href="/trend">
             <Text fontSize="14px" color={palette.white}>
               코인동향
             </Text>
           </Link>
-        </RightSide>
+        </div>
       </Nav>
     </Container>
   );
