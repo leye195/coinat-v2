@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+
 import useMount from '@/hooks/useMount';
 import { getCoins } from '@/lib/coin';
 import { initSocket } from '@/lib/socket';

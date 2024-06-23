@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import Color from '@/styles/Color';
 import { spacing } from '@/styles/variables';
-import Color from 'styles/Color';
 import Button from './Button';
 
 type Props = {

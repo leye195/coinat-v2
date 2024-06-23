@@ -6,11 +6,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Spacing } from '@/components/Spacing';
 import Table from '@/components/Table';
 import { Text } from '@/components/Text';
+
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';

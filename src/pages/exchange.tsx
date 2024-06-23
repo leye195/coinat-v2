@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState, useId } from 'react';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
+
 import { Divider } from '@/components/Divider';
 import ExchangeChart from '@/components/ExchangeChart';
 import { Flex } from '@/components/Flex';
@@ -14,6 +15,7 @@ import Skeleton from '@/components/Skeleton';
 import { Spacing } from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
 import { Text } from '@/components/Text';
+
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { btcKrw, getTickers, initSocket } from '@/lib/socket';
 import { getBreakpointQuery, setComma } from '@/lib/utils';
@@ -21,17 +23,7 @@ import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { Coin } from '@/types/Coin';
 import type { NextPageWithLayout } from '@/types/Page';
-
-const timeTabs = [
-  { name: '1달', value: 'months' },
-  { name: '1주', value: 'weeks' },
-  { name: '1일', value: 'days' },
-];
-
-const exchangeTabs = [
-  { name: 'Upbit', value: 'upbit' },
-  { name: 'Binance', value: 'binance' },
-];
+import { exchangeTabs, timeTabs } from 'data/tab';
 
 const ExchangePage: NextPageWithLayout = ({
   isSSRError,

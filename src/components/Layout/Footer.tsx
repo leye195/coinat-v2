@@ -1,21 +1,8 @@
-import styled from '@emotion/styled';
-
-const Container = styled.footer`
-  width: 100%;
-  background-color: #ffffff;
-`;
-
-const FooterContent = styled.div`
-  max-width: 1410px;
-  width: 100%;
-  padding: 0.75rem;
-`;
-
 const Footer = () => {
   return (
-    <Container>
-      <FooterContent>Footer</FooterContent>
-    </Container>
+    <footer className="w-full bg-white">
+      <div className="w-full p-3 max-w-[1410px]">Footer</div>
+    </footer>
   );
 };
 
