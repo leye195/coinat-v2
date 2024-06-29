@@ -1,17 +1,8 @@
-import styled from '@emotion/styled';
-import { spacing } from '@/styles/variables';
-import Skeleton from '../Skeleton';
-
-const Container = styled.div`
-  width: 100%;
-  margin-top: ${spacing.s};
-  padding: ${spacing.xs};
-  background-color: ${({ theme }) => theme.color.white};
-`;
+import Skeleton from '@/components/Skeleton';
 
 const TableSkeleton = () => {
   return (
-    <Container>
+    <div className="w-full mt-3 p-2 bg-white">
       <Skeleton width="100%" height={52} borderRadius="8px" />
       <Skeleton
         width="100%"
@@ -85,7 +76,7 @@ const TableSkeleton = () => {
         borderRadius="8px"
         marginTop="0.5rem"
       />
-    </Container>
+    </div>
   );
 };
 
