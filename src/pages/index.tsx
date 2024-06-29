@@ -40,7 +40,7 @@ const HomePage: NextPageWithLayout = () => {
   const { data } = useQuery({
     queryKey: ['coins', coinType, krwCoinData.data, btcCoinData.data],
     queryFn: () => getTickers(),
-    refetchInterval: 2000,
+    refetchInterval: 3000,
     refetchIntervalInBackground: true,
   });
 
@@ -85,7 +85,7 @@ const HomePage: NextPageWithLayout = () => {
   };
 
   return (
-    <Container>
+    <div className="font-bold">
       <FearGreed />
       <ExchangeBlock>
         <ExchangeBox>
@@ -130,13 +130,9 @@ const HomePage: NextPageWithLayout = () => {
           />
         </TableBlock>
       </ContentsBlock>
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  font-weight: 700;
-`;
 
 const ExchangeBlock = styled.section`
   ${breakpoint('md').down`
@@ -163,8 +159,10 @@ const ExchangeBox = styled.div`
 `;
 
 const ContentsBlock = styled.section`
+  padding-bottom: 2rem;
+
   ${breakpoint('xl').down`
-    padding-bottom: 20rem;
+    padding-bottom: 5.25rem;
   `}
 `;
 
