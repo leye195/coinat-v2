@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { useQuery } from 'react-query';
 
+import { getFearGreedIndex } from '@/api';
 import Skeleton from '@/components/Skeleton';
 import { breakpoint } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 import type { FearGreed } from '@/types/FearGreed';
-import { getFearGreedIndex } from 'api';
 import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
 
 const FearGreedBlock = styled.section`

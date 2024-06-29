@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getMarketcap } from '@/api';
 import { Text } from '@/components/Text';
 import usePrefetch from '@/hooks/usePrefetch';
 import { breakpoint, flex } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-import { getMarketcap } from 'api';
 
 type Props = {
   headerColor?: string;

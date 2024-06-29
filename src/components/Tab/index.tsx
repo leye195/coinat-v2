@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import { typeState } from '@/store/coin';
 import { flex } from '@/styles/mixin';
-import { typeState } from 'store/coin';
 
 import TabButton from './Button';
 import TabGroup from './Group';

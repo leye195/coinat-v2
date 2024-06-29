@@ -54,7 +54,7 @@
             "position": "after"
           },
           {
-            "pattern": "@libs",
+            "pattern": "@/",
             "group": "internal",
             "position": "after"
           },

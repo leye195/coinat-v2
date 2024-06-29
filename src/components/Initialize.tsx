@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import SocketIOClient from 'socket.io-client';
 
-import { chatSocketState } from 'store/socket';
+import { chatSocketState } from '@/store/socket';
 
 const Initialize = () => {
   const setSocket = useSetRecoilState(chatSocketState);

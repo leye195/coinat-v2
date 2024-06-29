@@ -8,13 +8,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
+import { postChat } from '@/api';
 import Button from '@/components/Button';
 import Form from '@/components/Form';
 import Input from '@/components/Input';
+import { chatSocketState } from '@/store/socket';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
-import { postChat } from 'api';
-import { chatSocketState } from 'store/socket';
 import Item from './Item';
 import List from './List';
 

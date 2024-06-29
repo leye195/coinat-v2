@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import useMount from '@/hooks/useMount';
 import { getCoins } from '@/lib/coin';
 import { initSocket } from '@/lib/socket';
-import { btcCoinListState, krCoinListState } from 'store/coin';
+import { btcCoinListState, krCoinListState } from '@/store/coin';
 
 const useCoinList = () => {
   const isMounted = useMount();

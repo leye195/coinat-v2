@@ -22,7 +22,9 @@
       "@/server/*": ["./server/*"],
       "@/hooks/*": ["./hooks/*"],
       "@/lib/*": ["./lib/*"],
-      "@/types/*": ["./types/*"]
+      "@/types/*": ["./types/*"],
+      "@/store/*": ["./store/*"],
+      "@/api": ["./api"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "postcss.config.js"],

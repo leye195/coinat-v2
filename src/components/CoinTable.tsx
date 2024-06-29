@@ -18,9 +18,9 @@ import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
 import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
+import { CoinState, typeState } from '@/store/coin';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { palette, spacing } from '@/styles/variables';
-import { CoinState, typeState } from 'store/coin';
 
 type Props = {
   krwCoinData: CoinState;

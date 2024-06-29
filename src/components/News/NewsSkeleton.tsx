@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Divider } from '@/components/Divider';
+import { Flex } from '@/components/Flex';
+import Skeleton from '@/components/Skeleton';
 import { breakpoints } from '@/styles/mixin';
-import { Flex } from '../Flex';
-import Skeleton from '../Skeleton';
 
 const NewsSkeleton = () => {
   return (

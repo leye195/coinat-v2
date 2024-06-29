@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 
+import { getBinanceCandles, getUpbitCandles } from '@/api';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import useMount from '@/hooks/useMount';
 import { btcKrw } from '@/lib/socket';
@@ -11,7 +12,6 @@ import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType, ChartData } from '@/types/Candle';
 import type { Ticker } from '@/types/Ticker';
-import { getBinanceCandles, getUpbitCandles } from 'api';
 
 type ExchangeChartProps = {
   exchange: string;

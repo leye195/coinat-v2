@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
+import { Flex } from '@/components/Flex';
+import { Text } from '@/components/Text';
 import { relativeTime } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { News } from '@/types/News';
-import { Flex } from '../Flex';
-import { Text } from '../Text';
 
 type SubNewsProps = {
   data: News;

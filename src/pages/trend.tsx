@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Suspense, useId, useState } from 'react';
 import { useQuery } from 'react-query';
 
+import { getNews } from '@/api';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
@@ -17,7 +18,6 @@ import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { NewsResponse } from '@/types/News';
 import type { NextPageWithLayout } from '@/types/Page';
-import { getNews } from 'api';
 import { newsTabs } from 'data/tab';
 
 const TrendPage: NextPageWithLayout = () => {
