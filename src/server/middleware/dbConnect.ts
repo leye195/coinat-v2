@@ -14,6 +14,7 @@ export function dbConnect() {
   db.once('open', () => {
     console.log(`Connected to mongodb server`);
   });
+  mongoose.set('strictQuery', false);
 
   return mongoose.connect(process.env.NEXT_PUBLIC_DB!);
 }
