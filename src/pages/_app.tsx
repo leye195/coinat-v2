@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import { useState } from 'react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { RecoilRoot } from 'recoil';
-import MetaTag from '@/components/Metatag';
+import MetaTags from '@/components/Metatags';
 import { globalTheme } from '@/styles/theme';
 import type { NextPageWithLayout } from '@/types/Page';
 
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <EmotionThemeProvider theme={globalTheme}>
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
-          <MetaTag />
+          <MetaTags />
           {getLayout(<Component {...pageProps} />)}
         </QueryClientProvider>
       </RecoilRoot>

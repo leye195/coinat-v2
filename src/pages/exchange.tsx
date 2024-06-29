@@ -10,7 +10,7 @@ import { Divider } from '@/components/Divider';
 import ExchangeChart from '@/components/ExchangeChart';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
-import MetaTag from '@/components/Metatag';
+import MetaTags from '@/components/Metatags';
 import Skeleton from '@/components/Skeleton';
 import { Spacing } from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
@@ -119,7 +119,7 @@ const ExchangePage: NextPageWithLayout = ({
 
   return (
     <Container flexDirection="column">
-      <MetaTag title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />
+      <MetaTags title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />
       <HeaderBox flexDirection="column" justifyContent="center">
         <Flex alignItems="center" gap="4px">
           <Image
