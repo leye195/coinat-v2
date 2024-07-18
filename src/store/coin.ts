@@ -8,10 +8,7 @@ export type CoinState = {
   data: Coin[];
 };
 
-export type WatchListState = {
-  krw: string[];
-  btc: string[];
-};
+export type WatchListState = Record<'krw' | 'btc', string[]>;
 
 export const typeState = atom({
   key: `typeState/${generateUid()}`,

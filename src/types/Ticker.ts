@@ -1,16 +1,14 @@
-export type Exchange = {
-  upbit: {
+export type Exchange = Record<
+  'upbit' | 'binance',
+  {
     krw: Ticker;
     btc: Ticker;
-  };
-  binance: {
-    krw: Ticker;
-    btc: Ticker;
-  };
-};
+  }
+>;
 
-export type Ticker = {
-  [key in string]: {
+export type Ticker = Record<
+  string,
+  {
     tradePrice: number;
     highPrice: number;
     lowPrice: number;
@@ -22,5 +20,5 @@ export type Ticker = {
     marketState?: string;
     volume?: number;
     timestamp?: number;
-  };
-};
+  }
+>;

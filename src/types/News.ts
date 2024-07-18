@@ -9,7 +9,4 @@ export type News = {
   url: string;
 };
 
-export type NewsResponse = {
-  featured_list: News[];
-  list: News[];
-};
+export type NewsResponse = Record<'featured_list' | 'list', News[]>;

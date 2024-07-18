@@ -7,6 +7,7 @@ import type {
 } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
 import type { Currency } from '@/types/Currency';
+import type { MarketCap } from '@/types/Marketcap';
 
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
@@ -47,7 +48,7 @@ export const getNews = (category?: string) =>
     })}`,
   );
 
-export const getMarketcap = () =>
+export const getMarketcap = (): Promise<AxiosResponse<MarketCap[]>> =>
   axios.get('https://crix-api-cdn.upbit.com/v1/crix/marketcap?currency=KRW');
 
 /**

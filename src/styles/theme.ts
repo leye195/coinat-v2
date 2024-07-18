@@ -1,8 +1,6 @@
 export type Theme = {
   rem: (number: number) => string;
-  color: {
-    [key in string]: string;
-  };
+  color: Record<string, string>;
 };
 
 const rem = (num: number): string => `${(num / 16).toFixed(4)}rem`;
