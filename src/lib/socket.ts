@@ -1,4 +1,3 @@
-import api from 'axios';
 import { getUpbitCoins } from '@/api';
 import { getPercent } from '@/lib/utils';
 import type { Coin, UpbitCoin } from '@/types/Coin';
