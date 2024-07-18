@@ -32,8 +32,7 @@ export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
 export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
   api.get(`coin-v2?type=${type}`);
 
-export const getUpbitCoins = () =>
-  axios.get('https://api.upbit.com/v1/market/all?isDetails=true');
+export const getUpbitCoins = () => api.get('market');
 
 export const getBinanceCoins = () =>
   axios.get('https://api.binance.com/api/v3/exchangeInfo');

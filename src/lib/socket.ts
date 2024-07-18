@@ -1,4 +1,5 @@
 import api from 'axios';
+import { getUpbitCoins } from '@/api';
 import { getPercent } from '@/lib/utils';
 import type { Coin, UpbitCoin } from '@/types/Coin';
 import type { Exchange } from '@/types/Ticker';
@@ -41,7 +42,7 @@ const BINANCE_SOCKET = 'wss://stream.binance.com:9443/stream?streams=';
 
 const onUpbitOpen = async (socket: WebSocket) => {
   const upbitList = (
-    await api.get('https://api.upbit.com/v1/market/all?isDetails=true')
+    await getUpbitCoins()
   ).data.filter(
     (coin: UpbitCoin) =>
       coin.market.includes('KRW-') || coin.market.includes('BTC-'),
