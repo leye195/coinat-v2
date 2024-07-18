@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
-import { Spacing } from '@/components/Spacing';
+import Spacing from '@/components/Spacing';
 import Table from '@/components/Table';
 import { Text } from '@/components/Text';
 

@@ -15,7 +15,7 @@ const Layout = ({ children, headerColor, isHideHeader }: Props) => {
         <div
           className={cn(
             'max-w-[1410px] h-full',
-            'mx-0 my-auto px-3 pt-0 pb-4',
+            'mx-auto my-0 px-3 pt-0 pb-4',
             'max-md:px-0 max-md:py-2',
             'max-sm:px-0 max-sm:py-0.5',
           )}

@@ -1,11 +1,20 @@
-import styled from '@emotion/styled';
+import { cn } from '@/lib/utils';
 
 type SpacingProps = {
   type?: 'vertical' | 'horizontal';
   size: string;
 };
 
-export const Spacing = styled.div<SpacingProps>`
-  width: ${({ type, size }) => (type === 'vertical' ? 0 : size)};
-  height: ${({ type, size }) => (type === 'vertical' ? size : 0)};
-`;
+const Spacing = ({ type = 'horizontal', size }: SpacingProps) => (
+  <div
+    className={cn(
+      type === 'vertical' && 'w-0 h-[var(--size)]',
+      type === 'horizontal' && 'w-[var(--size)] h-0',
+    )}
+    style={{
+      '--size': size,
+    }}
+  />
+);
+
+export default Spacing;

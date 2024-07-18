@@ -12,7 +12,7 @@ import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
 import MetaTags from '@/components/Metatags';
 import Skeleton from '@/components/Skeleton';
-import { Spacing } from '@/components/Spacing';
+import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
 import { Text } from '@/components/Text';
 
