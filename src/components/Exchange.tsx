@@ -1,8 +1,5 @@
-import styled from '@emotion/styled';
-
 import Skeleton from '@/components/Skeleton';
-import { breakpoint, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { cn } from '@/lib/utils';
 
 type Props = {
   title: string;
@@ -10,56 +7,30 @@ type Props = {
   isLoading: boolean;
 };
 
-const ExchangeBlock = styled.div`
-  ${flex({ direction: 'column' })};
-  gap: ${spacing.xxs};
-  width: 20%;
-  padding: ${spacing.s};
-  border: 1px solid ${({ theme }) => theme.color.gray};
-  border-radius: 16px;
-  background-color: white;
-  color: ${({ theme }) => theme.color.white};
-  white-space: pre;
-
-  ${breakpoint('md').down`
-    width: auto;
-    padding: ${spacing.xs} ${spacing.xxs};
-    border: none;
-    border-radius: 0;
-  `}
-`;
-
-const ExchangeTitle = styled.h6`
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  color: #333333;
-
-  ${breakpoint('md').down`
-    width: min-content;
-    font-size: 11px;
-  `}
-`;
-
-const ExchangeValue = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.color.black};
-
-  ${breakpoint('md').down`
-    font-size: 10px;
-  `};
-`;
-
 const Exchange = ({ title, value, isLoading }: Props) => {
   return (
-    <ExchangeBlock>
-      <ExchangeTitle>{title}</ExchangeTitle>
+    <div
+      className={cn(
+        'flex flex-col gap-1 p-3',
+        'w-1/5 border border-[#d0d0d0] rounded-2xl',
+        'bg-white text-white whitespace-pre',
+        'max-md:w-auto max-md:rounded-none max-md:border-none max-md:px-2 max-md:py-1',
+      )}
+    >
+      <h6
+        className={cn(
+          'm-0 text-[14px] font-normal text-[#333333]',
+          'max-md:text-[11px] max-md:w-min',
+        )}
+      >
+        {title}
+      </h6>
       {isLoading ? (
         <Skeleton width="100%" height={18} borderRadius="4px" />
       ) : (
-        <ExchangeValue>{value}</ExchangeValue>
+        <p className={cn('m-0 text-black', 'max-md:text-[10px]')}>{value}</p>
       )}
-    </ExchangeBlock>
+    </div>
   );
 };
 

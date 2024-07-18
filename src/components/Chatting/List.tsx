@@ -1,29 +1,21 @@
-import styled from '@emotion/styled';
 import { ComponentProps } from 'react';
-import { breakpoint, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { cn } from '@/lib/utils';
 
 type Props = ComponentProps<'div'>;
 
-const Container = styled.div`
-  ${flex({ direction: 'column' })};
-  gap: ${spacing.s};
-  min-height: 12rem;
-  max-height: 12.5rem;
-  width: 20rem;
-  padding: ${spacing.s};
-  border: 1px solid #e1e1e1;
-  border-left: none;
-  border-right: none;
-  overflow: auto;
-
-  ${breakpoint('xl').down`
-    width: 100%;
-  `};
-`;
-
 const List = ({ children }: Props) => {
-  return <Container>{children}</Container>;
+  return (
+    <div
+      className={cn(
+        'flex flex-col gap-3',
+        'min-h-[12rem] max-h-[12.5rem] w-[20rem]',
+        'p-3 border border-[#e1e1e1] border-l-0 border-r-0 overflow-hidden',
+        'max-xl:w-full',
+      )}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default List;

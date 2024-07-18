@@ -1,7 +1,5 @@
-import styled from '@emotion/styled';
 import Header from '@/components/Layout/Header';
-import { breakpoint } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { cn } from '@/lib/utils';
 
 type Props = {
   children?: React.ReactNode;
@@ -9,33 +7,22 @@ type Props = {
   isHideHeader?: boolean;
 };
 
-const MainContainer = styled.main`
-  min-height: calc(100vh - ${({ theme }) => theme.rem(48)});
-  position: relative;
-`;
-
-const MainBox = styled.div`
-  max-width: 1410px;
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 ${spacing.s} ${spacing.m};
-
-  ${breakpoint('md').down`
-    padding: 0 0.5rem;
-  `}
-
-  ${breakpoint('sm').down`
-    padding: 0 0.125rem;
-  `}
-`;
-
 const Layout = ({ children, headerColor, isHideHeader }: Props) => {
   return (
     <>
       {!isHideHeader && <Header headerColor={headerColor} />}
-      <MainContainer>
-        <MainBox>{children}</MainBox>
-      </MainContainer>
+      <main className="relative min-h-[calc(100vh-48px)]">
+        <div
+          className={cn(
+            'max-w-[1410px] h-full',
+            'mx-0 my-auto px-3 pt-0 pb-4',
+            'max-md:px-0 max-md:py-2',
+            'max-sm:px-0 max-sm:py-0.5',
+          )}
+        >
+          {children}
+        </div>
+      </main>
     </>
   );
 };

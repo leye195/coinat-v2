@@ -18,7 +18,7 @@ import { Text } from '@/components/Text';
 
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { btcKrw, getTickers, initSocket } from '@/lib/socket';
-import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { Coin } from '@/types/Coin';
@@ -118,7 +118,10 @@ const ExchangePage: NextPageWithLayout = ({
   }, [code, type, navigate]);
 
   return (
-    <Container flexDirection="column">
+    <Flex
+      className={cn('mt-2 mx-auto mb-0 max-w-[1024px]')}
+      flexDirection="column"
+    >
       <MetaTags title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />
       <HeaderBox flexDirection="column" justifyContent="center">
         <Flex alignItems="center" gap="4px">
@@ -253,18 +256,13 @@ const ExchangePage: NextPageWithLayout = ({
           <Skeleton width="100%" height={500} borderRadius={12} />
         )}
       </ContentBox>
-    </Container>
+    </Flex>
   );
 };
 
 ExchangePage.getLayout = (page) => {
   return <Layout>{page}</Layout>;
 };
-
-const Container = styled(Flex)`
-  margin: 8px auto 0 auto;
-  max-width: 1024px;
-`;
 
 const HeaderBox = styled(Flex)`
   width: 100%;

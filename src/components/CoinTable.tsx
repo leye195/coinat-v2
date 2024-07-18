@@ -17,7 +17,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
-import { getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
+import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { CoinState, typeState } from '@/store/coin';
 import { breakpoint, breakpoints, flex } from '@/styles/mixin';
 import { palette, spacing } from '@/styles/variables';
@@ -58,18 +58,6 @@ const SymbolCell = styled.div`
   svg {
     color: #e2be1b;
   }
-`;
-
-const Warning = styled.div`
-  color: ${({ theme }) => theme.color.white};
-  background-color: orange;
-  padding: 0.125rem;
-  font-size: 14px;
-  font-weight: 600;
-
-  ${breakpoint('md').down`
-    font-size: 10px;
-  `}
 `;
 
 const CoinTable = ({ coinList, handleSort }: Props) => {
@@ -210,7 +198,17 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                         ? `${setComma(data.last)}₩`
                         : data.last}
                     </p>
-                    {data.upbitWarning && <Warning>투자 유의</Warning>}
+                    {data.upbitWarning && (
+                      <div
+                        className={cn(
+                          'text-white bg-orange-300',
+                          'p-0.5 text-sm font-semibold',
+                          'max-md:text-[10px]',
+                        )}
+                      >
+                        투자 유의
+                      </div>
+                    )}
                   </UpbitCell>
                 </Table.Cell>
                 <Table.Cell>

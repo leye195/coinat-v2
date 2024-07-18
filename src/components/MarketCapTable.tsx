@@ -9,11 +9,9 @@ import { Flex } from '@/components/Flex';
 import { Spacing } from '@/components/Spacing';
 import Table from '@/components/Table';
 import { Text } from '@/components/Text';
-
 import { getCoinSymbolImage } from '@/lib/coin';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import type { MarketCap } from '@/types/Marketcap';
 
 const MarketCapTable = () => {
   const id = useId();
@@ -24,7 +22,7 @@ const MarketCapTable = () => {
     queryFn: getMarketcap,
     select: (response) => {
       const { data } = response;
-      return data as MarketCap[];
+      return data;
     },
     refetchOnWindowFocus: false,
   });

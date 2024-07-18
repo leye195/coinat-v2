@@ -1,39 +1,10 @@
-import styled from '@emotion/styled';
 import { useQuery } from 'react-query';
 
 import { getFearGreedIndex } from '@/api';
 import Skeleton from '@/components/Skeleton';
-import { breakpoint } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { cn } from '@/lib/utils';
 import type { FearGreed } from '@/types/FearGreed';
 import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
-
-const FearGreedBlock = styled.section`
-  padding: ${spacing.s};
-  margin-top: ${spacing.xs};
-  background-color: ${({ theme }) => theme.color.white};
-  border: 1px solid #d0d0d0;
-  font-weight: 600;
-
-  ${breakpoint('md').down`
-    padding: ${spacing.xs};
-    margin-top: 0;
-    font-size: 14px;
-  `}
-
-  ${breakpoint('sm').down`
-    font-size: 11px;
-   `}
-`;
-
-const FearGreedTitle = styled.span`
-  font-weight: 400;
-`;
-
-const FearGreedValue = styled.span<{ color: string }>`
-  margin-left: ${spacing.xs};
-  color: ${({ color }) => color};
-`;
 
 const FearGreed = () => {
   const { isLoading, data } = useQuery(
@@ -51,21 +22,31 @@ const FearGreed = () => {
   );
 
   return (
-    <FearGreedBlock>
+    <section
+      className={cn(
+        'p-3 mt-2 bg-white border border-[#d0d0d0] font-semibold',
+        'max-md:p-2 max-md:mt-0 max-md:text-sm',
+        'max-sm:text-[11px]',
+      )}
+    >
       {isLoading ? (
         <Skeleton width="100%" height={20} borderRadius="4px" />
       ) : (
         <>
-          <FearGreedTitle>공포 · 탐욕 지수 :</FearGreedTitle>
-          <FearGreedValue
-            color={fearGreedColor[data?.value_classification as FearGreed]}
+          <span>공포 · 탐욕 지수 :</span>
+          <span
+            className="ml-2 text-[var(--color)]"
+            style={{
+              '--color':
+                fearGreedColor[data?.value_classification as FearGreed],
+            }}
           >
             {data?.value} -{' '}
             {fearGreedIndex[data?.value_classification as FearGreed]}
-          </FearGreedValue>
+          </span>
         </>
       )}
-    </FearGreedBlock>
+    </section>
   );
 };
 

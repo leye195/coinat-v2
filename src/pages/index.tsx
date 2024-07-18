@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { useRef } from 'react';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
@@ -14,11 +13,10 @@ import Tab from '@/components/Tab';
 import useCoinList from '@/hooks/useCoinList';
 import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
-import { getBreakpointQuery, setComma } from '@/lib/utils';
+import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
 import { typeState } from '@/store/coin';
 import { exchangeSelector, exchangeState } from '@/store/exchange';
-import { breakpoint, breakpoints, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { breakpoints } from '@/styles/mixin';
 import type { NextPageWithLayout } from '@/types/Page';
 
 const HomePage: NextPageWithLayout = () => {
@@ -87,8 +85,15 @@ const HomePage: NextPageWithLayout = () => {
   return (
     <div className="font-bold">
       <FearGreed />
-      <ExchangeBlock>
-        <ExchangeBox>
+      <section className="max-md:overflow-auto">
+        <div
+          className={cn(
+            'flex gap-1 my-2 mx-0',
+            'max-md:w-full max-md:gap-0 max-md:my-1',
+            'max-md:border max-md:border-[#d0d0d0] max-md:bg-white',
+            'max-sm:py-0 max-sm:px-1',
+          )}
+        >
           <Exchange
             title={isSmDown ? 'USD/KRW' : '환율(USD/KRW)'}
             value={setComma(exchangeData.usdToKrw)}
@@ -114,84 +119,25 @@ const HomePage: NextPageWithLayout = () => {
             value={`${setComma(exchangeData.bitDiff)}%`}
             isLoading={exchangeData.isLoading || !exchangeData.bitDiff}
           />
-        </ExchangeBox>
-      </ExchangeBlock>
-      <ContentsBlock>
-        <TableBlock>
+        </div>
+      </section>
+      <section className="pb-8 max-xl:pb-[5.25rem]">
+        <div className={cn('mx-auto my-0 max-w-[768px]', 'max-md:mt-1')}>
           <Tab tabs={['KRW', 'BTC']} />
-          <CountBox>
-            <p>암호화폐 - {data?.length}개</p>
-          </CountBox>
+          <div className={cn('max-md:text-xs max-sm:text-[10px]')}>
+            <p className={cn('m-2 max-md:m-1')}>암호화폐 - {data?.length}개</p>
+          </div>
           <CoinTable
             krwCoinData={krwCoinData}
             btcCoinData={btcCoinData}
             coinList={data ?? []}
             handleSort={handleSort}
           />
-        </TableBlock>
-      </ContentsBlock>
+        </div>
+      </section>
     </div>
   );
 };
-
-const ExchangeBlock = styled.section`
-  ${breakpoint('md').down`
-    overflow: auto;
-  `}
-`;
-
-const ExchangeBox = styled.div`
-  ${flex({})};
-  gap: ${spacing.xxs};
-  margin: ${spacing.xs} 0;
-
-  ${breakpoint('md').down`
-    width: 100vw;
-    gap: 0;
-    margin: ${spacing.xxs} 0;
-    border: 1px solid #d0d0d0;
-    background-color: white;
-  `}
-
-  ${breakpoint('sm').down`
-    padding: 0 ${spacing.xxs};
-  `}
-`;
-
-const ContentsBlock = styled.section`
-  padding-bottom: 2rem;
-
-  ${breakpoint('xl').down`
-    padding-bottom: 5.25rem;
-  `}
-`;
-
-const CountBox = styled.div`
-  p {
-    margin: 0.5rem;
-  }
-
-  ${breakpoint('md').down`
-    font-size: 12px;
-
-    p {
-      margin: 0.25rem;
-    }
-  `}
-
-  ${breakpoint('sm').down`
-    font-size: 10px;
-  `}
-`;
-
-const TableBlock = styled.div`
-  max-width: 768px;
-  margin: 0 auto;
-
-  ${breakpoint('md').down`
-    margin-top: ${spacing.xxxs};
-  `}
-`;
 
 HomePage.getLayout = (page) => {
   return <Layout>{page}</Layout>;
