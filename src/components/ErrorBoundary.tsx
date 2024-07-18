@@ -1,71 +1,14 @@
 import styled from '@emotion/styled';
-import React from 'react';
-import Color from '@/styles/Color';
-import { spacing } from '@/styles/variables';
+import React, { type PropsWithChildren } from 'react';
+import { cn } from '@/lib/utils';
 import Button from './Button';
-
-type Props = {
-  children: React.ReactNode;
-};
 
 type State = {
   hasError: boolean;
   error?: Error;
 };
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-
-  h1 {
-    font-size: 2rem;
-    color: ${({ theme }) => theme.color.black};
-  }
-
-  p {
-    color: ${({ theme }) => theme.color.black};
-  }
-
-  button {
-    margin-top: ${spacing.m};
-    background-color: ${({ theme }) => theme.color.primary};
-    border: 1px solid ${({ theme }) => theme.color.primary};
-
-    &:hover,
-    &:active {
-      background: ${Color('#3772ff').darker(5)};
-    }
-  }
-`;
-
-const BodyBlock = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -100;
-`;
-
-const ErrorStackBlock = styled.div`
-  width: 100%;
-  max-width: 492px;
-  margin-top: ${spacing.xl};
-  background: ${({ theme }) => theme.color.white};
-  font-size: 1.25rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 8px 24px 0 rgba(153, 156, 178, 0.1);
-`;
-
 const ErrorStackContextBox = styled.div`
-  overflow-y: auto;
-  width: 100%;
-  min-height: 200px;
-  max-height: 300px;
-
   ::-webkit-scrollbar {
     width: 10px;
     background-color: ${({ theme }) => theme.color.white};
@@ -78,13 +21,8 @@ const ErrorStackContextBox = styled.div`
   }
 `;
 
-const ErrorStackText = styled.p`
-  padding: ${spacing.l};
-  margin: 0;
-`;
-
-class ErrorBoundary extends React.Component<Props, State> {
-  constructor(props: Props) {
+class ErrorBoundary extends React.Component<PropsWithChildren, State> {
+  constructor(props: PropsWithChildren) {
     super(props);
     this.state = { hasError: false };
   }
@@ -100,18 +38,34 @@ class ErrorBoundary extends React.Component<Props, State> {
     if (hasError) {
       // You can render any custom fallback UI
       return (
-        <Container>
-          <BodyBlock />
-          <h1>Something went wrong.</h1>
-          <Button onClick={() => window.location.reload()}>Reload</Button>
+        <div className={cn('flex flex-col items-center justify-center', 'p-6')}>
+          <h1 className="text-[2rem] text-black">Something went wrong.</h1>
+          <Button
+            className={cn(
+              'mt-4 bg-blue-600 border border-blue-600',
+              'hover:bg-blue-700 active:bg-blue-700',
+            )}
+            onClick={() => window.location.reload()}
+          >
+            Reload
+          </Button>
           {error && process.env.NODE_ENV === 'development' && (
-            <ErrorStackBlock>
-              <ErrorStackContextBox>
-                <ErrorStackText>{error.stack}</ErrorStackText>
+            <div
+              className={cn(
+                'w-full max-w-[492px] mt-6',
+                'bg-white text-xl rounded-lg shadow-[0_8px_24px_0_rgba(153,156,178,0.1)]',
+              )}
+            >
+              <ErrorStackContextBox
+                className={cn(
+                  'overflow-y-auto w-full min-h-[200px] max-h-[300px]',
+                )}
+              >
+                <p className={cn('m-0 p-5 text-black')}>{error.stack}</p>
               </ErrorStackContextBox>
-            </ErrorStackBlock>
+            </div>
           )}
-        </Container>
+        </div>
       );
     }
 
