@@ -1,59 +1,40 @@
-import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getMarketcap } from '@/api';
 import { Text } from '@/components/Text';
 import usePrefetch from '@/hooks/usePrefetch';
-import { breakpoint, flex } from '@/styles/mixin';
+import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 
-type Props = {
-  headerColor?: string;
-};
-
-const Container = styled.header<{ color?: string }>`
-  ${flex({ alignItems: 'center', justifyContents: 'space-between' })};
-  width: 100%;
-  height: 3rem;
-  background-color: ${({ color }) => color ?? '#000000cc'};
-
-  ${breakpoint('md').down`
-    height: 2.25rem;
-  `}
-`;
-
-const Nav = styled.nav`
-  ${flex({ alignItems: 'center', justifyContents: 'space-between' })};
-  max-width: 1410px;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  padding: 0.75rem;
-`;
-
-const Logo = styled.div`
-  position: relative;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.5rem;
-
-  ${breakpoint('md').down`
-    font-size: 1rem;
-  `}
-`;
-
-const Header = ({ headerColor }: Props) => {
+const Header = () => {
   usePrefetch({
     queryKey: ['marketcap'],
     queryFn: getMarketcap,
   });
 
   return (
-    <Container color={headerColor}>
-      <Nav>
+    <div
+      className={cn(
+        'flex items-center justify-between',
+        'w-full h-12 bg-[#000000cc]',
+        'max-md:h-9',
+      )}
+    >
+      <nav
+        className={cn(
+          'flex items-center justify-between',
+          'w-full h-full mx-auto p-3',
+          'max-w-[1410px]',
+        )}
+      >
         <div>
           <Link href="/">
-            <Logo>
+            <div
+              className={cn(
+                'relative text-white font-bold',
+                'text-2xl max-md:text-base',
+              )}
+            >
               CoinAT
               <Image
                 className="absolute translate-x-[5rem] translate-y-[-2rem]"
@@ -62,7 +43,7 @@ const Header = ({ headerColor }: Props) => {
                 width={14}
                 height={14}
               />
-            </Logo>
+            </div>
           </Link>
         </div>
         <div>
@@ -72,8 +53,8 @@ const Header = ({ headerColor }: Props) => {
             </Text>
           </Link>
         </div>
-      </Nav>
-    </Container>
+      </nav>
+    </div>
   );
 };
 

@@ -3,14 +3,13 @@ import { cn } from '@/lib/utils';
 
 type Props = {
   children?: React.ReactNode;
-  headerColor?: string;
   isHideHeader?: boolean;
 };
 
-const Layout = ({ children, headerColor, isHideHeader }: Props) => {
+const Layout = ({ children, isHideHeader }: Props) => {
   return (
     <>
-      {!isHideHeader && <Header headerColor={headerColor} />}
+      {!isHideHeader && <Header />}
       <main className="relative min-h-[calc(100vh-48px)]">
         <div
           className={cn(

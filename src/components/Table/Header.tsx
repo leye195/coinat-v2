@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { cn } from '@/lib/utils';
 import { breakpoint, flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 
@@ -8,26 +9,6 @@ type Props = {
   right?: JSX.Element | React.ReactNode;
   onClick?: () => void;
 };
-
-const HeaderBlock = styled.div<{ width?: string }>`
-  ${flex({ alignItems: 'center' })}
-  width: ${({ width }) => width ?? '25%'};
-  padding: ${spacing.s} ${spacing.xs};
-  font-weight: 400;
-  cursor: pointer;
-
-  ${breakpoint('lg').down`
-    font-size: 14px;
-  `}
-
-  ${breakpoint('md').down`
-    font-size: 12px;
-  `}
-
-  ${breakpoint('sm').down`
-    font-size: 10px;
-  `}
-`;
 
 const RightBox = styled.div`
   ${flex({})}
@@ -44,10 +25,20 @@ const RightBox = styled.div`
 
 const Header = ({ name, width, right, onClick }: Props) => {
   return (
-    <HeaderBlock width={width} onClick={onClick}>
+    <div
+      className={cn(
+        'flex items-center cursor-pointer',
+        'px-2 py-3 font-normal w-[var(--width)]',
+        'max-lg:text-[14px] max-md:text-[12px] max-sm:text-[10px]',
+      )}
+      style={{
+        '--width': width ?? '25%',
+      }}
+      onClick={onClick}
+    >
       {name}
       {right && <RightBox>{right}</RightBox>}
-    </HeaderBlock>
+    </div>
   );
 };
 

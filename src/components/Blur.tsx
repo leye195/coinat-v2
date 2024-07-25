@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
 import type { ComponentProps } from 'react';
 
-type Props = {
-  onClick?: () => void;
-} & ComponentProps<'div'>;
+type Props = ComponentProps<'div'>;
 
 const Container = styled.div`
   position: fixed;

@@ -12,7 +12,6 @@ import { Flex } from '@/components/Flex';
 import Spacing from '@/components/Spacing';
 import Table from '@/components/Table';
 import { Text } from '@/components/Text';
-
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';

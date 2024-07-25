@@ -1,20 +1,20 @@
-import styled from '@emotion/styled';
 import type { ComponentProps } from 'react';
-import { flex } from '@/styles/mixin';
+import { cn } from '@/lib/utils';
 
-const Container = styled.div`
-  ${flex({ alignItems: 'center', justifyContents: 'center' })};
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(21, 22, 25, 0.5);
-  z-index: 1000;
-`;
-
-const Dimmer = ({ children, ...rest }: ComponentProps<'div'>) => {
-  return <Container {...rest}>{children}</Container>;
+const Dimmer = ({ children, className, ...rest }: ComponentProps<'div'>) => {
+  return (
+    <div
+      className={cn(
+        'flex items-center justify-center',
+        'w-screen h-screen fixed top-0 left-0',
+        'bg-[#1516197f] z-[1000]',
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default Dimmer;
