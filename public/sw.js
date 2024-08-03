@@ -1,4 +1,5 @@
 const CACHE_NAME = 'v1';
+const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
 
 const installEvent = () => {
   self.addEventListener('install', () => {
