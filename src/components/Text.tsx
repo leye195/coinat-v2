@@ -1,14 +1,21 @@
-import styled from '@emotion/styled';
-import { CSSProperties } from 'react';
+import type { CSSProperties, PropsWithChildren } from 'react';
 
 type TextProps = {
   fontSize?: CSSProperties['fontSize'];
   fontWeight?: CSSProperties['fontWeight'];
   color?: CSSProperties['color'];
-};
+} & PropsWithChildren;
 
-export const Text = styled.span<TextProps>`
-  font-size: ${({ fontSize }) => fontSize ?? '16px'};
-  font-weight: ${({ fontWeight }) => fontWeight ?? 400};
-  color: ${({ color }) => color ?? 'black'};
-`;
+export const Text = ({ fontSize, fontWeight, color, children }: TextProps) => {
+  return (
+    <span
+      style={{
+        fontSize: fontSize ?? '16px',
+        fontWeight: fontWeight ?? 400,
+        color: color ?? 'black',
+      }}
+    >
+      {children}
+    </span>
+  );
+};

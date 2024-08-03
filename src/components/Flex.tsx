@@ -1,5 +1,4 @@
-import styled from '@emotion/styled';
-import { CSSProperties } from 'react';
+import type { CSSProperties, PropsWithChildren } from 'react';
 
 type FlexProps = {
   display?: 'flex' | 'inline-flex';
@@ -8,13 +7,29 @@ type FlexProps = {
   gap?: string;
   flexDirection?: CSSProperties['flexDirection'];
   isFull?: boolean;
-};
+} & PropsWithChildren;
 
-export const Flex = styled.div<FlexProps>`
-  display: ${({ display }) => display ?? 'flex'};
-  align-items: ${({ alignItems }) => alignItems ?? 'flex-start'};
-  justify-content: ${({ justifyContent }) => justifyContent ?? 'flex-start'};
-  gap: ${({ gap }) => gap ?? 0};
-  flex-direction: ${({ flexDirection }) => flexDirection ?? 'row'};
-  width: ${({ isFull }) => (isFull ? '100%' : 'auto')};
-`;
+export const Flex = ({
+  children,
+  display,
+  alignItems,
+  justifyContent,
+  gap,
+  flexDirection,
+  isFull,
+}: FlexProps) => {
+  return (
+    <div
+      style={{
+        display: display ?? 'flex',
+        alignItems: alignItems ?? 'flex-start',
+        justifyContent: justifyContent ?? 'flex-start',
+        gap: gap ?? 0,
+        flexDirection: flexDirection ?? 'row',
+        width: isFull ? '100%' : 'auto',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
