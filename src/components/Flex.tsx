@@ -1,4 +1,4 @@
-import type { CSSProperties, PropsWithChildren } from 'react';
+import type { ComponentProps, CSSProperties } from 'react';
 
 type FlexProps = {
   display?: 'flex' | 'inline-flex';
@@ -7,7 +7,8 @@ type FlexProps = {
   gap?: string;
   flexDirection?: CSSProperties['flexDirection'];
   isFull?: boolean;
-} & PropsWithChildren;
+  className?: string;
+} & ComponentProps<'div'>;
 
 export const Flex = ({
   children,
@@ -17,9 +18,13 @@ export const Flex = ({
   gap,
   flexDirection,
   isFull,
+  className,
+  style,
+  ...restProps
 }: FlexProps) => {
   return (
     <div
+      className={className}
       style={{
         display: display ?? 'flex',
         alignItems: alignItems ?? 'flex-start',
@@ -28,6 +33,7 @@ export const Flex = ({
         flexDirection: flexDirection ?? 'row',
         width: isFull ? '100%' : 'auto',
       }}
+      {...restProps}
     >
       {children}
     </div>

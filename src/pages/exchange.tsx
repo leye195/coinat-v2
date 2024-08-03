@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -123,7 +122,12 @@ const ExchangePage: NextPageWithLayout = ({
       flexDirection="column"
     >
       <MetaTags title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />
-      <HeaderBox flexDirection="column" justifyContent="center">
+      <Flex
+        className="bg-white p-3"
+        isFull
+        flexDirection="column"
+        justifyContent="center"
+      >
         <Flex alignItems="center" gap="4px">
           <Image
             alt={code}
@@ -170,10 +174,8 @@ const ExchangePage: NextPageWithLayout = ({
             </Text>
           </Flex>
           <Flex
+            className="min-w-[150px]"
             flexDirection="column"
-            style={{
-              minWidth: 150,
-            }}
             alignItems="stretch"
           >
             <Flex alignItems="center" justifyContent="space-between">
@@ -210,9 +212,14 @@ const ExchangePage: NextPageWithLayout = ({
             </Flex>
           </Flex>
         </Flex>
-      </HeaderBox>
+      </Flex>
       <Spacing size="16px" type="vertical" />
-      <ContentBox flexDirection="column" gap="12px">
+      <Flex
+        className="bg-white px-3 py-6"
+        isFull
+        flexDirection="column"
+        gap="12px"
+      >
         <Flex isFull justifyContent="space-between">
           <Tab.Group>
             {timeTabs.map(({ name, value }, idx) => (
@@ -255,7 +262,7 @@ const ExchangePage: NextPageWithLayout = ({
         ) : (
           <Skeleton width="100%" height={500} borderRadius={12} />
         )}
-      </ContentBox>
+      </Flex>
     </Flex>
   );
 };
@@ -263,18 +270,6 @@ const ExchangePage: NextPageWithLayout = ({
 ExchangePage.getLayout = (page) => {
   return <Layout>{page}</Layout>;
 };
-
-const HeaderBox = styled(Flex)`
-  width: 100%;
-  padding: 12px;
-  background-color: white;
-`;
-
-const ContentBox = styled(Flex)`
-  padding: 24px 12px;
-  background-color: white;
-  width: 100%;
-`;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { code = '', type = 'KRW' } = query;

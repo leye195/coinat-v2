@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { Suspense, useId, useState } from 'react';
 import { useQuery } from 'react-query';
 
@@ -14,7 +13,6 @@ import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
 import { Text } from '@/components/Text';
 
-import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { NewsResponse } from '@/types/News';
 import type { NextPageWithLayout } from '@/types/Page';
@@ -45,8 +43,18 @@ const TrendPage: NextPageWithLayout = () => {
   };
 
   return (
-    <Container justifyContent="center" flexDirection="column" gap="8px">
-      <HeaderBox alignItems="center" justifyContent="space-between">
+    <Flex
+      className="mx-auto mt-2 max-w-5xl"
+      justifyContent="center"
+      flexDirection="column"
+      gap="8px"
+    >
+      <Flex
+        className="p-3 bg-white"
+        alignItems="center"
+        justifyContent="space-between"
+        isFull
+      >
         <Text fontWeight={800} fontSize="18px">
           디지털 자산 뉴스
         </Text>
@@ -64,16 +72,21 @@ const TrendPage: NextPageWithLayout = () => {
             left={`${(100 / newsTabs.length) * activeTab.index}%`}
           />
         </Tab.Group>
-      </HeaderBox>
+      </Flex>
       {isLoading ? (
         <NewsSkeleton />
       ) : (
-        <ContentBox flexDirection="column" gap="12px">
-          <MainNewsBox gap="8px">
+        <Flex
+          className="px-3 py-6 bg-white min-h-[500px]"
+          isFull
+          flexDirection="column"
+          gap="12px"
+        >
+          <Flex className="max-md:!flex-col" gap="8px">
             {data?.featured_list.slice(offset, offset + 2).map((news) => (
               <MainNews key={news.id} data={news} />
             ))}
-          </MainNewsBox>
+          </Flex>
           <Divider
             type="horizontal"
             size="1px"
@@ -82,14 +95,18 @@ const TrendPage: NextPageWithLayout = () => {
               marginBlock: '8px',
             }}
           />
-          <SubNewsBox gap="16px">
+          <Flex className="flex-wrap" isFull gap="16px">
             {data?.list.slice(offset, offset + 20).map((news) => (
               <SubNews key={news.id} data={news} />
             ))}
-          </SubNewsBox>
-        </ContentBox>
+          </Flex>
+        </Flex>
       )}
-      <ContentBox flexDirection="column">
+      <Flex
+        className="px-3 py-6 bg-white min-h-[500px]"
+        isFull
+        flexDirection="column"
+      >
         <Flex alignItems="center" gap="4px">
           <Text fontWeight={800} fontSize="18px">
             디지털 자산 시총
@@ -109,38 +126,10 @@ const TrendPage: NextPageWithLayout = () => {
         <Suspense fallback={<TableSkeleton />}>
           <MarketCapTable />
         </Suspense>
-      </ContentBox>
-    </Container>
+      </Flex>
+    </Flex>
   );
 };
-
-const Container = styled(Flex)`
-  margin: 8px auto 0 auto;
-  max-width: 1024px;
-`;
-
-const HeaderBox = styled(Flex)`
-  width: 100%;
-  padding: 12px;
-  background-color: white;
-`;
-
-const ContentBox = styled(Flex)`
-  padding: 24px 12px;
-  background-color: white;
-  min-height: 500px;
-  width: 100%;
-`;
-
-const MainNewsBox = styled(Flex)`
-  ${breakpoints.down('md')} {
-    flex-direction: column;
-  }
-`;
-
-const SubNewsBox = styled(Flex)`
-  flex-wrap: wrap;
-`;
 
 TrendPage.getLayout = (page) => {
   return <Layout>{page}</Layout>;

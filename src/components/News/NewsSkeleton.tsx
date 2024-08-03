@@ -1,24 +1,28 @@
-import styled from '@emotion/styled';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Skeleton from '@/components/Skeleton';
-import { breakpoints } from '@/styles/mixin';
+import { cn } from '@/lib/utils';
 
 const NewsSkeleton = () => {
   return (
-    <ContentBox flexDirection="column" gap="12px">
-      <MainNewsBox gap="8px">
-        <Container flexDirection="column" gap="8px">
+    <Flex
+      className="bg-white min-h-[500px] px-3 py-6"
+      isFull
+      flexDirection="column"
+      gap="12px"
+    >
+      <Flex className="max-md:!flex-col" isFull gap="8px">
+        <Flex className="flex-1" isFull flexDirection="column" gap="8px">
           <Skeleton width="70%" height={16} />
           <Skeleton width="100%" height={60} />
           <Skeleton width={80} height={12} />
-        </Container>
-        <Container flexDirection="column" gap="8px">
+        </Flex>
+        <Flex className="flex-1" flexDirection="column" gap="8px">
           <Skeleton width="70%" height={16} />
           <Skeleton width="100%" height={60} />
           <Skeleton width={80} height={12} />
-        </Container>
-      </MainNewsBox>
+        </Flex>
+      </Flex>
       <Divider
         type="horizontal"
         size="1px"
@@ -27,128 +31,230 @@ const NewsSkeleton = () => {
           marginBlock: '8px',
         }}
       />
-      <SubNewsBox gap="16px">
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+      <Flex className="flex-wrap" isFull gap="16px">
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-        <SubNews alignItems="center" justifyContent="space-between" gap="6px">
+        </Flex>
+        <Flex
+          className={cn(
+            '!w-[49%] max-lg:!w-full max-sm:!flex-col max-sm:!items-start',
+          )}
+          alignItems="center"
+          justifyContent="space-between"
+          gap="6px"
+        >
           <Skeleton width="70%" height={14} />
           <Skeleton width="16px" height={12} />
-        </SubNews>
-      </SubNewsBox>
-    </ContentBox>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
-
-const ContentBox = styled(Flex)`
-  padding: 24px 12px;
-  background-color: white;
-  min-height: 500px;
-  width: 100%;
-`;
-
-const Container = styled(Flex)`
-  flex: 1;
-  width: 100%;
-`;
-
-const SubNews = styled(Flex)`
-  width: 49%;
-
-  ${breakpoints.down('lg')} {
-    width: 100%;
-  }
-
-  ${breakpoints.down('sm')} {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
-
-const MainNewsBox = styled(Flex)`
-  width: 100%;
-
-  ${breakpoints.down('md')} {
-    flex-direction: column;
-  }
-`;
-
-const SubNewsBox = styled(Flex)`
-  flex-wrap: wrap;
-  width: 100%;
-`;
 
 export default NewsSkeleton;

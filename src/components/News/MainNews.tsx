@@ -1,7 +1,6 @@
-import styled from '@emotion/styled';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
-import { relativeTime } from '@/lib/utils';
+import { cn, relativeTime } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 import type { News } from '@/types/News';
 
@@ -15,12 +14,21 @@ const MainNews = ({ data }: MainNewsProps) => {
   };
 
   return (
-    <Container onClick={onClick}>
+    <Flex className={cn('flex-1 cursor-pointer')} onClick={onClick}>
       <Flex flexDirection="column" gap="8px">
-        <Title fontSize="14px" fontWeight={800}>
+        <Text
+          className="max-h-5 text-ellipsis break-words break-all line-clamp-1"
+          fontSize="14px"
+          fontWeight={800}
+        >
           {data.title}
-        </Title>
-        <Content fontSize="12px">{data.content.trim()}</Content>
+        </Text>
+        <Text
+          className="max-h-16 text-ellipsis overflow-hidden break-words break-all line-clamp-4 leading-5"
+          fontSize="12px"
+        >
+          {data.content.trim()}
+        </Text>
         <Flex alignItems="center" gap="6px">
           <Text fontSize="10px" color={palette.gray}>
             {data.company}
@@ -30,40 +38,8 @@ const MainNews = ({ data }: MainNewsProps) => {
           </Text>
         </Flex>
       </Flex>
-    </Container>
+    </Flex>
   );
 };
-
-const Title = styled(Text)`
-  display: -webkit-box;
-  max-height: 16px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  word-wrap: break-word;
-  word-break: break-all;
-`;
-
-const Content = styled(Text)`
-  display: -webkit-box;
-  overflow: hidden;
-  max-height: 75px;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  word-wrap: break-word;
-  word-break: break-all;
-  line-height: 20px;
-`;
-
-const Container = styled(Flex)`
-  flex: 1;
-  cursor: pointer;
-
-  &:hover ${Title} {
-    text-decoration: underline;
-  }
-`;
 
 export default MainNews;
