@@ -1,7 +1,5 @@
-import styled from '@emotion/styled';
+import { Flex } from '@/components/Flex';
 import { cn } from '@/lib/utils';
-import { breakpoint, flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
 
 type Props = {
   name: React.ReactNode;
@@ -9,19 +7,6 @@ type Props = {
   right?: JSX.Element | React.ReactNode;
   onClick?: () => void;
 };
-
-const RightBox = styled.div`
-  ${flex({})}
-  margin-left: ${spacing.s};
-
-  ${breakpoint('md').down`
-    margin-left: ${spacing.xs};
-  `}
-
-  ${breakpoint('sm').down`
-    margin-left: ${spacing.xxs};
-  `}
-`;
 
 const Header = ({ name, width, right, onClick }: Props) => {
   return (
@@ -37,7 +22,9 @@ const Header = ({ name, width, right, onClick }: Props) => {
       onClick={onClick}
     >
       {name}
-      {right && <RightBox>{right}</RightBox>}
+      {right && (
+        <Flex className={cn('ml-3 max-md:ml-2 max-sm:ml-1')}>{right}</Flex>
+      )}
     </div>
   );
 };
