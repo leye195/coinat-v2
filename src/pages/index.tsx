@@ -12,7 +12,7 @@ import Tab from '@/components/Tab';
 
 import useCoinList from '@/hooks/useCoinList';
 import { combineTickers } from '@/lib/socket';
-import sort, { initSort, Sort } from '@/lib/sort';
+import sort, { initSort, type Sort } from '@/lib/sort';
 import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
 import { typeState } from '@/store/coin';
 import { exchangeSelector, exchangeState } from '@/store/exchange';
