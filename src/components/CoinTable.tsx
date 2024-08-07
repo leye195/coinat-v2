@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,8 +17,8 @@ import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { CoinState, typeState } from '@/store/coin';
-import { breakpoint, breakpoints, flex } from '@/styles/mixin';
-import { palette, spacing } from '@/styles/variables';
+import { breakpoints } from '@/styles/mixin';
+import { palette } from '@/styles/variables';
 
 type Props = {
   krwCoinData: CoinState;
@@ -27,37 +26,6 @@ type Props = {
   coinList: CombinedTickers[];
   handleSort: (type: string) => () => void;
 };
-
-const BinanceCell = styled.div`
-  ${flex({ direction: 'column' })};
-
-  p {
-    margin: 0;
-  }
-`;
-
-const UpbitCell = styled(BinanceCell)`
-  gap: ${spacing.xxxs};
-`;
-
-const PercentCell = styled(BinanceCell)``;
-
-const SymbolCell = styled.div`
-  ${flex({ alignItems: 'center' })}
-  gap: ${spacing.xs};
-
-  ${breakpoint('sm').down`
-    gap: ${spacing.xxxs};
-  `}
-
-  img {
-    border-radius: 2rem;
-  }
-
-  svg {
-    color: #e2be1b;
-  }
-`;
 
 const CoinTable = ({ coinList, handleSort }: Props) => {
   const coinType = useRecoilValue(typeState);
@@ -68,7 +36,6 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
     key: 'krwfav',
     defaultValue: [],
   });
-
   const { value: btcFavList, updateValue: updateBtcFavList } = useLocalStorage({
     key: 'btcfav',
     defaultValue: [],
@@ -135,7 +102,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
         </>
       }
       body={
-        !coinList.length ? (
+        !coinList || !coinList.length ? (
           <Table.Skeleton />
         ) : (
           <>
@@ -149,7 +116,9 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
             ].map((data: CombinedTickers) => (
               <Table.Row key={data.symbol}>
                 <Table.Cell>
-                  <SymbolCell>
+                  <div
+                    className={cn('flex items-center gap-2', 'max-sm:gap-0.5')}
+                  >
                     <Flex
                       alignItems="center"
                       gap="4px"
@@ -166,6 +135,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                     >
                       <picture>
                         <img
+                          className="rounded-[2rem]"
                           alt={data.symbol}
                           src={getCoinSymbolImage(data.symbol)}
                           width={isSmDown ? 16 : 20}
@@ -185,14 +155,15 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       onClick={toggleFav(data.symbol)}
                     >
                       <FontAwesomeIcon
+                        className="text-[#e2be1b]"
                         icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
                       />
                     </Button>
-                  </SymbolCell>
+                  </div>
                 </Table.Cell>
                 <Table.Cell>
-                  <UpbitCell>
-                    <p>
+                  <div className={cn('flex flex-col gap-0.5')}>
+                    <p className="m-0">
                       {coinType === 'KRW'
                         ? `${setComma(data.last)}₩`
                         : data.last}
@@ -208,15 +179,15 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                         투자 유의
                       </div>
                     )}
-                  </UpbitCell>
+                  </div>
                 </Table.Cell>
                 <Table.Cell>
-                  <BinanceCell>
-                    <p>{data.blast}</p>
+                  <div className={cn('flex flex-col')}>
+                    <p className="m-0">{data.blast}</p>
                     {data.convertedBlast && (
                       <p>{setComma(data.convertedBlast ?? 0)}₩</p>
                     )}
-                  </BinanceCell>
+                  </div>
                 </Table.Cell>
                 <Table.Cell
                   color={
@@ -227,9 +198,9 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       : palette.black
                   }
                 >
-                  <PercentCell>
-                    <p>{setComma(data?.per ?? 0)}%</p>
-                  </PercentCell>
+                  <div className={cn('flex flex-col')}>
+                    <p className="m-0">{setComma(data?.per ?? 0)}%</p>
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}

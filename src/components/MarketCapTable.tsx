@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import Image from 'next/image';
 import { useId, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -72,7 +71,7 @@ const MarketCapTable = () => {
                   </Table.Cell>
                   <Table.Cell width="30%">
                     <Flex alignItems="center" gap="8px" isFull>
-                      <IconBox>
+                      <picture className="flex rounded-[100px] overflow-hidden">
                         <Image
                           alt={item.symbol}
                           src={getCoinSymbolImage(item.symbol)}
@@ -80,7 +79,7 @@ const MarketCapTable = () => {
                           height={24}
                           unoptimized
                         />
-                      </IconBox>
+                      </picture>
                       <Text fontSize="14px">{item.symbol}</Text>
                     </Flex>
                   </Table.Cell>
@@ -127,11 +126,5 @@ const MarketCapTable = () => {
     </Flex>
   );
 };
-
-const IconBox = styled.picture`
-  display: flex;
-  border-radius: 100px;
-  overflow: hidden;
-`;
 
 export default MarketCapTable;

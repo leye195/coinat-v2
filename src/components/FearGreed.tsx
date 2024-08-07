@@ -12,7 +12,6 @@ const FearGreed = () => {
     async () => {
       const res = await getFearGreedIndex();
       const { data } = res.data;
-
       return data ? data[0] : {};
     },
     {
