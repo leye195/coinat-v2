@@ -27,6 +27,11 @@ const nextConfig = {
           },
         ],
       },
+      // web worker
+      {
+        test: /\.worker\.ts$/,
+        use: { loader: 'worker-loader' },
+      },
     );
 
     return config;
