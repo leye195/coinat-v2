@@ -16,7 +16,12 @@ import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
-import { CoinState, typeState } from '@/store/coin';
+import {
+  btcCoinListState,
+  CoinState,
+  krCoinListState,
+  typeState,
+} from '@/store/coin';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 
@@ -29,6 +34,9 @@ type Props = {
 
 const CoinTable = ({ coinList, handleSort }: Props) => {
   const coinType = useRecoilValue(typeState);
+  const { isLoading: isKrwLoading } = useRecoilValue(krCoinListState);
+  const { isLoading: isBtcLoading } = useRecoilValue(btcCoinListState);
+
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const navigate = useRouter();
 
@@ -102,7 +110,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
         </>
       }
       body={
-        !coinList || !coinList.length ? (
+        !coinList.length || isKrwLoading || isBtcLoading ? (
           <Table.Skeleton />
         ) : (
           <>
