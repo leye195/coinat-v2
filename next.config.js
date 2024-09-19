@@ -27,6 +27,14 @@ const nextConfig = {
           },
         ],
       },
+      // web worker
+      {
+        test: /\.worker\.ts$/,
+        loader: 'worker-loader',
+        options: {
+          inline: 'fallback', // 워커를 별도의 파일로 분리
+        },
+      },
     );
 
     return config;
