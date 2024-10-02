@@ -122,3 +122,8 @@ export const postChat = (message: string) =>
   api.post('chat', {
     message,
   });
+
+export const getCoinInfo = (coin: string) =>
+  axios.get(
+    `https://api-manager.upbit.com/api/v1/coin_info/pub/${coin.toUpperCase()}.json`,
+  );
