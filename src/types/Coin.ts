@@ -31,7 +31,7 @@ type MainComponent = {
   detail: Record<'subtitle' | 'content', string>;
 };
 
-export type CoinInfo = {
+type CoinInfo = {
   english_name: string;
   korean_name: string;
   symbol: string;
@@ -42,4 +42,9 @@ export type CoinInfo = {
     MarketData
   >;
   main_components: MainComponent[];
+};
+
+export type CoinInfoResponse = {
+  isSuccess: boolean;
+  data: CoinInfo;
 };

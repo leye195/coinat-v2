@@ -5,7 +5,7 @@ import type {
   UpbitCandle,
   UpbitCandlesParams,
 } from '@/types/Candle';
-import type { Coin } from '@/types/Coin';
+import type { Coin, CoinInfoResponse } from '@/types/Coin';
 import type { Currency } from '@/types/Currency';
 import type { MarketCap } from '@/types/Marketcap';
 
@@ -123,7 +123,9 @@ export const postChat = (message: string) =>
     message,
   });
 
-export const getCoinInfo = (coin: string) =>
+export const getCoinInfo = (
+  coin: string,
+): Promise<AxiosResponse<CoinInfoResponse>> =>
   axios.get(
     `https://api-manager.upbit.com/api/v1/coin_info/pub/${coin.toUpperCase()}.json`,
   );

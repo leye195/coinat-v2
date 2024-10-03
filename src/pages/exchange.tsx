@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState, useId } from 'react';
 import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 
+import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import ExchangeChart from '@/components/ExchangeChart';
 import { Flex } from '@/components/Flex';
@@ -263,6 +264,8 @@ const ExchangePage: NextPageWithLayout = ({
           <Skeleton width="100%" height={500} borderRadius={12} />
         )}
       </Flex>
+      <Spacing size="16px" type="vertical" />
+      <CoinInfo code={code} />
     </Flex>
   );
 };
