@@ -59,6 +59,7 @@ const ExchangeChart = ({
       setIsInitialized(false);
       setChartData(data);
     },
+    refetchOnWindowFocus: false,
   });
 
   useQuery({
@@ -86,6 +87,7 @@ const ExchangeChart = ({
       setIsInitialized(false);
       setChartData(data);
     },
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
