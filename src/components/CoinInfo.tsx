@@ -24,8 +24,6 @@ const CoinInfo = ({ code }: Props) => {
     refetchOnWindowFocus: false,
   });
 
-  console.log(data);
-
   return (
     <Flex
       flexDirection="column"

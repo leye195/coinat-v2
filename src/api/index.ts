@@ -126,6 +126,4 @@ export const postChat = (message: string) =>
 export const getCoinInfo = (
   coin: string,
 ): Promise<AxiosResponse<CoinInfoResponse>> =>
-  axios.get(
-    `https://api-manager.upbit.com/api/v1/coin_info/pub/${coin.toUpperCase()}.json`,
-  );
+  api.get(`coin-info?code=${coin.toUpperCase()}`);
