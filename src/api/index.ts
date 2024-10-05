@@ -65,11 +65,13 @@ export const getUpbitCandles = ({
   minute = 3,
 }: UpbitCandlesParams): Promise<AxiosResponse<UpbitCandle[]>> => {
   if (candleType === 'minutes')
-    return upbitApi.get(
-      `/candles/minutes/${minute}?market=${market}&count=${count}`,
+    return api.get(
+      `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
     );
 
-  return upbitApi.get(`/candles/${candleType}?market=${market}&count=${count}`);
+  return api.get(
+    `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
+  );
 };
 
 /**
