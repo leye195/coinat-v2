@@ -97,12 +97,6 @@ const ExchangePage: NextPageWithLayout = ({
   };
 
   useEffect(() => {
-    if (isSSRError) {
-      navigate.replace('/');
-    }
-  }, [isSSRError, code, navigate]);
-
-  useEffect(() => {
     const checkCodeValidation = async () => {
       const response = await getCoins(type == 'KRW' ? 'KRW' : 'BTC');
       const data = response.find((item: Coin) => item.name === code);
@@ -291,10 +285,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     };
   } catch (error) {
     return {
-      props: {
-        code,
-        type,
-        isSSRError: true,
+      redirect: {
+        permanent: false,
+        destination: '/',
       },
     };
   }
