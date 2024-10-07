@@ -58,18 +58,31 @@ export const getMarketcap = (): Promise<AxiosResponse<MarketCap[]>> =>
 export const getFearGreedIndex = () =>
   axios.get('https://api.alternative.me/fng/?limit=1');
 
-export const getUpbitCandles = ({
+export const getUpbitCandles = async ({
   market,
   candleType = 'months',
   count = 200,
   minute = 3,
 }: UpbitCandlesParams): Promise<AxiosResponse<UpbitCandle[]>> => {
-  if (candleType === 'minutes')
-    return upbitApi.get(
-      `/candles/minutes/${minute}?market=${market}&count=${count}`,
-    );
+  try {
+    if (candleType === 'minutes')
+      return upbitApi.get(
+        `/candles/minutes/${minute}?market=${market}&count=${count}`,
+      );
 
-  return upbitApi.get(`/candles/${candleType}?market=${market}&count=${count}`);
+    return upbitApi.get(
+      `/candles/${candleType}?market=${market}&count=${count}`,
+    );
+  } catch (error) {
+    if (candleType === 'minutes')
+      return api.get(
+        `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
+      );
+
+    return api.get(
+      `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
+    );
+  }
 };
 /**
  * 두나무 환율 정보
