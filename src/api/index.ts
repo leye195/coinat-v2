@@ -65,15 +65,12 @@ export const getUpbitCandles = ({
   minute = 3,
 }: UpbitCandlesParams): Promise<AxiosResponse<UpbitCandle[]>> => {
   if (candleType === 'minutes')
-    return api.get(
-      `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
+    return upbitApi.get(
+      `/candles/minutes/${minute}?market=${market}&count=${count}`,
     );
 
-  return api.get(
-    `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
-  );
+  return upbitApi.get(`/candles/${candleType}?market=${market}&count=${count}`);
 };
-
 /**
  * 두나무 환율 정보
  * https://crix-api-cdn.upbit.com/v1/forex/recent?codes=FRX.KRWUSD
