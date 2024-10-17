@@ -20,8 +20,8 @@ const CoinInfo = ({ code }: Props) => {
       const { data } = res.data;
       return data;
     },
-    suspense: true,
     refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 12,
   });
 
   return (
