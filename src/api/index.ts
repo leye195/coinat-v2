@@ -119,10 +119,10 @@ export const getBinanceCandles = ({
   interval,
 }: BinanceCandlesParams) => {
   const intervalValue = {
-    minutes: '1s',
+    minutes: '1m',
     days: '1d',
     weeks: '1w',
-    months: '1m',
+    months: '1M',
   };
 
   return binanceApi.get(
