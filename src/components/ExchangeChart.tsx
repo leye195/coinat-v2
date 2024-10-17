@@ -5,7 +5,6 @@ import { useMedia } from 'react-use';
 
 import { getBinanceCandles, getUpbitCandles } from '@/api';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
-import useMount from '@/hooks/useMount';
 import { btcKrw } from '@/lib/socket';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
@@ -32,7 +31,8 @@ const ExchangeChart = ({
   const [isInitialized, setIsInitialized] = useState(false);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
-  const isMounted = useMount();
+  const exchangeRate =
+    priceSymbol === 'BTC' || exchange === 'upbit' ? 1 : btcKrw.upbit;
 
   useQuery({
     queryKey: ['exchange', `${priceSymbol}-${code}`, type, 'upbit'],
@@ -71,7 +71,6 @@ const ExchangeChart = ({
       }),
     enabled: exchange === 'binance',
     select: ({ data }) => {
-      const exchangeRate = priceSymbol === 'BTC' ? 1 : btcKrw.upbit;
       const parsedData = data.map((item: Array<string | number>) => ({
         close: +item[4] * exchangeRate,
         high: +item[2] * exchangeRate,
@@ -91,37 +90,8 @@ const ExchangeChart = ({
   });
 
   useEffect(() => {
-    if (!chartRef.current || !isMounted || !isInitialized) return;
-
-    chartRef.current?.setPriceVolumePrecision(priceSymbol === 'KRW' ? 2 : 8, 8);
-    chartRef.current?.resize();
-  }, [isSmDown, priceSymbol, isMounted, isInitialized, exchange]);
-
-  useIsomorphicLayoutEffect(() => {
-    if (newData && chartRef.current && isInitialized) {
-      const data = {
-        timestamp: reCalculateTimeStamp(newData?.timestamp ?? 0),
-        open: newData.openPrice,
-        close: newData.tradePrice,
-        high: newData.highPrice,
-        low: newData.lowPrice,
-        volume: newData.volume,
-      };
-
-      chartRef.current?.updateData(data);
-      setChartData((prev) => [data, ...prev]);
-    }
-  }, [newData]);
-
-  useIsomorphicLayoutEffect(() => {
-    import('klinecharts').then(({ init }) => {
-      if (isInitialized) return;
-
-      if (chartRef.current) {
-        setIsInitialized(true);
-        chartRef.current?.applyNewData(chartData);
-        return;
-      }
+    import('klinecharts').then(({ init, dispose }) => {
+      if (chartRef.current) dispose('chart');
 
       chartRef.current = init('chart', {
         styles: {
@@ -161,6 +131,42 @@ const ExchangeChart = ({
           },
         },
       });
+    });
+  }, [exchange, isSmDown]);
+
+  useEffect(() => {
+    if (!chartRef.current) return;
+
+    chartRef.current.setPriceVolumePrecision(priceSymbol === 'KRW' ? 2 : 8, 8);
+    chartRef.current.resize();
+  }, [isSmDown, priceSymbol]);
+
+  useIsomorphicLayoutEffect(() => {
+    if (newData && chartRef.current && isInitialized) {
+      const data = {
+        timestamp: reCalculateTimeStamp(
+          newData.timestamp ?? new Date().getTime(),
+        ),
+        open: newData.openPrice * exchangeRate,
+        close: newData.tradePrice * exchangeRate,
+        high: newData.highPrice * exchangeRate,
+        low: newData.lowPrice * exchangeRate,
+        volume: newData.volume,
+      };
+
+      chartRef.current.updateData(data);
+    }
+  }, [newData]);
+
+  useIsomorphicLayoutEffect(() => {
+    import('klinecharts').then(() => {
+      if (isInitialized) return;
+
+      if (chartRef.current && !isInitialized) {
+        setIsInitialized(true);
+        chartRef.current?.applyNewData(chartData, true);
+        return;
+      }
     });
   }, [chartData]);
 
