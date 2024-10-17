@@ -65,23 +65,32 @@ export const getUpbitCandles = async ({
   minute = 3,
 }: UpbitCandlesParams): Promise<AxiosResponse<UpbitCandle[]>> => {
   try {
-    if (candleType === 'minutes')
-      return upbitApi.get(
+    if (candleType === 'minutes') {
+      const response = await upbitApi.get(
         `/candles/minutes/${minute}?market=${market}&count=${count}`,
       );
 
-    return upbitApi.get(
+      return response;
+    }
+
+    const response = await upbitApi.get(
       `/candles/${candleType}?market=${market}&count=${count}`,
     );
-  } catch (error) {
-    if (candleType === 'minutes')
-      return api.get(
+
+    return response;
+  } catch {
+    if (candleType === 'minutes') {
+      const response = await api.get(
         `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
       );
 
-    return api.get(
+      return response;
+    }
+
+    const response = await api.get(
       `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
     );
+    return response;
   }
 };
 /**
