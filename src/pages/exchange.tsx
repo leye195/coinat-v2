@@ -26,7 +26,6 @@ import type { NextPageWithLayout } from '@/types/Page';
 import { exchangeTabs, timeTabs } from 'data/tab';
 
 const ExchangePage: NextPageWithLayout = ({
-  isSSRError,
   code,
   type,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -39,29 +38,30 @@ const ExchangePage: NextPageWithLayout = ({
     value: 'upbit',
     index: 0,
   });
+  const priceSymbol = type === 'KRW' ? 'KRW' : 'BTC';
+  const exchangeRate =
+    priceSymbol === 'KRW' && activeExchangeTab.value === 'binance'
+      ? btcKrw.upbit
+      : 1;
 
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const navigate = useRouter();
   const { data } = useQuery({
     queryKey: ['exchange', code, type],
     queryFn: getTickers,
-    enabled: !isSSRError,
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
     select: (response) => {
       const exchange = activeExchangeTab.value as 'upbit' | 'binance';
       const currency = exchange === 'binance' || type !== 'KRW' ? 'btc' : 'krw';
+      const data = response[exchange][currency][code?.toUpperCase()];
 
-      const data = response[exchange][currency];
-      return data[code?.toUpperCase()];
+      return {
+        ...data,
+        exchangeRate,
+      };
     },
   });
-
-  const priceSymbol = type === 'KRW' ? 'KRW' : 'BTC';
-  const exchangeRate =
-    priceSymbol === 'KRW' && activeExchangeTab.value === 'binance'
-      ? btcKrw.upbit
-      : 1;
 
   const status = useMemo(() => {
     const color =
@@ -116,7 +116,13 @@ const ExchangePage: NextPageWithLayout = ({
       className={cn('mt-2 mx-auto mb-0 max-w-[1024px]')}
       flexDirection="column"
     >
-      <MetaTags title={`${data?.tradePrice ?? 0} ${code.toUpperCase()}/KRW`} />
+      <MetaTags
+        title={`${
+          priceSymbol === 'KRW'
+            ? setComma((data?.tradePrice ?? 0) * exchangeRate)
+            : data?.tradePrice ?? 0
+        } ${code.toUpperCase()}/KRW`}
+      />
       <Flex
         className="bg-white p-3"
         isFull
@@ -246,8 +252,9 @@ const ExchangePage: NextPageWithLayout = ({
           </Tab.Group>
         </Flex>
 
-        {code && data ? (
+        {data ? (
           <ExchangeChart
+            key={activeExchangeTab.value}
             code={code}
             exchange={activeExchangeTab.value}
             type={activeTimeTab.value}
@@ -280,7 +287,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       props: {
         code: code.toUpperCase(),
         type,
-        isSSRError: false,
       },
     };
   } catch (error) {
