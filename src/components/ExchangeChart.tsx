@@ -15,7 +15,7 @@ import type { Ticker } from '@/types/Ticker';
 type ExchangeChartProps = {
   exchange: string;
   code: string;
-  type: string;
+  type: CandleType;
   priceSymbol: string;
   newData: Extract<Ticker[keyof Ticker], object>;
 };
@@ -49,7 +49,7 @@ const ExchangeChart = ({
         high: item.high_price,
         low: item.low_price,
         open: item.opening_price,
-        timestamp: reCalculateTimeStamp(item.timestamp),
+        timestamp: new Date(item.candle_date_time_kst).getTime(),
         volume: item.candle_acc_trade_volume,
       }));
 
@@ -76,7 +76,7 @@ const ExchangeChart = ({
         high: +item[2] * exchangeRate,
         low: +item[3] * exchangeRate,
         open: +item[1] * exchangeRate,
-        timestamp: item[0], //reCalculateTimeStamp(item.timestamp),
+        timestamp: reCalculateTimeStamp(+item[0], type),
         volume: +item[5],
       }));
 
@@ -146,6 +146,7 @@ const ExchangeChart = ({
       const data = {
         timestamp: reCalculateTimeStamp(
           newData.timestamp ?? new Date().getTime(),
+          type,
         ),
         open: newData.openPrice * exchangeRate,
         close: newData.tradePrice * exchangeRate,

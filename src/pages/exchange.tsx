@@ -21,6 +21,7 @@ import { btcKrw, getTickers, initSocket } from '@/lib/socket';
 import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
+import type { CandleType } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
 import type { NextPageWithLayout } from '@/types/Page';
 import { exchangeTabs, timeTabs } from 'data/tab';
@@ -257,7 +258,7 @@ const ExchangePage: NextPageWithLayout = ({
             key={activeExchangeTab.value}
             code={code}
             exchange={activeExchangeTab.value}
-            type={activeTimeTab.value}
+            type={activeTimeTab.value as CandleType}
             newData={data}
             priceSymbol={priceSymbol}
           />
