@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useId, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { getMarketcap } from '@/api';
@@ -24,11 +24,12 @@ const MarketCapTable = () => {
       return data;
     },
     refetchOnWindowFocus: false,
+    suspense: true,
   });
 
-  const toggleLoadMore = () => {
+  const toggleLoadMore = useCallback(() => {
     setLoadMore((prev) => !prev);
-  };
+  }, []);
 
   return (
     <Flex isFull flexDirection="column">

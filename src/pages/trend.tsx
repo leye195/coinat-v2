@@ -1,4 +1,4 @@
-import { Suspense, useId, useState } from 'react';
+import { Suspense, useCallback, useId, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { getNews } from '@/api';
@@ -30,17 +30,20 @@ const TrendPage: NextPageWithLayout = () => {
     queryFn: ({ queryKey }) =>
       getNews(queryKey[1] === 'all' ? undefined : queryKey[1]),
     select: (response) => {
-      const { data } = response;
-      return data.data as NewsResponse;
+      const { data } = response.data;
+      return data as NewsResponse;
     },
   });
 
-  const onClickTab = (name: string, index: number) => {
-    setActiveTab({
-      name,
-      index,
-    });
-  };
+  const onClickTab = useCallback(
+    (name: string, index: number) => () => {
+      setActiveTab({
+        name,
+        index,
+      });
+    },
+    [],
+  );
 
   return (
     <Flex
@@ -60,10 +63,7 @@ const TrendPage: NextPageWithLayout = () => {
         </Text>
         <Tab.Group>
           {newsTabs.map(({ name, value }, idx) => (
-            <Tab.Button
-              key={`${id}-${name}`}
-              onClick={() => onClickTab(value, idx)}
-            >
+            <Tab.Button key={`${id}-${name}`} onClick={onClickTab(value, idx)}>
               <Text fontSize="14px">{name}</Text>
             </Tab.Button>
           ))}
