@@ -1,10 +1,10 @@
 import { Chart, Nullable } from 'klinecharts';
 import { useEffect, useRef, useState } from 'react';
-import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 
-import { getBinanceCandles, getUpbitCandles } from '@/api';
+import useBinanceCandles from '@/hooks/useBinanceCandles';
 import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
+import useUpbitCandles from '@/hooks/useUpbitCandles';
 import { btcKrw } from '@/lib/socket';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
@@ -34,59 +34,27 @@ const ExchangeChart = ({
   const exchangeRate =
     priceSymbol === 'BTC' || exchange === 'upbit' ? 1 : btcKrw.upbit;
 
-  useQuery({
-    queryKey: ['exchange', `${priceSymbol}-${code}`, type, 'upbit'],
-    queryFn: ({ queryKey }) =>
-      getUpbitCandles({
-        market: queryKey[1],
-        candleType: queryKey[2] as CandleType,
-        count: 200,
-      }),
+  useUpbitCandles({
+    priceSymbol,
+    code,
+    type,
     enabled: exchange === 'upbit',
-    select: ({ data }) => {
-      const parsedData = data.map((item) => ({
-        close: item.trade_price,
-        high: item.high_price,
-        low: item.low_price,
-        open: item.opening_price,
-        timestamp: new Date(item.candle_date_time_kst).getTime(),
-        volume: item.candle_acc_trade_volume,
-      }));
-
-      return parsedData.reverse();
-    },
     onSuccess: (data) => {
       setIsInitialized(false);
       setChartData(data);
     },
-    refetchOnWindowFocus: false,
   });
 
-  useQuery({
-    queryKey: ['exchange', `${code}BTC`, type, 'binance'],
-    queryFn: ({ queryKey }) =>
-      getBinanceCandles({
-        symbol: queryKey[1],
-        interval: queryKey[2] as CandleType,
-      }),
+  useBinanceCandles({
+    priceSymbol,
+    code,
+    type,
+    exchangeRate,
     enabled: exchange === 'binance',
-    select: ({ data }) => {
-      const parsedData = data.map((item: Array<string | number>) => ({
-        close: +item[4] * exchangeRate,
-        high: +item[2] * exchangeRate,
-        low: +item[3] * exchangeRate,
-        open: +item[1] * exchangeRate,
-        timestamp: reCalculateTimeStamp(+item[0], type),
-        volume: +item[5],
-      }));
-
-      return parsedData;
-    },
     onSuccess: (data) => {
       setIsInitialized(false);
       setChartData(data);
     },
-    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
