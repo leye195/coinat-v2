@@ -16,6 +16,7 @@ import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
 import { Text } from '@/components/Text';
 
+import { exchangeTabs, timeTabs } from '@/data/tab';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { btcKrw, getTickers, initSocket } from '@/lib/socket';
 import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
@@ -24,7 +25,6 @@ import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
 import type { NextPageWithLayout } from '@/types/Page';
-import { exchangeTabs, timeTabs } from '@/data/tab';
 
 const ExchangePage: NextPageWithLayout = ({
   code,
