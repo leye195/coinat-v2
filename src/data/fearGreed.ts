@@ -4,7 +4,7 @@ export const fearGreedIndex = {
   Neutral: '중립',
   Greed: '탐욕',
   'Extreme Greed': '극도 탐욕',
-};
+} as const;
 
 export const fearGreedColor = {
   'Extreme Fear': '#ff5722',
@@ -12,4 +12,4 @@ export const fearGreedColor = {
   Neutral: '#252323',
   Greed: '#F49C45',
   'Extreme Greed': '#ff5722',
-};
+} as const;
