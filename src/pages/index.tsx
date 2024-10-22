@@ -9,7 +9,6 @@ import Exchange from '@/components/Exchange';
 import FearGreed from '@/components/FearGreed';
 import Layout from '@/components/Layout';
 import Tab from '@/components/Tab';
-
 import useCoinList from '@/hooks/useCoinList';
 import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
@@ -18,6 +17,7 @@ import { typeState } from '@/store/coin';
 import { exchangeSelector, exchangeState } from '@/store/exchange';
 import { breakpoints } from '@/styles/mixin';
 import type { NextPageWithLayout } from '@/types/Page';
+import { exchangeHeader } from '@/data/table';
 
 const HomePage: NextPageWithLayout = () => {
   const selectedType = useRef<string | null>(null);
@@ -95,27 +95,27 @@ const HomePage: NextPageWithLayout = () => {
           )}
         >
           <Exchange
-            title={isSmDown ? 'USD/KRW' : '환율(USD/KRW)'}
+            title={isSmDown ? exchangeHeader[0] : `환율(${exchangeHeader[0]})`}
             value={setComma(exchangeData.usdToKrw)}
             isLoading={exchangeData.isLoading || !exchangeData.usdToKrw}
           />
           <Exchange
-            title={isSmDown ? 'USDT/KRW' : '환율(USDT/KRW)'}
+            title={isSmDown ? exchangeHeader[1] : `환율(${exchangeHeader[1]})`}
             value={setComma(exchangeData.usdtToKrw)}
             isLoading={exchangeData.isLoading || !exchangeData.usdtToKrw}
           />
           <Exchange
-            title="업비트(BTC)"
+            title={exchangeHeader[2]}
             value={setComma(exchangeData.upbitBit)}
             isLoading={exchangeData.isLoading || !exchangeData.upbitBit}
           />
           <Exchange
-            title="바이낸스(BTC)"
+            title={exchangeHeader[3]}
             value={setComma(exchangeData.binanceBit)}
             isLoading={exchangeData.isLoading || !exchangeData.binanceBit}
           />
           <Exchange
-            title="BTC 차이(%)"
+            title={exchangeHeader[4]}
             value={`${setComma(exchangeData.bitDiff)}%`}
             isLoading={exchangeData.isLoading || !exchangeData.bitDiff}
           />

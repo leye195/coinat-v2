@@ -24,7 +24,7 @@ import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
 import type { NextPageWithLayout } from '@/types/Page';
-import { exchangeTabs, timeTabs } from 'data/tab';
+import { exchangeTabs, timeTabs } from '@/data/tab';
 
 const ExchangePage: NextPageWithLayout = ({
   code,

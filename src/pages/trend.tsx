@@ -16,7 +16,7 @@ import { Text } from '@/components/Text';
 import { palette } from '@/styles/variables';
 import type { NewsResponse } from '@/types/News';
 import type { NextPageWithLayout } from '@/types/Page';
-import { newsTabs } from 'data/tab';
+import { newsTabs } from '@/data/tab';
 
 const TrendPage: NextPageWithLayout = () => {
   const id = useId();

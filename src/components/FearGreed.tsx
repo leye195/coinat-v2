@@ -4,7 +4,7 @@ import { getFearGreedIndex } from '@/api';
 import Skeleton from '@/components/Skeleton';
 import { cn } from '@/lib/utils';
 import type { FearGreed } from '@/types/FearGreed';
-import { fearGreedColor, fearGreedIndex } from 'data/fearGreed';
+import { fearGreedColor, fearGreedIndex } from '@/data/fearGreed';
 
 const FearGreed = () => {
   const { isLoading, data } = useQuery(

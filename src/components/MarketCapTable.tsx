@@ -11,6 +11,7 @@ import { Text } from '@/components/Text';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
+import { marketCapHeader } from 'data/table';
 
 const MarketCapTable = () => {
   const id = useId();
@@ -36,7 +37,7 @@ const MarketCapTable = () => {
       <Table
         header={
           <>
-            {['', '시가총액', '거래대금(24H)'].map((name, idx) => (
+            {marketCapHeader.map((name, idx) => (
               <Table.Header
                 key={`${name}-${id}`}
                 name={
