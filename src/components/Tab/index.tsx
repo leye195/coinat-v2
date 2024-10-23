@@ -39,13 +39,8 @@ const Tab = ({ tabs }: Props) => {
   useEffect(() => {
     const path = router.asPath;
 
-    if (path === '/?type=BTC') {
-      setCoinType('BTC');
-      setActiveIdx(1);
-    } else {
-      setCoinType('KRW');
-      setActiveIdx(0);
-    }
+    setCoinType(path === '/?type=BTC' ? 'BTC' : 'KRW');
+    setActiveIdx(path === '/?type=BTC' ? 1 : 0);
   }, [router, setCoinType]);
 
   return (
