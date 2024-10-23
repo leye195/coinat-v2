@@ -1,5 +1,6 @@
 import { Suspense, useCallback, useId, useState } from 'react';
 import { useQuery } from 'react-query';
+import { match, P } from 'ts-pattern';
 
 import { getNews } from '@/api';
 import { Divider } from '@/components/Divider';
@@ -25,7 +26,7 @@ const TrendPage: NextPageWithLayout = () => {
     name: 'all',
     index: 0,
   });
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['news', activeTab.name],
     queryFn: ({ queryKey }) =>
       getNews(queryKey[1] === 'all' ? undefined : queryKey[1]),
@@ -73,35 +74,37 @@ const TrendPage: NextPageWithLayout = () => {
           />
         </Tab.Group>
       </Flex>
-      {isLoading ? (
-        <NewsSkeleton />
-      ) : (
-        <Flex
-          className="px-3 py-6 bg-white min-h-[500px]"
-          isFull
-          flexDirection="column"
-          gap="12px"
-        >
-          <Flex className="max-md:!flex-col" gap="8px">
-            {data?.featured_list.slice(offset, offset + 2).map((news) => (
-              <MainNews key={news.id} data={news} />
-            ))}
+      {match({ data })
+        .with({ data: P.when((data) => data != undefined) }, ({ data }) => (
+          <Flex
+            className="px-3 py-6 bg-white min-h-[500px]"
+            isFull
+            flexDirection="column"
+            gap="12px"
+          >
+            <Flex className="max-md:!flex-col" gap="8px">
+              {data.featured_list.slice(offset, offset + 2).map((news) => (
+                <MainNews key={news.id} data={news} />
+              ))}
+            </Flex>
+            <Divider
+              type="horizontal"
+              size="1px"
+              style={{
+                width: '100%',
+                marginBlock: '8px',
+              }}
+            />
+            <Flex className="flex-wrap" isFull gap="16px">
+              {data.list.slice(offset, offset + 20).map((news) => (
+                <SubNews key={news.id} data={news} />
+              ))}
+            </Flex>
           </Flex>
-          <Divider
-            type="horizontal"
-            size="1px"
-            style={{
-              width: '100%',
-              marginBlock: '8px',
-            }}
-          />
-          <Flex className="flex-wrap" isFull gap="16px">
-            {data?.list.slice(offset, offset + 20).map((news) => (
-              <SubNews key={news.id} data={news} />
-            ))}
-          </Flex>
-        </Flex>
-      )}
+        ))
+        .otherwise(() => (
+          <NewsSkeleton />
+        ))}
       <Flex
         className="px-3 py-6 bg-white min-h-[500px]"
         isFull

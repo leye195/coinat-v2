@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
+import { match, P } from 'ts-pattern';
 
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
@@ -109,10 +110,23 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
           )}
         </>
       }
-      body={
-        !coinList.length || isKrwLoading || isBtcLoading ? (
-          <Table.Skeleton />
-        ) : (
+      body={match({
+        coinList,
+        isKrwLoading,
+        isBtcLoading,
+      })
+        .with(
+          P.union(
+            { isKrwLoading: true },
+            { isBtcLoading: true },
+            { coinList: P.nullish },
+            {
+              coinList: P.when((coinList) => coinList.length === 0),
+            },
+          ),
+          () => <Table.Skeleton />,
+        )
+        .otherwise(({ coinList }) => (
           <>
             {[
               ...coinList.filter(
@@ -213,8 +227,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
               </Table.Row>
             ))}
           </>
-        )
-      }
+        ))}
     />
   );
 };

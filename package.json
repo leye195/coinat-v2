@@ -40,7 +40,8 @@
     "recoil": "^0.7.5",
     "socket.io": "^4.5.3",
     "socket.io-client": "^4.5.3",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "ts-pattern": "^5.5.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",

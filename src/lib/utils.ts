@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import qs from 'qs';
 import { twMerge } from 'tailwind-merge';
+import { match } from 'ts-pattern';
 import type { CandleType } from '@/types/Candle';
 
 export function cn(...inputs: ClassValue[]) {
@@ -97,21 +98,22 @@ export const reCalculateTimeStamp = (
 ) => {
   const date = new Date(timestamp);
 
-  if (type === 'months') {
-    date.setUTCDate(1);
-    date.setUTCHours(0, 0, 0, 0);
+  return match(type)
+    .with('months', () => {
+      date.setUTCDate(1);
+      date.setUTCHours(0, 0, 0, 0);
 
-    return date.getTime();
-  }
+      return date.getTime();
+    })
+    .with('weeks', () => {
+      const day = date.getDay();
+      const distanceToMonday = day === 0 ? -6 : 1 - day;
+      date.setUTCDate(date.getDate() + distanceToMonday); // 월요일로 이동
+      date.setUTCHours(0, 0, 0, 0);
 
-  if (type === 'weeks') {
-    const day = date.getDay();
-    const distanceToMonday = day === 0 ? -6 : 1 - day;
-    date.setUTCDate(date.getDate() + distanceToMonday); // 월요일로 이동
-    date.setUTCHours(0, 0, 0, 0);
-
-    return date.getTime();
-  }
-
-  return Math.floor(timestamp / 24 / 60 / 60 / 1000) * 24 * 60 * 60 * 1000;
+      return date.getTime();
+    })
+    .otherwise(
+      () => Math.floor(timestamp / 24 / 60 / 60 / 1000) * 24 * 60 * 60 * 1000,
+    );
 };

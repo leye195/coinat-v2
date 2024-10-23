@@ -6,6 +6,7 @@ import { getMarketcap } from '@/api';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import Spacing from '@/components/Spacing';
+import SwitchCase from '@/components/SwitchCase';
 import Table from '@/components/Table';
 import { Text } from '@/components/Text';
 import { getCoinSymbolImage } from '@/lib/coin';
@@ -51,68 +52,74 @@ const MarketCapTable = () => {
           </>
         }
         body={
-          !data ? (
-            <Table.Skeleton />
-          ) : (
-            <>
-              {data?.slice(0, loadMore ? data.length : 10).map((item, idx) => (
-                <Table.Row
-                  key={item.symbol}
-                  style={{
-                    padding: 8,
-                  }}
-                >
-                  <Table.Cell width="10%">
-                    <Text
-                      fontSize="14px"
-                      fontWeight={800}
-                      color={idx < 3 ? palette.red : palette.black}
-                    >
-                      {idx + 1}
-                    </Text>
-                  </Table.Cell>
-                  <Table.Cell width="30%">
-                    <Flex alignItems="center" gap="8px" isFull>
-                      <picture className="flex rounded-[100px] overflow-hidden">
-                        <Image
-                          alt={item.symbol}
-                          src={getCoinSymbolImage(item.symbol)}
-                          width={24}
-                          height={24}
-                          unoptimized
-                        />
-                      </picture>
-                      <Text fontSize="14px">{item.symbol}</Text>
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell width="30%">
-                    <Flex isFull justifyContent="flex-end">
-                      <Text fontSize="14px">
-                        {setComma(Math.round(item.marketCap / 100000000))}
-                      </Text>
-                      <Spacing size="4px" />
-                      <Text fontSize="14px" color={palette.gray}>
-                        억원
-                      </Text>
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell width="30%">
-                    <Flex isFull justifyContent="flex-end">
-                      <Text fontSize="14px">
-                        {setComma(
-                          Math.round(item.accTradePrice24h / 100000000),
-                        )}
-                      </Text>
-                      <Spacing size="4px" />
-                      <Text fontSize="14px" color={palette.gray}>
-                        억원
-                      </Text>
-                    </Flex>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </>
-          )
+          <SwitchCase
+            value={data != undefined ? 'success' : 'loading'}
+            caseBy={{
+              loading: <Table.Skeleton />,
+              success: (
+                <>
+                  {data
+                    ?.slice(0, loadMore ? data.length : 10)
+                    .map((item, idx) => (
+                      <Table.Row
+                        key={item.symbol}
+                        style={{
+                          padding: 8,
+                        }}
+                      >
+                        <Table.Cell width="10%">
+                          <Text
+                            fontSize="14px"
+                            fontWeight={800}
+                            color={idx < 3 ? palette.red : palette.black}
+                          >
+                            {idx + 1}
+                          </Text>
+                        </Table.Cell>
+                        <Table.Cell width="30%">
+                          <Flex alignItems="center" gap="8px" isFull>
+                            <picture className="flex rounded-[100px] overflow-hidden">
+                              <Image
+                                alt={item.symbol}
+                                src={getCoinSymbolImage(item.symbol)}
+                                width={24}
+                                height={24}
+                                unoptimized
+                              />
+                            </picture>
+                            <Text fontSize="14px">{item.symbol}</Text>
+                          </Flex>
+                        </Table.Cell>
+                        <Table.Cell width="30%">
+                          <Flex isFull justifyContent="flex-end">
+                            <Text fontSize="14px">
+                              {setComma(Math.round(item.marketCap / 100000000))}
+                            </Text>
+                            <Spacing size="4px" />
+                            <Text fontSize="14px" color={palette.gray}>
+                              억원
+                            </Text>
+                          </Flex>
+                        </Table.Cell>
+                        <Table.Cell width="30%">
+                          <Flex isFull justifyContent="flex-end">
+                            <Text fontSize="14px">
+                              {setComma(
+                                Math.round(item.accTradePrice24h / 100000000),
+                              )}
+                            </Text>
+                            <Spacing size="4px" />
+                            <Text fontSize="14px" color={palette.gray}>
+                              억원
+                            </Text>
+                          </Flex>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                </>
+              ),
+            }}
+          />
         }
       />
       <Button

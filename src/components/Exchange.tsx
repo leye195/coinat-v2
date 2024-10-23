@@ -1,4 +1,5 @@
 import Skeleton from '@/components/Skeleton';
+import SwitchCase from '@/components/SwitchCase';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -25,11 +26,17 @@ const Exchange = ({ title, value, isLoading }: Props) => {
       >
         {title}
       </h6>
-      {isLoading ? (
-        <Skeleton width="100%" height={18} borderRadius="4px" />
-      ) : (
-        <p className={cn('m-0 text-black', 'max-md:text-[10px]')}>{value}</p>
-      )}
+      <SwitchCase
+        value={isLoading ? 'loading' : 'success'}
+        caseBy={{
+          loading: <Skeleton width="100%" height={18} borderRadius="4px" />,
+          success: (
+            <p className={cn('m-0 text-black', 'max-md:text-[10px]')}>
+              {value}
+            </p>
+          ),
+        }}
+      />
     </div>
   );
 };
