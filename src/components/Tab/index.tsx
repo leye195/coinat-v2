@@ -4,22 +4,23 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { typeState } from '@/store/coin';
-import { flex } from '@/styles/mixin';
 
+import { flex } from '@/styles/mixin';
 import TabButton from './Button';
 import TabGroup from './Group';
 
 export const ActiveBar = styled.div<{ left: string; width: string }>`
-  ${flex({ alignItems: 'center', justifyContents: 'center' })};
   position: absolute;
-  left: ${({ left }) => left};
+  z-index: 0;
   bottom: 0;
-  transition: all 200ms 30ms cubic-bezier(0.4, 0, 0.6, 1);
+  left: ${({ left }) => left};
+  width: ${({ width }) => width};
+  height: 3px;
   background-color: #f8b64c;
   color: white;
-  height: 3px;
-  width: ${({ width }) => width};
-  z-index: 0;
+  transition: all 200ms 30ms cubic-bezier(0.4, 0, 0.6, 1);
+
+  ${flex({ alignItems: 'center', justifyContents: 'center' })};
 `;
 
 type Props = {

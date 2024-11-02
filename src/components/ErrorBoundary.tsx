@@ -11,13 +11,13 @@ type State = {
 const ErrorStackContextBox = styled.div`
   ::-webkit-scrollbar {
     width: 10px;
-    background-color: ${({ theme }) => theme.color.white};
     border-radius: 0 16px 16px 0;
+    background-color: ${({ theme }) => theme.color.white};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.color.gray};
     border-radius: 8px;
+    background-color: ${({ theme }) => theme.color.gray};
   }
 `;
 

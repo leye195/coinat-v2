@@ -24,8 +24,8 @@ type FormState = {
 
 const Container = styled.div`
   position: fixed;
-  bottom: 1.5rem;
   right: 1rem;
+  bottom: 1.5rem;
 
   ${breakpoint('xl').down`
     left: 0;
@@ -36,8 +36,8 @@ const Container = styled.div`
 `;
 
 const ChatIconContainer = styled(Container)`
-  bottom: 1.5rem;
   right: 1rem;
+  bottom: 1.5rem;
 
   ${breakpoint('xl').down`
     left: auto;
@@ -48,18 +48,18 @@ const ChatIconContainer = styled(Container)`
 
 const ChatIconWrapper = styled(Button)`
   padding: ${spacing.xs};
-  border-radius: 8px;
-  box-shadow: -2px 3px 3px 1px #bebebe;
-  background-color: white;
   border: none;
+  border-radius: 8px;
+  background-color: white;
   cursor: pointer;
+  box-shadow: -2px 3px 3px 1px #bebebe;
 `;
 
 const ChatWrapper = styled.div`
-  background-color: ${({ theme }) => theme.color.white};
-  border-radius: 8px;
   border: 1px solid #e3e3e3;
+  border-radius: 8px;
   overflow: hidden;
+  background-color: ${({ theme }) => theme.color.white};
 
   ${breakpoint('lg').down`
     border-radius: 0;
@@ -70,17 +70,17 @@ const ChatHeaderLogo = styled(Button)`
   ${flex({ alignItems: 'center' })}
   gap: ${spacing.xs};
   padding: 0;
+  border: none;
   background-color: transparent;
   color: ${({ theme }) => theme.color.white};
-  border: none;
   font-weight: 800;
   cursor: pointer;
 `;
 
 const ChatHeader = styled.div`
   padding: ${spacing.s};
+  background-color: #000c;
   font-size: 24px;
-  background-color: #000000cc;
 `;
 
 const ChatContents = styled.div`
@@ -89,13 +89,13 @@ const ChatContents = styled.div`
 
 const ChatFooter = styled.div`
   padding: ${spacing.s} ${spacing.xs} ${spacing.s} ${spacing.xs};
-  background-color: #000000cc;
+  background-color: #000c;
 
   button {
-    background-color: transparent;
     border: none;
-    cursor: pointer;
+    background-color: transparent;
     color: white;
+    cursor: pointer;
 
     &:disabled {
       color: #b2b2b2;
@@ -111,10 +111,10 @@ const ChatForm = styled(Form)`
 `;
 
 const ChatInput = styled(Input)`
-  padding: ${spacing.s} ${spacing.xs};
   flex: 1;
-  border-radius: 8px;
+  padding: ${spacing.s} ${spacing.xs};
   border: 1px solid #e3e3e3;
+  border-radius: 8px;
 `;
 
 const Chatting = () => {

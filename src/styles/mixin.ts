@@ -10,8 +10,8 @@ export const flex = ({
 }: Flex) => css`
   display: ${display};
   flex-direction: ${direction};
-  align-items: ${alignItems};
   justify-content: ${justifyContents};
+  align-items: ${alignItems};
 `;
 
 export const breakpoint = (key: Size) => {

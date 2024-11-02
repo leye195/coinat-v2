@@ -12,12 +12,12 @@ const ButtonBox = styled.div<{ isActive?: boolean }>`
 
   &::after {
     position: absolute;
-    content: '';
     bottom: 0;
-    height: 3px;
     width: 100%;
+    height: 3px;
     background-color: ${({ isActive }) =>
       isActive ? '#f8b64c' : 'transparent'};
+    content: '';
   }
 
   ${breakpoint('md').down`

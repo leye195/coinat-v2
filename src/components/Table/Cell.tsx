@@ -8,12 +8,13 @@ type CellProps = {
 } & ComponentProps<'div'>;
 
 const Container = styled.div<{ color?: string; width?: string }>`
-  ${flex({ alignItems: 'center' })};
-  padding: ${spacing.xxs} ${spacing.xs};
   width: ${({ width }) => width ?? '30%'};
   height: 100%;
-  font-weight: 400;
+  padding: ${spacing.xxs} ${spacing.xs};
   color: ${({ color }) => color ?? '#000000'};
+  font-weight: 400;
+
+  ${flex({ alignItems: 'center' })};
 `;
 
 const Cell = ({ children, color, width }: CellProps) => {

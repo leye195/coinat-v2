@@ -19,15 +19,15 @@ const Container = styled.button<{
   borderRadius: string;
   width?: string;
 }>`
+  width: ${({ width }) => width ?? 'auto'};
   padding: ${({ padding }) =>
     `${padding?.top ?? `0.5rem`} ${padding?.right ?? '0.5rem'} ${
       padding?.bottom ?? '0.5rem'
     } ${padding?.left ?? '0.5rem'}`};
-  background-color: ${({ bgColor }) => bgColor ?? '#ffffff'};
-  color: ${({ color }) => color ?? '#000000'};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
-  width: ${({ width }) => width ?? 'auto'};
+  background-color: ${({ bgColor }) => bgColor ?? '#ffffff'};
+  color: ${({ color }) => color ?? '#000000'};
   cursor: pointer;
 
   &:disabled {
