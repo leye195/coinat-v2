@@ -115,3 +115,12 @@ export const reCalculateTimeStamp = (
 
   return Math.floor(timestamp / 24 / 60 / 60 / 1000) * 24 * 60 * 60 * 1000;
 };
+
+export const formatPrice = (
+  price: number,
+  exchangeRate: number,
+  symbol: string,
+) => {
+  const value = price * exchangeRate;
+  return symbol === 'KRW' ? setComma(value) : price;
+};
