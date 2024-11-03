@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-
-import { typeState } from '@/store/coin';
+import { useId, useMemo } from 'react';
 
 import { flex } from '@/styles/mixin';
 import TabButton from './Button';
@@ -23,42 +20,42 @@ export const ActiveBar = styled.div<{ left: string; width: string }>`
   ${flex({ alignItems: 'center', justifyContents: 'center' })};
 `;
 
-type Props = {
+type TabProps = {
   tabs: string[];
 };
 
-const Tab = ({ tabs }: Props) => {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [coinType, setCoinType] = useRecoilState(typeState);
+const Tab = ({ tabs }: TabProps) => {
+  const id = useId();
   const router = useRouter();
+  const { type } = router.query;
+
+  const activeIdx = useMemo(() => {
+    const index = tabs.findIndex((tab) => tab === type);
+    return index !== -1 ? index : 0;
+  }, [tabs, type]);
+
+  const tabWidth = useMemo(() => `${100 / tabs.length}%`, [tabs.length]);
+  const activeBarLeft = useMemo(
+    () => `${(100 / tabs.length) * activeIdx}%`,
+    [tabs.length, activeIdx],
+  );
 
   const handleClick = (name: string, idx: number) => () => {
-    setActiveIdx(idx);
     router.push(`?type=${name}`);
   };
 
-  useEffect(() => {
-    const path = router.asPath;
-
-    setCoinType(path === '/?type=BTC' ? 'BTC' : 'KRW');
-    setActiveIdx(path === '/?type=BTC' ? 1 : 0);
-  }, [router, setCoinType]);
-
   return (
-    <TabGroup>
+    <TabGroup key={id}>
       {tabs.map((tab, idx) => (
         <TabButton
           key={tab}
-          isActive={tab === coinType}
+          isActive={idx === activeIdx}
           onClick={handleClick(tab, idx)}
         >
           {tab}
         </TabButton>
       ))}
-      <ActiveBar
-        left={`${(100 / tabs.length) * activeIdx}%`}
-        width={`${100 / tabs.length}%`}
-      />
+      <ActiveBar left={activeBarLeft} width={tabWidth} />
     </TabGroup>
   );
 };
