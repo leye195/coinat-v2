@@ -1,7 +1,4 @@
 import { Suspense, useCallback, useId, useState } from 'react';
-import { useQuery } from 'react-query';
-
-import { getNews } from '@/api';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
@@ -12,27 +9,22 @@ import SubNews from '@/components/News/SubNews';
 import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
 import { Text } from '@/components/Text';
-
 import { newsTabs } from '@/data/tab';
+import useMount from '@/hooks/useMount';
+import { useNewsData } from '@/hooks/useNewsData';
 import { palette } from '@/styles/variables';
-import type { NewsResponse } from '@/types/News';
 import type { NextPageWithLayout } from '@/types/Page';
 
 const TrendPage: NextPageWithLayout = () => {
+  const isMounted = useMount();
   const id = useId();
   const [offset] = useState(0);
   const [activeTab, setActiveTab] = useState({
     name: 'all',
     index: 0,
   });
-  const { data, isLoading } = useQuery({
-    queryKey: ['news', activeTab.name],
-    queryFn: ({ queryKey }) =>
-      getNews(queryKey[1] === 'all' ? undefined : queryKey[1]),
-    select: (response) => {
-      const { data } = response.data;
-      return data as NewsResponse;
-    },
+  const { data, isLoading } = useNewsData({
+    category: activeTab.name,
   });
 
   const onClickTab = useCallback(
@@ -44,6 +36,8 @@ const TrendPage: NextPageWithLayout = () => {
     },
     [],
   );
+
+  if (!isMounted) return <></>;
 
   return (
     <Flex

@@ -2,7 +2,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState, useId } from 'react';
-import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
 
 import CoinInfo from '@/components/CoinInfo';
@@ -17,9 +16,10 @@ import Tab, { ActiveBar } from '@/components/Tab';
 import { Text } from '@/components/Text';
 
 import { exchangeTabs, timeTabs } from '@/data/tab';
+import useExchangeData from '@/hooks/useExchangeData';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
-import { btcKrw, getTickers, initSocket } from '@/lib/socket';
-import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
+import { btcKrw, initSocket } from '@/lib/socket';
+import { cn, formatPrice, getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
@@ -47,21 +47,11 @@ const ExchangePage: NextPageWithLayout = ({
 
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const navigate = useRouter();
-  const { data } = useQuery({
-    queryKey: ['exchange', code, type],
-    queryFn: getTickers,
-    refetchInterval: 2000,
-    refetchIntervalInBackground: true,
-    select: (response) => {
-      const exchange = activeExchangeTab.value as 'upbit' | 'binance';
-      const currency = exchange === 'binance' || type !== 'KRW' ? 'btc' : 'krw';
-      const data = response[exchange][currency][code?.toUpperCase()];
-
-      return {
-        ...data,
-        exchangeRate,
-      };
-    },
+  const { data } = useExchangeData({
+    code,
+    type,
+    exchange: activeExchangeTab.value as 'upbit' | 'binance',
+    exchangeRate,
   });
 
   const status = useMemo(() => {
@@ -118,11 +108,11 @@ const ExchangePage: NextPageWithLayout = ({
       flexDirection="column"
     >
       <MetaTags
-        title={`${
-          priceSymbol === 'KRW'
-            ? setComma((data?.tradePrice ?? 0) * exchangeRate)
-            : data?.tradePrice ?? 0
-        } ${code.toUpperCase()}/KRW`}
+        title={`${formatPrice(
+          data?.tradePrice ?? 0,
+          exchangeRate,
+          priceSymbol,
+        )} ${code.toUpperCase()}/${priceSymbol}`}
       />
       <Flex
         className="bg-white p-3"
@@ -158,9 +148,7 @@ const ExchangePage: NextPageWithLayout = ({
           >
             <Flex alignItems="flex-end" gap="2px">
               <Text fontSize="24px" fontWeight={800} color={status.color}>
-                {priceSymbol === 'KRW'
-                  ? setComma((data?.tradePrice ?? 0) * exchangeRate)
-                  : data?.tradePrice ?? 0}
+                {formatPrice(data?.tradePrice ?? 0, exchangeRate, priceSymbol)}
               </Text>
               <Text fontSize="12px" color={status.color}>
                 {priceSymbol}
@@ -169,10 +157,7 @@ const ExchangePage: NextPageWithLayout = ({
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {priceSymbol === 'KRW'
-                ? setComma((data?.changePrice ?? 0) * exchangeRate)
-                : data?.changePrice ?? 0}
-              )
+              {formatPrice(data?.changePrice ?? 0, exchangeRate, priceSymbol)}
             </Text>
           </Flex>
           <Flex
@@ -184,9 +169,7 @@ const ExchangePage: NextPageWithLayout = ({
               <Text fontSize="12px">고가</Text>
               {data?.highPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                  {priceSymbol === 'KRW'
-                    ? setComma(data.highPrice * exchangeRate)
-                    : data.highPrice}
+                  {formatPrice(data?.highPrice ?? 0, exchangeRate, priceSymbol)}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -204,9 +187,7 @@ const ExchangePage: NextPageWithLayout = ({
               <Text fontSize="12px">저가</Text>
               {data?.lowPrice ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                  {priceSymbol === 'KRW'
-                    ? setComma(data.lowPrice * exchangeRate)
-                    : data.lowPrice}
+                  {formatPrice(data?.lowPrice ?? 0, exchangeRate, priceSymbol)}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />

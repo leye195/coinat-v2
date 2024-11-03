@@ -1,86 +1,28 @@
-import { useRef } from 'react';
-import { useQuery } from 'react-query';
 import { useMedia } from 'react-use';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
-import { getCurrencyInfo } from '@/api';
 import CoinTable from '@/components/CoinTable';
 import Exchange from '@/components/Exchange';
 import FearGreed from '@/components/FearGreed';
 import Layout from '@/components/Layout';
 import Tab from '@/components/Tab';
+
 import { exchangeHeader } from '@/data/table';
 import useCoinList from '@/hooks/useCoinList';
-import { combineTickers } from '@/lib/socket';
-import sort, { initSort, Sort } from '@/lib/sort';
+import { useTickerData } from '@/hooks/useTickersData';
 import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
-import { typeState } from '@/store/coin';
-import { exchangeSelector, exchangeState } from '@/store/exchange';
+import { exchangeSelector } from '@/store/exchange';
 import { breakpoints } from '@/styles/mixin';
 import type { NextPageWithLayout } from '@/types/Page';
 
 const HomePage: NextPageWithLayout = () => {
-  const selectedType = useRef<string | null>(null);
-  const sortType = useRef({
-    symbol: false,
-    last: false,
-    blast: false,
-    per: false,
-  });
-
-  const coinType = useRecoilValue(typeState);
   const exchangeData = useRecoilValue(exchangeSelector);
-  const setExchangeState = useSetRecoilState(exchangeState);
-
   const { krwCoinData, btcCoinData } = useCoinList();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
-
-  const { data } = useQuery({
-    queryKey: ['coins', coinType, krwCoinData.data, btcCoinData.data],
-    queryFn: () => getTickers(),
-    refetchInterval: 3000,
-    refetchIntervalInBackground: true,
+  const { data, handleSort } = useTickerData({
+    krwCoinData,
+    btcCoinData,
   });
-
-  const getTickers = async () => {
-    try {
-      const data = combineTickers(
-        coinType === 'KRW' ? krwCoinData.data : btcCoinData.data,
-        coinType,
-      );
-
-      const { data: currencyData } = await getCurrencyInfo();
-
-      const btc = data.find((data) => data.symbol === 'BTC');
-      const upbitBit = btc?.last ?? 0;
-      const binanceBit = btc?.blast ?? 0;
-
-      setExchangeState({
-        upbitBit,
-        binanceBit,
-        usdToKrw: currencyData.value,
-        isLoading: false,
-      });
-
-      const result = sort(
-        data,
-        selectedType.current ?? 'symbol',
-        sortType.current[selectedType.current as Sort],
-      );
-      return result;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleSort = (type: string) => () => {
-    sortType.current = {
-      ...initSort,
-      [type]: !sortType.current[type as Sort],
-    };
-
-    selectedType.current = type;
-  };
 
   return (
     <div className="font-bold">
