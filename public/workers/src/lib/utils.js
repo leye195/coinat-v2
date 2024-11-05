@@ -71,4 +71,23 @@ export const relativeTime = (datetime) => {
     const targetTime = new Date(datetime);
     return formatDistanceToNow(targetTime, { addSuffix: true, locale: ko });
 };
-export const reCalculateTimeStamp = (timestamp) => Math.floor(timestamp / 24 / 60 / 60 / 1000) * 24 * 60 * 60 * 1000;
+export const reCalculateTimeStamp = (timestamp, type = 'days') => {
+    const date = new Date(timestamp);
+    if (type === 'months') {
+        date.setUTCDate(1);
+        date.setUTCHours(0, 0, 0, 0);
+        return date.getTime();
+    }
+    if (type === 'weeks') {
+        const day = date.getDay();
+        const distanceToMonday = day === 0 ? -6 : 1 - day;
+        date.setUTCDate(date.getDate() + distanceToMonday); // 월요일로 이동
+        date.setUTCHours(0, 0, 0, 0);
+        return date.getTime();
+    }
+    return Math.floor(timestamp / 24 / 60 / 60 / 1000) * 24 * 60 * 60 * 1000;
+};
+export const formatPrice = (price, exchangeRate, symbol) => {
+    const value = price * exchangeRate;
+    return symbol === 'KRW' ? setComma(value) : price;
+};

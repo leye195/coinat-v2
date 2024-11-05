@@ -5,7 +5,7 @@ import { Flex } from './Flex';
 import MultilineText from './MultilineText';
 import { SectionWithTitle } from './SectionWithTitle';
 import Table from './Table';
-import { Text } from './Text';
+import Text from './Text';
 
 type Props = {
   code: string;
