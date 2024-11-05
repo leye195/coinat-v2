@@ -2,9 +2,11 @@ import { Chart, Nullable } from 'klinecharts';
 import { useEffect, useRef, useState } from 'react';
 import { useMedia } from 'react-use';
 
-import useBinanceCandles from '@/hooks/useBinanceCandles';
-import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
-import useUpbitCandles from '@/hooks/useUpbitCandles';
+import {
+  useBinanceCandles,
+  useUpbitCandles,
+  useIsomorphicLayoutEffect,
+} from '@/hooks';
 import { btcKrw } from '@/lib/socket';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';

@@ -8,8 +8,7 @@ import Layout from '@/components/Layout';
 import Tab from '@/components/Tab';
 
 import { exchangeHeader } from '@/data/table';
-import useCoinList from '@/hooks/useCoinList';
-import { useTickerData } from '@/hooks/useTickersData';
+import { useCoinList, useTickersData } from '@/hooks';
 import { cn, getBreakpointQuery, setComma } from '@/lib/utils';
 import { exchangeSelector } from '@/store/exchange';
 import { breakpoints } from '@/styles/mixin';
@@ -19,7 +18,7 @@ const HomePage: NextPageWithLayout = () => {
   const exchangeData = useRecoilValue(exchangeSelector);
   const { krwCoinData, btcCoinData } = useCoinList();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
-  const { data, handleSort } = useTickerData({
+  const { data, handleSort } = useTickersData({
     krwCoinData,
     btcCoinData,
   });

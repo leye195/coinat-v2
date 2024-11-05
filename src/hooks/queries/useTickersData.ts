@@ -13,10 +13,7 @@ interface UseTickerDataProps {
   btcCoinData: CoinState;
 }
 
-export const useTickerData = ({
-  krwCoinData,
-  btcCoinData,
-}: UseTickerDataProps) => {
+const useTickerData = ({ krwCoinData, btcCoinData }: UseTickerDataProps) => {
   const selectedType = useRef<string | null>(null);
   const sortType = useRef({
     symbol: false,
@@ -81,3 +78,5 @@ export const useTickerData = ({
     ...rest,
   };
 };
+
+export default useTickerData;

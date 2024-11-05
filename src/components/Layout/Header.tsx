@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getMarketcap } from '@/api';
-import { Text } from '@/components/Text';
-import usePrefetch from '@/hooks/usePrefetch';
+import Text from '@/components/Text';
+import { usePrefetch } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 

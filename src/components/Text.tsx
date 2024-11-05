@@ -7,7 +7,7 @@ type TextProps = {
   className?: string;
 } & PropsWithChildren;
 
-export const Text = ({
+const Text = ({
   fontSize,
   fontWeight,
   color,
@@ -27,3 +27,5 @@ export const Text = ({
     </span>
   );
 };
+
+export default Text;

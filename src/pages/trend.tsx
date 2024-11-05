@@ -1,4 +1,5 @@
 import { Suspense, useCallback, useId, useState } from 'react';
+
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
@@ -8,10 +9,10 @@ import NewsSkeleton from '@/components/News/NewsSkeleton';
 import SubNews from '@/components/News/SubNews';
 import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
-import { Text } from '@/components/Text';
+import Text from '@/components/Text';
+
 import { newsTabs } from '@/data/tab';
-import useMount from '@/hooks/useMount';
-import { useNewsData } from '@/hooks/useNewsData';
+import { useMount, useNewsData } from '@/hooks';
 import { palette } from '@/styles/variables';
 import type { NextPageWithLayout } from '@/types/Page';
 

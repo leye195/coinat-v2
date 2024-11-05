@@ -6,7 +6,7 @@ type UseNewsDataProps = {
   category: string;
 };
 
-export const useNewsData = ({ category }: UseNewsDataProps) => {
+const useNewsData = ({ category }: UseNewsDataProps) => {
   return useQuery({
     queryKey: ['news', category],
     queryFn: ({ queryKey }) =>
@@ -17,3 +17,5 @@ export const useNewsData = ({ category }: UseNewsDataProps) => {
     },
   });
 };
+
+export default useNewsData;

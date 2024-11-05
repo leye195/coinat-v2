@@ -13,10 +13,10 @@ import MetaTags from '@/components/Metatags';
 import Skeleton from '@/components/Skeleton';
 import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
-import { Text } from '@/components/Text';
+import Text from '@/components/Text';
 
 import { exchangeTabs, timeTabs } from '@/data/tab';
-import useExchangeData from '@/hooks/useExchangeData';
+import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { btcKrw, initSocket } from '@/lib/socket';
 import { cn, formatPrice, getBreakpointQuery, setComma } from '@/lib/utils';

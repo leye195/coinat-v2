@@ -20,11 +20,11 @@
       "@/components/*": ["./components/*"],
       "@/styles/*": ["./styles/*"],
       "@/server/*": ["./server/*"],
-      "@/hooks/*": ["./hooks/*"],
       "@/lib/*": ["./lib/*"],
       "@/types/*": ["./types/*"],
       "@/store/*": ["./store/*"],
       "@/data/*": ["./data/*"],
+      "@/hooks": ["./hooks"],
       "@/api": ["./api"]
     }
   },

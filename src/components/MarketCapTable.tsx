@@ -7,7 +7,7 @@ import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import Spacing from '@/components/Spacing';
 import Table from '@/components/Table';
-import { Text } from '@/components/Text';
+import Text from '@/components/Text';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
