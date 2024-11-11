@@ -14,10 +14,11 @@ import { useMount, useNewsData } from '@/hooks';
 import { palette } from '@/styles/variables';
 import type { NextPageWithLayout } from '@/types/Page';
 
+const OFFSET = 2;
+
 const TrendPage: NextPageWithLayout = () => {
   const isMounted = useMount();
   const id = useId();
-  const [offset] = useState(0);
   const [activeTab, setActiveTab] = useState({
     name: 'all',
     index: 0,
@@ -76,7 +77,7 @@ const TrendPage: NextPageWithLayout = () => {
           gap="12px"
         >
           <Flex className="max-md:!flex-col" gap="8px">
-            {data?.featured_list.slice(offset, offset + 2).map((news) => (
+            {data?.featured_list.slice(OFFSET, OFFSET + 2).map((news) => (
               <MainNews key={news.id} data={news} />
             ))}
           </Flex>
@@ -89,7 +90,7 @@ const TrendPage: NextPageWithLayout = () => {
             }}
           />
           <Flex className="flex-wrap" isFull gap="16px">
-            {data?.list.slice(offset, offset + 20).map((news) => (
+            {data?.list.slice(OFFSET, OFFSET + 20).map((news) => (
               <SubNews key={news.id} data={news} />
             ))}
           </Flex>
