@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { useIsomorphicLayoutEffect } from '@/hooks';
 import { getLocalStorageData, setLocalStorageData } from '@/lib/storage';
 
