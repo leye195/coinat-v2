@@ -1,5 +1,5 @@
-import { keyframes } from '@emotion/react';
 import type { CSSProperties } from 'react';
+import { keyframes } from '@emotion/react';
 
 type Props = {
   fadeDuration?: number;

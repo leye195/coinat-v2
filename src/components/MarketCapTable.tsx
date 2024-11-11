@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import { useCallback, useId, useState } from 'react';
+import Image from 'next/image';
 import { useQuery } from 'react-query';
-
+import { marketCapHeader } from 'data/table';
 import { getMarketcap } from '@/api';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
@@ -11,7 +11,6 @@ import Text from '@/components/Text';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import { marketCapHeader } from 'data/table';
 
 const MarketCapTable = () => {
   const id = useId();

@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import type { ComponentProps } from 'react';
+import styled from '@emotion/styled';
 import { flex } from '@/styles/mixin';
 import { spacing } from '@/styles/variables';
 

@@ -1,9 +1,8 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useEffect, useMemo, useState, useId } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState, useId } from 'react';
 import { useMedia } from 'react-use';
-
 import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import ExchangeChart from '@/components/ExchangeChart';
@@ -14,7 +13,6 @@ import Skeleton from '@/components/Skeleton';
 import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
 import Text from '@/components/Text';
-
 import { exchangeTabs, timeTabs } from '@/data/tab';
 import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
@@ -73,14 +71,14 @@ const ExchangePage: NextPageWithLayout = ({
     };
   }, [data, activeExchangeTab]);
 
-  const onClickTimeTab = (value: string, index: number) => {
+  const onClickTimeTab = (value: string, index: number) => () => {
     setActiveTimeTab({
       value,
       index,
     });
   };
 
-  const onClickMarketTab = (value: string, index: number) => {
+  const onClickMarketTab = (value: string, index: number) => () => {
     setActiveExchangeTab({
       value,
       index,
@@ -208,7 +206,7 @@ const ExchangePage: NextPageWithLayout = ({
             {timeTabs.map(({ name, value }, idx) => (
               <Tab.Button
                 key={`${id}-${name}`}
-                onClick={() => onClickTimeTab(value, idx)}
+                onClick={onClickTimeTab(value, idx)}
               >
                 <Text fontSize="14px">{name}</Text>
               </Tab.Button>
@@ -222,7 +220,7 @@ const ExchangePage: NextPageWithLayout = ({
             {exchangeTabs.map(({ name, value }, index) => (
               <Tab.Button
                 key={`${id}-${name}`}
-                onClick={() => onClickMarketTab(value, index)}
+                onClick={onClickMarketTab(value, index)}
               >
                 <Text fontSize="14px">{name}</Text>
               </Tab.Button>

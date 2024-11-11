@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 import type { AppProps } from 'next/app';
-import { useState } from 'react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import MetaTags from '@/components/Metatags';

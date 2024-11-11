@@ -1,11 +1,11 @@
-import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
-import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
-
+import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
+import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import Spacing from '@/components/Spacing';
@@ -24,6 +24,8 @@ import {
 } from '@/store/coin';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
+
+const TABLE_HEADER = ['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'];
 
 type Props = {
   krwCoinData: CoinState;
@@ -49,10 +51,14 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
     defaultValue: [],
   });
 
-  const isFavSymbol = (symbol: string) => {
-    if (coinType === 'KRW') return krwFavList.includes(symbol);
-    return btcFavList.includes(symbol);
-  };
+  const isFavSymbol = useCallback(
+    (symbol: string) => {
+      return coinType === 'KRW'
+        ? krwFavList.includes(symbol)
+        : btcFavList.includes(symbol);
+    },
+    [btcFavList, coinType, krwFavList],
+  );
 
   const toggleFav = (symbol: string) => () => {
     if (isFavSymbol(symbol)) {
@@ -85,28 +91,32 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
     );
   };
 
+  const filteredCointList = useMemo(() => {
+    return [
+      ...coinList.filter(
+        (data) => data.symbol !== 'BTC' && isFavSymbol(data.symbol),
+      ),
+      ...coinList.filter(
+        (data) => data.symbol !== 'BTC' && !isFavSymbol(data.symbol),
+      ),
+    ];
+  }, [coinList, isFavSymbol]);
+
   return (
     <Table
       header={
         <>
-          {['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'].map(
-            (name, idx) => (
-              <Table.Header
-                key={name}
-                name={name}
-                right={
-                  <Image
-                    src="/assets/updown.png"
-                    alt=""
-                    width={6}
-                    height={12}
-                  />
-                }
-                width="25%"
-                onClick={handleSort(sortColumn[idx])}
-              />
-            ),
-          )}
+          {TABLE_HEADER.map((name, idx) => (
+            <Table.Header
+              key={name}
+              name={name}
+              right={
+                <Image src="/assets/updown.png" alt="" width={6} height={12} />
+              }
+              width="25%"
+              onClick={handleSort(sortColumn[idx])}
+            />
+          ))}
         </>
       }
       body={
@@ -114,20 +124,14 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
           <Table.Skeleton />
         ) : (
           <>
-            {[
-              ...coinList.filter(
-                (data) => data.symbol !== 'BTC' && isFavSymbol(data.symbol),
-              ),
-              ...coinList.filter(
-                (data) => data.symbol !== 'BTC' && !isFavSymbol(data.symbol),
-              ),
-            ].map((data: CombinedTickers) => (
+            {filteredCointList.map((data) => (
               <Table.Row key={data.symbol}>
                 <Table.Cell>
                   <div
                     className={cn('flex items-center gap-2', 'max-sm:gap-0.5')}
                   >
                     <Flex
+                      className="cursor-pointer"
                       alignItems="center"
                       gap="4px"
                       onClick={() =>
@@ -137,17 +141,14 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                           }&type=${coinType.toUpperCase()}`,
                         )
                       }
-                      style={{
-                        cursor: 'pointer',
-                      }}
                     >
                       <picture>
                         <img
-                          className="rounded-[2rem]"
+                          className="rounded-[2rem] max-sm:w-4 w-5 min-w-4"
                           alt={data.symbol}
                           src={getCoinSymbolImage(data.symbol)}
-                          width={isSmDown ? 16 : 20}
-                          height={isSmDown ? 16 : 20}
+                          width={20}
+                          height={20}
                         />
                       </picture>
                       <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>

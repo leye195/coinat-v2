@@ -1,7 +1,6 @@
+import { useId, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useId, useMemo } from 'react';
-
 import { flex } from '@/styles/mixin';
 import TabButton from './Button';
 import TabGroup from './Group';

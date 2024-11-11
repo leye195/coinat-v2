@@ -1,5 +1,4 @@
 import { useQuery } from 'react-query';
-
 import { getFearGreedIndex } from '@/api';
 import Skeleton from '@/components/Skeleton';
 import { fearGreedColor, fearGreedIndex } from '@/data/fearGreed';
@@ -12,11 +11,14 @@ const FearGreed = () => {
     async () => {
       const res = await getFearGreedIndex();
       const { data } = res.data;
-      return data ? data[0] : {};
+      return data;
     },
     {
       refetchIntervalInBackground: true,
       refetchInterval: 1000 * 50,
+      select: (data) => {
+        return data[0];
+      },
     },
   );
 

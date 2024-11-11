@@ -1,5 +1,15 @@
 export type CandleType = 'minutes' | 'days' | 'weeks' | 'months';
 
+export type FearGreed = {
+  name: string;
+  data: Array<
+    Record<
+      'value' | 'value_classification' | 'timestamp' | 'time_until_update',
+      string
+    >
+  >;
+};
+
 export type UpbitCandle = {
   market: string;
   candle_date_time_utc: string;

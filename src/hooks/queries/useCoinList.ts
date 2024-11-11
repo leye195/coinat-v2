@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
-
 import { initSocket } from '@/lib/socket';
 import { btcCoinListState, krCoinListState } from '@/store/coin';
 

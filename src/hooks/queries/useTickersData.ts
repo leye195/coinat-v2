@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { useQuery } from 'react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-
 import { getCurrencyInfo } from '@/api';
 import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';

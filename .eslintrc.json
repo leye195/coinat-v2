@@ -31,8 +31,8 @@
       "error",
       {
         "groups": [
-          "builtin",
           "external",
+          "builtin",
           "internal",
           ["parent", "sibling"],
           "index"
@@ -49,21 +49,23 @@
             "position": "before"
           },
           {
-            "pattern": "@",
+            "pattern": "@fortawesome/**",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "@/**",
             "group": "internal",
             "position": "after"
           },
           {
-            "pattern": "@/",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "./",
+            "pattern": "./**",
             "group": "internal",
             "position": "after"
           }
         ],
+        "pathGroupsExcludedImportTypes": ["react", "next"],
+        "newlines-between": "never",
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true

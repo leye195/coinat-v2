@@ -1,7 +1,6 @@
-import { Chart, Nullable } from 'klinecharts';
 import { useEffect, useRef, useState } from 'react';
+import { Chart, Nullable } from 'klinecharts';
 import { useMedia } from 'react-use';
-
 import {
   useBinanceCandles,
   useUpbitCandles,

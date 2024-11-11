@@ -1,12 +1,10 @@
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
-
 import CoinTable from '@/components/CoinTable';
 import Exchange from '@/components/Exchange';
 import FearGreed from '@/components/FearGreed';
 import Layout from '@/components/Layout';
 import Tab from '@/components/Tab';
-
 import { exchangeHeader } from '@/data/table';
 import { useCoinList, useTickersData } from '@/hooks';
 import { cn, getBreakpointQuery, setComma } from '@/lib/utils';

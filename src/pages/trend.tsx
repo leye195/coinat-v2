@@ -1,5 +1,4 @@
 import { Suspense, useCallback, useId, useState } from 'react';
-
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Layout from '@/components/Layout';
@@ -10,7 +9,6 @@ import SubNews from '@/components/News/SubNews';
 import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
 import Text from '@/components/Text';
-
 import { newsTabs } from '@/data/tab';
 import { useMount, useNewsData } from '@/hooks';
 import { palette } from '@/styles/variables';

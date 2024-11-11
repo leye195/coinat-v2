@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { queryStringify } from '@/lib/utils';
 import type {
   BinanceCandlesParams,
+  FearGreed,
   UpbitCandle,
   UpbitCandlesParams,
 } from '@/types/Candle';
@@ -55,7 +56,7 @@ export const getMarketcap = (): Promise<AxiosResponse<MarketCap[]>> =>
  * 탐욕 지수 api
  * @returns
  */
-export const getFearGreedIndex = () =>
+export const getFearGreedIndex = (): Promise<AxiosResponse<FearGreed>> =>
   axios.get('https://api.alternative.me/fng/?limit=1');
 
 export const getUpbitCandles = async ({
