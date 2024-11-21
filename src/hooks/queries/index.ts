@@ -4,3 +4,4 @@ export { default as useExchangeData } from './useExchangeData';
 export { default as useUpbitCandles } from './useUpbitCandles';
 export { default as useBinanceCandles } from './useBinanceCandles';
 export { default as useNewsData } from './useNewsData';
+export { default as useInitCoinList } from './useInitCoinList';

@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import MetaTags from '@/components/Metatags';
+import Worker from '@/components/Worker';
 import { globalTheme } from '@/styles/theme';
 import type { NextPageWithLayout } from '@/types/Page';
 
@@ -22,6 +23,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
           <MetaTags />
+          <Worker />
           {getLayout(<Component {...pageProps} />)}
         </QueryClientProvider>
       </RecoilRoot>
