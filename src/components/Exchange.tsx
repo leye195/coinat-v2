@@ -26,7 +26,7 @@ const Exchange = ({ title, value, isLoading }: Props) => {
         {title}
       </h6>
       {isLoading ? (
-        <Skeleton width="100%" height={18} borderRadius="4px" />
+        <Skeleton width="100%" height={27} borderRadius="4px" />
       ) : (
         <p className={cn('m-0 text-black', 'max-md:text-[10px]')}>{value}</p>
       )}
