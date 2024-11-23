@@ -1,4 +1,4 @@
-const { colors, twTypographyMap } = require('ownui-system');
+const { twTypographyMap } = require('ownui-system');
 const plugin = require('tailwindcss/plugin');
 
 const config = {
