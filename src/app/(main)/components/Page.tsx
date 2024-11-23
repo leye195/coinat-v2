@@ -23,7 +23,9 @@ const HomePage = () => {
             <Tab tabs={['KRW', 'BTC']} />
           </Suspense>
           <div className={cn('max-md:text-xs max-sm:text-[10px]')}>
-            <p className={cn('m-2 max-md:m-1')}>암호화폐 - {data?.length}개</p>
+            <p className={cn('m-2 max-md:m-1')}>
+              암호화폐 - {data?.length ?? 0}개
+            </p>
           </div>
           <CoinTable
             krwCoinData={krwCoinData}
