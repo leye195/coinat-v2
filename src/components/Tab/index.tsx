@@ -44,7 +44,7 @@ const Tab = ({ tabs }: TabProps) => {
     [tabs.length, activeIdx],
   );
 
-  const handleClick = (name: string, idx: number) => () => {
+  const handleClick = (name: string) => () => {
     router.push(`?type=${name}`);
   };
 
@@ -54,7 +54,7 @@ const Tab = ({ tabs }: TabProps) => {
         <TabButton
           key={tab}
           isActive={idx === activeIdx}
-          onClick={handleClick(tab, idx)}
+          onClick={handleClick(tab)}
         >
           {tab}
         </TabButton>

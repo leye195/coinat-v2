@@ -44,7 +44,7 @@ app.get(async (_, res) => {
         value: +KRW,
       });
     }
-  } catch (error) {
+  } catch {
     const currency = await currencyModel.findOne({ name: 'KRW_USD' });
     res.status(200).json({
       name: 'KRW_USD',

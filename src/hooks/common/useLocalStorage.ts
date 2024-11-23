@@ -16,7 +16,7 @@ const useLocalStorage = ({ key, defaultValue }: UseLocalStorageProps) => {
   };
 
   useIsomorphicLayoutEffect(() => {
-    let storedData = getLocalStorageData(key) ?? defaultValue;
+    const storedData = getLocalStorageData(key) ?? defaultValue;
 
     if (storedData === defaultValue) {
       setLocalStorageData(key, storedData);

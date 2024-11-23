@@ -1,6 +1,6 @@
 import type { ComponentProps, CSSProperties } from 'react';
 
-type FlexProps = {
+export type FlexProps = {
   display?: 'flex' | 'inline-flex';
   alignItems?: CSSProperties['alignItems'];
   justifyContent?: CSSProperties['justifyContent'];
@@ -19,7 +19,6 @@ export const Flex = ({
   flexDirection,
   isFull,
   className,
-  style,
   ...restProps
 }: FlexProps) => {
   return (

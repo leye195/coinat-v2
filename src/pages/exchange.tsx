@@ -269,7 +269,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         type,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       redirect: {
         permanent: false,

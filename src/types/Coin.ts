@@ -35,7 +35,7 @@ type CoinInfo = {
   english_name: string;
   korean_name: string;
   symbol: string;
-  header_key_values: {};
+  header_key_values: Record<string, string | number>;
   block_inspector_urls: BlockInspectorUrl[];
   market_data: Record<
     'coin_market_cap' | 'coin_gecko' | 'project_name',
