@@ -44,7 +44,13 @@ const nextConfig = {
     removeConsole: process.env.NEXT_PUBLIC_ENV === 'production',
   },
   images: {
-    domains: ['static.upbit.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'static.upbit.com',
+        port: '',
+      },
+    ],
     path: '/_next/image',
     loader: 'default',
     minimumCacheTTL: 3600,
