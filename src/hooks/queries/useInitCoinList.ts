@@ -12,7 +12,6 @@ const useInitCoinList = () => {
   useEffect(() => {
     const localData = getLocalStorageData('coins');
 
-    // TODO: 저장시간 비교,
     if (localData) {
       const { krw, btc } = localData;
       setKrwCoinList({

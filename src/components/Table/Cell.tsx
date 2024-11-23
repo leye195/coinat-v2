@@ -1,27 +1,24 @@
 import type { ComponentProps } from 'react';
-import styled from '@emotion/styled';
-import { flex } from '@/styles/mixin';
-import { spacing } from '@/styles/variables';
+import { cn } from '@/lib/utils';
 
 type CellProps = {
   width?: string;
 } & ComponentProps<'div'>;
 
-const Container = styled.div<{ color?: string; width?: string }>`
-  width: ${({ width }) => width ?? '30%'};
-  height: 100%;
-  padding: ${spacing.xxs} ${spacing.xs};
-  color: ${({ color }) => color ?? '#000000'};
-  font-weight: 400;
-
-  ${flex({ alignItems: 'center' })};
-`;
-
 const Cell = ({ children, color, width }: CellProps) => {
   return (
-    <Container color={color} width={width}>
+    <div
+      className={cn(
+        'h-full font-normal flex items-center px-2 py-1',
+        'text-[var(--color)] w-[var(--width)]',
+      )}
+      style={{
+        '--color': color ?? '#000000',
+        '--width': width ?? '30%',
+      }}
+    >
       {children}
-    </Container>
+    </div>
   );
 };
 

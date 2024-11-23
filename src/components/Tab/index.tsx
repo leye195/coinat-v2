@@ -1,23 +1,28 @@
 import { useId, useMemo } from 'react';
-import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { flex } from '@/styles/mixin';
+import { cn } from '@/lib/utils';
 import TabButton from './Button';
 import TabGroup from './Group';
 
-export const ActiveBar = styled.div<{ left: string; width: string }>`
-  position: absolute;
-  z-index: 0;
-  bottom: 0;
-  left: ${({ left }) => left};
-  width: ${({ width }) => width};
-  height: 3px;
-  background-color: #f8b64c;
-  color: white;
-  transition: all 200ms 30ms cubic-bezier(0.4, 0, 0.6, 1);
+type ActiveBarProps = {
+  left: string;
+  width: string;
+};
 
-  ${flex({ alignItems: 'center', justifyContents: 'center' })};
-`;
+export const ActiveBar = ({ left, width }: ActiveBarProps) => (
+  <div
+    className={cn(
+      'absolute z-0 bottom-0 h-[3px] text-white bg-[#f8b64c]',
+      'flex items-center justify-center',
+      'left-[var(--left)] w-[var(--width)]',
+      'transition-all duration-200 delay-30 ease-[cubic-bezier(0.4,0,0.6,1)]',
+    )}
+    style={{
+      '--left': left,
+      '--width': width,
+    }}
+  />
+);
 
 type TabProps = {
   tabs: string[];
