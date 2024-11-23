@@ -38,7 +38,11 @@ const config: Config = {
   },
 
   plugins: [
-    plugin(function ({ addUtilities }) {
+    plugin(function ({
+      addUtilities,
+    }: {
+      addUtilities: (utilities: any, variants?: string[]) => void;
+    }) {
       // Add your custom styles here
       addUtilities(twTypographyMap, ['responsive', 'hover']);
     }),
