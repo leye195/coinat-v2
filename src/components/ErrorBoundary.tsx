@@ -1,5 +1,4 @@
 import React, { type PropsWithChildren } from 'react';
-import styled from '@emotion/styled';
 import { cn } from '@/lib/utils';
 import Button from './Button';
 
@@ -7,19 +6,6 @@ type State = {
   hasError: boolean;
   error?: Error;
 };
-
-const ErrorStackContextBox = styled.div`
-  ::-webkit-scrollbar {
-    width: 10px;
-    border-radius: 0 16px 16px 0;
-    background-color: ${({ theme }) => theme.color.white};
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background-color: ${({ theme }) => theme.color.gray};
-  }
-`;
 
 class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   constructor(props: PropsWithChildren) {
@@ -56,13 +42,13 @@ class ErrorBoundary extends React.Component<PropsWithChildren, State> {
                 'bg-white text-xl rounded-lg shadow-[0_8px_24px_0_rgba(153,156,178,0.1)]',
               )}
             >
-              <ErrorStackContextBox
+              <div
                 className={cn(
                   'overflow-y-auto w-full min-h-[200px] max-h-[300px]',
                 )}
               >
                 <p className={cn('m-0 p-5 text-black')}>{error.stack}</p>
-              </ErrorStackContextBox>
+              </div>
             </div>
           )}
         </div>

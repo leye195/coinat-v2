@@ -10,7 +10,6 @@ onmessage = async () => {
       btc: btcData,
     });
   } catch (error) {
-    console.log(error);
     postMessage({
       krw: [],
       btc: [],

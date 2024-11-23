@@ -1,17 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getMarketcap } from '@/api';
 import Text from '@/components/Text';
-import { usePrefetch } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
+import PreFetcher from '../PreFetcher';
 
 const Header = () => {
-  usePrefetch({
-    queryKey: ['marketcap'],
-    queryFn: getMarketcap,
-  });
-
   return (
     <div
       className={cn(
@@ -20,6 +14,7 @@ const Header = () => {
         'max-md:h-9',
       )}
     >
+      <PreFetcher />
       <nav
         className={cn(
           'flex items-center justify-between',

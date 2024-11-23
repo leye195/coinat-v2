@@ -6,10 +6,10 @@ type Props = {
   isHideHeader?: boolean;
 };
 
-const Layout = ({ children, isHideHeader }: Props) => {
+const Layout = ({ children }: Props) => {
   return (
     <>
-      {!isHideHeader && <Header />}
+      <Header />
       <main className="relative min-h-[calc(100vh-48px)]">
         <div
           className={cn(
