@@ -1,5 +1,5 @@
 import { useId, memo } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getCoinInfo } from '@/api';
 import { Flex } from './Flex';
 import MultilineText from './MultilineText';

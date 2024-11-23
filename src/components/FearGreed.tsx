@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getFearGreedIndex } from '@/api';
 import Skeleton from '@/components/Skeleton';
 import { fearGreedColor, fearGreedIndex } from '@/data/fearGreed';
@@ -6,21 +6,19 @@ import { cn } from '@/lib/utils';
 import type { FearGreed } from '@/types/FearGreed';
 
 const FearGreed = () => {
-  const { isLoading, data } = useQuery(
-    ['fear-greed'],
-    async () => {
+  const { isLoading, data } = useQuery({
+    queryKey: ['fear-greed'],
+    queryFn: async () => {
       const res = await getFearGreedIndex();
       const { data } = res.data;
       return data;
     },
-    {
-      refetchIntervalInBackground: true,
-      refetchInterval: 1000 * 50,
-      select: (data) => {
-        return data[0];
-      },
+    refetchIntervalInBackground: true,
+    refetchInterval: 1000 * 50,
+    select: (data) => {
+      return data[0];
     },
-  );
+  });
 
   return (
     <section

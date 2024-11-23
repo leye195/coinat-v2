@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import type { AppProps } from 'next/app';
-import { QueryClientProvider, QueryClient } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import MetaTags from '@/components/Metatags';
 import Worker from '@/components/Worker';

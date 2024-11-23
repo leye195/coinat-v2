@@ -1,6 +1,6 @@
 import { useCallback, useId, useState } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useQuery } from 'react-query';
 import { marketCapHeader } from 'data/table';
 import { getMarketcap } from '@/api';
 import Button from '@/components/Button';
@@ -16,7 +16,7 @@ const MarketCapTable = () => {
   const id = useId();
   const [loadMore, setLoadMore] = useState(false);
 
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ['marketcap'],
     queryFn: getMarketcap,
     select: (response) => {
@@ -24,7 +24,6 @@ const MarketCapTable = () => {
       return data;
     },
     refetchOnWindowFocus: false,
-    suspense: true,
   });
 
   const toggleLoadMore = useCallback(() => {

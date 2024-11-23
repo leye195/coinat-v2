@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { type AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
 import { getUpbitCandles } from '@/api';
 import type { CandleType, UpbitCandle } from '@/types/Candle';
 
@@ -31,7 +32,7 @@ const useUpbitCandles = ({
     return parsedData.reverse();
   }
 
-  return useQuery({
+  const { data, ...rest } = useQuery({
     queryKey: ['exchange', `${priceSymbol}-${code}`, type, 'upbit'],
     queryFn: ({ queryKey }) =>
       getUpbitCandles({
@@ -39,11 +40,18 @@ const useUpbitCandles = ({
         candleType: queryKey[2] as CandleType,
         count: 200,
       }),
-    select: selectUpbitCandles,
-    onSuccess,
     enabled,
+    select: selectUpbitCandles,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (!data) return;
+
+    onSuccess(data);
+  }, [data, onSuccess]);
+
+  return { data, ...rest };
 };
 
 export default useUpbitCandles;

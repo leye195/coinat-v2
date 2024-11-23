@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { getCurrencyInfo } from '@/api';
 import { combineTickers } from '@/lib/socket';

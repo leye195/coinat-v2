@@ -1,4 +1,4 @@
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from '@tanstack/react-query';
 
 type UsePrefetchProps = {
   queryKey: QueryKey;

@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { type AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
 import { getBinanceCandles } from '@/api';
 import { reCalculateTimeStamp } from '@/lib/utils';
 import { CandleType } from '@/types/Candle';
@@ -34,7 +35,7 @@ const useBinanceCandles = ({
     return parsedData;
   }
 
-  return useQuery({
+  const { data, ...rest } = useQuery({
     queryKey: ['exchange', `${code}BTC`, type, 'binance', priceSymbol],
     queryFn: ({ queryKey }) =>
       getBinanceCandles({
@@ -43,9 +44,19 @@ const useBinanceCandles = ({
       }),
     enabled,
     select: selectBinanceCandles,
-    onSuccess,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (!data) return;
+
+    onSuccess(data);
+  }, [data, onSuccess]);
+
+  return {
+    data,
+    ...rest,
+  };
 };
 
 export default useBinanceCandles;
