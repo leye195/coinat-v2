@@ -3,13 +3,37 @@ import { useSetRecoilState } from 'recoil';
 import { initSocket } from '@/lib/socket';
 import { getLocalStorageData, setLocalStorageData } from '@/lib/storage';
 import { btcCoinListState, krCoinListState } from '@/store/coin';
+import { Coin } from '@/types/Coin';
 
-const useInitCoinList = () => {
+type UseInitCointListProps = {
+  workerEnabled?: boolean;
+  initialData?: Record<'krw' | 'btc', Coin[]>;
+};
+
+const useInitCoinList = ({
+  initialData = { krw: [], btc: [] },
+  workerEnabled = true,
+}: UseInitCointListProps = {}) => {
   const workerRef = useRef<Worker | null>(null);
   const setKrwCoinList = useSetRecoilState(krCoinListState);
   const setBtcCoinList = useSetRecoilState(btcCoinListState);
 
   useEffect(() => {
+    if (workerEnabled) return;
+
+    const { krw, btc } = initialData;
+
+    setKrwCoinList({
+      isLoading: false,
+      data: krw,
+    });
+    setBtcCoinList({ isLoading: false, data: btc });
+    initSocket([...krw, ...btc]);
+  }, [workerEnabled, initialData, setBtcCoinList, setKrwCoinList]);
+
+  useEffect(() => {
+    if (!workerEnabled) return;
+
     const localData = getLocalStorageData('coins');
 
     if (localData) {
@@ -51,7 +75,7 @@ const useInitCoinList = () => {
     return () => {
       workerRef.current?.terminate();
     };
-  }, [setBtcCoinList, setKrwCoinList]);
+  }, [workerEnabled, setBtcCoinList, setKrwCoinList]);
 };
 
 export default useInitCoinList;

@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';

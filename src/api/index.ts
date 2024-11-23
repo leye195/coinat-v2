@@ -10,6 +10,7 @@ import type { Coin, CoinInfoResponse } from '@/types/Coin';
 import type { Currency } from '@/types/Currency';
 import type { MarketCap } from '@/types/Marketcap';
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 
@@ -34,7 +35,17 @@ export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
 export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
   api.get(`coin-v2?type=${type}`);
 
+export const getUpbitCoinsV2 = () =>
+  fetch(`${BASE_URL}/api/market`, {
+    cache: 'no-cache',
+  });
+
 export const getUpbitCoins = () => api.get('market');
+
+export const getBinanceCoinsV2 = () =>
+  fetch('https://api.binance.com/api/v3/exchangeInfo', {
+    cache: 'no-cache',
+  });
 
 export const getBinanceCoins = () =>
   axios.get('https://api.binance.com/api/v3/exchangeInfo');

@@ -1,5 +1,7 @@
+'use client';
+
 import { useId, useMemo } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import TabButton from './Button';
 import TabGroup from './Group';
@@ -31,7 +33,8 @@ type TabProps = {
 const Tab = ({ tabs }: TabProps) => {
   const id = useId();
   const router = useRouter();
-  const { type } = router.query;
+  const searchParams = useSearchParams();
+  const type = searchParams?.get('type');
 
   const activeIdx = useMemo(() => {
     const index = tabs.findIndex((tab) => tab === type);

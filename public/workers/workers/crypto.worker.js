@@ -18,7 +18,6 @@ onmessage = () => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        console.log(error);
         postMessage({
             krw: [],
             btc: [],

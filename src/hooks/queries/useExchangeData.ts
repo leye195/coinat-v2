@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
 import { getTickers } from '@/lib/socket';
 import type { Exchange } from '@/types/Ticker';
