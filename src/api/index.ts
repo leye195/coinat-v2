@@ -37,12 +37,9 @@ export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
 
 export const getUpbitCoinsV2 = async () => {
   try {
-    const response = await fetch(
-      `https://api.upbit.com/v1/market/all?isDetails=true`,
-      {
-        cache: 'no-cache',
-      },
-    );
+    const response = await fetch(`${BASE_URL}/api/upbit/market`, {
+      cache: 'no-cache',
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
