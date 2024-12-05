@@ -1,7 +1,9 @@
+'use client';
+
 import { useInitCoinList } from 'hooks/queries';
 
 const Worker = () => {
-  useInitCoinList();
+  useInitCoinList({ workerEnabled: true });
   return null;
 };
 

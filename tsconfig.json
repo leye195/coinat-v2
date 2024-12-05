@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,36 +14,17 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "jsxImportSource": "@emotion/react",
     "baseUrl": "src",
     "paths": {
-      "@/components/*": [
-        "./components/*"
-      ],
-      "@/styles/*": [
-        "./styles/*"
-      ],
-      "@/server/*": [
-        "./server/*"
-      ],
-      "@/lib/*": [
-        "./lib/*"
-      ],
-      "@/types/*": [
-        "./types/*"
-      ],
-      "@/store/*": [
-        "./store/*"
-      ],
-      "@/data/*": [
-        "./data/*"
-      ],
-      "@/hooks": [
-        "./hooks"
-      ],
-      "@/api": [
-        "./api"
-      ]
+      "@/components/*": ["./components/*"],
+      "@/styles/*": ["./styles/*"],
+      "@/server/*": ["./server/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/types/*": ["./types/*"],
+      "@/store/*": ["./store/*"],
+      "@/data/*": ["./data/*"],
+      "@/hooks": ["./hooks"],
+      "@/api": ["./api"]
     },
     "plugins": [
       {
@@ -62,7 +39,5 @@
     "postcss.config.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

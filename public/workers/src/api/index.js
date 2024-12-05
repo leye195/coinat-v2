@@ -1,5 +1,15 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import axios from 'axios';
 import { queryStringify } from '@/lib/utils';
+const BASE_URL = 'https://coinat-vapp.vercel.app';
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 const api = axios.create({
@@ -16,7 +26,21 @@ const binanceApi = axios.create({
 });
 export const getCurrencyInfo = () => api.get('currency');
 export const getCoins = (type) => api.get(`coin-v2?type=${type}`);
+export const getUpbitCoinsV2 = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield fetch(`https://api.upbit.com/v1/market/all?isDetails=true`, {
+        cache: 'force-cache',
+    });
+    const data = yield response.json(); // 응답 본문을 읽음
+    return data; // 데이터 반환
+});
 export const getUpbitCoins = () => api.get('market');
+export const getBinanceCoinsV2 = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield fetch('https://api.binance.com/api/v3/exchangeInfo', {
+        cache: 'force-cache',
+    });
+    const data = yield response.json();
+    return data;
+});
 export const getBinanceCoins = () => axios.get('https://api.binance.com/api/v3/exchangeInfo');
 /**
  * news api
@@ -30,11 +54,24 @@ export const getMarketcap = () => axios.get('https://crix-api-cdn.upbit.com/v1/c
  * @returns
  */
 export const getFearGreedIndex = () => axios.get('https://api.alternative.me/fng/?limit=1');
-export const getUpbitCandles = ({ market, candleType = 'months', count = 200, minute = 3, }) => {
-    if (candleType === 'minutes')
-        return upbitApi.get(`/candles/minutes/${minute}?market=${market}&count=${count}`);
-    return upbitApi.get(`/candles/${candleType}?market=${market}&count=${count}`);
-};
+export const getUpbitCandles = (_a) => __awaiter(void 0, [_a], void 0, function* ({ market, candleType = 'months', count = 200, minute = 3, }) {
+    try {
+        if (candleType === 'minutes') {
+            const response = yield upbitApi.get(`/candles/minutes/${minute}?market=${market}&count=${count}`);
+            return response;
+        }
+        const response = yield upbitApi.get(`/candles/${candleType}?market=${market}&count=${count}`);
+        return response;
+    }
+    catch (_b) {
+        if (candleType === 'minutes') {
+            const response = yield api.get(`upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`);
+            return response;
+        }
+        const response = yield api.get(`upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`);
+        return response;
+    }
+});
 /**
  * 두나무 환율 정보
  * https://crix-api-cdn.upbit.com/v1/forex/recent?codes=FRX.KRWUSD
@@ -63,13 +100,14 @@ export const getUpgitRateExchange = () => axios.get('https://quotation-api-cdn.d
  */
 export const getBinanceCandles = ({ symbol, interval, }) => {
     const intervalValue = {
-        minutes: '1s',
+        minutes: '1m',
         days: '1d',
         weeks: '1w',
-        months: '1m',
+        months: '1M',
     };
     return binanceApi.get(`/api/v3/uiKlines?symbol=${symbol}&interval=${intervalValue[interval]}`);
 };
 export const postChat = (message) => api.post('chat', {
     message,
 });
+export const getCoinInfo = (coin) => api.get(`coin-info?code=${coin.toUpperCase()}`);

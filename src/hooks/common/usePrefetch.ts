@@ -1,3 +1,5 @@
+'use client';
+
 import { QueryFunction, QueryKey, useQueryClient } from '@tanstack/react-query';
 
 type UsePrefetchProps = {

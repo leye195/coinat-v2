@@ -10,6 +10,7 @@ import type { Coin, CoinInfoResponse } from '@/types/Coin';
 import type { Currency } from '@/types/Currency';
 import type { MarketCap } from '@/types/Marketcap';
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 
@@ -34,7 +35,49 @@ export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
 export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
   api.get(`coin-v2?type=${type}`);
 
+export const getUpbitCoinsV2 = async () => {
+  try {
+    const response = await fetch(
+      `https://api.upbit.com/v1/market/all?isDetails=true`,
+      {
+        cache: 'no-cache',
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json(); // 응답 본문을 읽음
+    return data; // 데이터 반환
+  } catch (error) {
+    console.error('Error fetching Upbit coins:', error);
+    return []; // 또는 대체 데이터를 반환
+  }
+};
+
 export const getUpbitCoins = () => api.get('market');
+
+export const getBinanceCoinsV2 = async () => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/binance/market`, //'https://api.binance.com/api/v3/exchangeInfo',
+      {
+        cache: 'no-cache',
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching Binance coins:', error);
+    return []; // 또는 대체 데이터를 반환
+  }
+};
 
 export const getBinanceCoins = () =>
   axios.get('https://api.binance.com/api/v3/exchangeInfo');

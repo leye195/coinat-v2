@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
 import { getNews } from '@/api';
 import type { NewsResponse } from '@/types/News';
