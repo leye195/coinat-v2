@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import axios from 'axios';
 import { queryStringify } from '@/lib/utils';
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const BASE_URL = 'https://coinat-vapp.vercel.app';
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 const api = axios.create({
@@ -26,12 +26,20 @@ const binanceApi = axios.create({
 });
 export const getCurrencyInfo = () => api.get('currency');
 export const getCoins = (type) => api.get(`coin-v2?type=${type}`);
-export const getUpbitCoinsV2 = () => fetch(`${BASE_URL}/api/market`, {
-    cache: 'no-cache',
+export const getUpbitCoinsV2 = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield fetch(`https://api.upbit.com/v1/market/all?isDetails=true`, {
+        cache: 'force-cache',
+    });
+    const data = yield response.json(); // 응답 본문을 읽음
+    return data; // 데이터 반환
 });
 export const getUpbitCoins = () => api.get('market');
-export const getBinanceCoinsV2 = () => fetch('https://api.binance.com/api/v3/exchangeInfo', {
-    cache: 'no-cache',
+export const getBinanceCoinsV2 = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield fetch('https://api.binance.com/api/v3/exchangeInfo', {
+        cache: 'force-cache',
+    });
+    const data = yield response.json();
+    return data;
 });
 export const getBinanceCoins = () => axios.get('https://api.binance.com/api/v3/exchangeInfo');
 /**

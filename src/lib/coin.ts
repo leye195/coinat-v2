@@ -14,7 +14,7 @@ export const getCoinSymbolImage = (symbol: string) =>
 export const getCoinsV2 = async (type: Currency) => {
   try {
     // upbit coin data
-    const upbitData = await (await getUpbitCoinsV2()).json();
+    const upbitData = await getUpbitCoinsV2();
     const upbitKrwCoins: UpbitCoin[] = upbitData.filter((coin: UpbitCoin) =>
       coin.market.includes('KRW-'),
     );
@@ -28,9 +28,9 @@ export const getCoinsV2 = async (type: Currency) => {
       });
 
     // binance coin data
-    const binanceData = await (await getBinanceCoinsV2()).json();
-    const binanceBtcCoins = binanceData.symbols
-      .filter(
+    const binanceData = await getBinanceCoinsV2();
+    const binanceBtcCoins = binanceData?.symbols
+      ?.filter(
         (data: any) => data.symbol.endsWith('BTC') && data.status === 'TRADING',
       )
       .map((data: any) => data.symbol.slice(0, data.symbol.length - 3));

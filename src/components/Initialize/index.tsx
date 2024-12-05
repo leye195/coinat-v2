@@ -10,7 +10,6 @@ async function fetchData() {
 
 async function Initialize() {
   const data = await fetchData();
-
   return <InitializeClient {...data} />;
 }
 

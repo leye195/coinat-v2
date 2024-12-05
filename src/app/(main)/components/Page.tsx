@@ -27,12 +27,7 @@ const HomePage = () => {
               암호화폐 - {data?.length ?? 0}개
             </p>
           </div>
-          <CoinTable
-            krwCoinData={krwCoinData}
-            btcCoinData={btcCoinData}
-            coinList={data ?? []}
-            handleSort={handleSort}
-          />
+          <CoinTable coinList={data ?? []} handleSort={handleSort} />
         </div>
       </section>
     </>

@@ -12,7 +12,7 @@ export const getCoinSymbolImage = (symbol) => `https://static.upbit.com/logos/${
 export const getCoinsV2 = (type) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // upbit coin data
-        const upbitData = yield (yield getUpbitCoinsV2()).json();
+        const upbitData = yield getUpbitCoinsV2();
         const upbitKrwCoins = upbitData.filter((coin) => coin.market.includes('KRW-'));
         const upbitBtcCoins = upbitData
             .filter((coin) => coin.market.includes('BTC-'))
@@ -21,7 +21,7 @@ export const getCoinsV2 = (type) => __awaiter(void 0, void 0, void 0, function* 
             return !upbitKrwCoins.some((coin) => coin.market.includes(symbol));
         });
         // binance coin data
-        const binanceData = yield (yield getBinanceCoinsV2()).json();
+        const binanceData = yield getBinanceCoinsV2();
         const binanceBtcCoins = binanceData.symbols
             .filter((data) => data.symbol.endsWith('BTC') && data.status === 'TRADING')
             .map((data) => data.symbol.slice(0, data.symbol.length - 3));

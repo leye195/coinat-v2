@@ -19,7 +19,15 @@ const useInitCoinList = ({
   const setBtcCoinList = useSetRecoilState(btcCoinListState);
 
   useEffect(() => {
-    if (workerEnabled) return;
+    if (
+      workerEnabled ||
+      initialData.krw.length === 0 ||
+      initialData.btc.length === 0
+    ) {
+      return;
+    }
+
+    console.log('here:', initialData);
 
     const { krw, btc } = initialData;
 

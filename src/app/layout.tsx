@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import Initialize from '@/components/Initialize';
 import Layout from '@/components/Layout';
+import { NavigationEvents } from '@/components/NavigationEvents';
 import Providers from '@/components/Providers';
 
 import '@/styles/globals.css';
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Providers>
           <Initialize />
+          <NavigationEvents />
           <Layout>{children}</Layout>
         </Providers>
       </body>

@@ -16,15 +16,13 @@ import { getCoinSymbolImage } from '@/lib/coin';
 import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
-import { CoinState, typeState } from '@/store/coin';
+import { typeState } from '@/store/coin';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 
 const TABLE_HEADER = ['코인', '업비트(₩)', '바이낸스(BTC)', '차이(%)'];
 
 type Props = {
-  krwCoinData: CoinState;
-  btcCoinData: CoinState;
   coinList: CombinedTickers[];
   handleSort: (type: string) => () => void;
 };
