@@ -36,18 +36,20 @@ export const btcKrw: Rate = {
   binance: 0, // btc
 };
 
+let upbitConnected = false;
+let binanceConnected = false;
+
 const UPBIT_SOCKET = 'wss://api.upbit.com/websocket/v1';
 const BINANCE_SOCKET = 'wss://stream.binance.com:9443/stream?streams=';
 
 const onUpbitOpen = async (socket: WebSocket) => {
-  const upbitList = (
-    await getUpbitCoins()
-  ).data.filter(
+  const upbitList = (await getUpbitCoins()).data.filter(
     (coin: UpbitCoin) =>
       coin.market.includes('KRW-') || coin.market.includes('BTC-'),
   );
 
   console.log('upbit connected');
+  upbitConnected = true;
 
   const data = [
     { ticket: 'coin-at' },
@@ -60,7 +62,7 @@ const onUpbitOpen = async (socket: WebSocket) => {
   socket.send(JSON.stringify(data));
 };
 
-const handleUpbitMessage = (cb?: () => void) => (e: any) => {
+const handleUpbitMessage = (_cb?: () => void) => (e: any) => {
   const enc = new TextDecoder('utf-8');
   const arr = new Uint8Array(e.data);
   const {
@@ -117,11 +119,12 @@ const handleUpbitMessage = (cb?: () => void) => (e: any) => {
   }
 };
 
-const onBinanceOpen = async (socket: WebSocket) => {
+const onBinanceOpen = async (_socket: WebSocket) => {
   console.log('binance connected');
+  binanceConnected = true;
 };
 
-const handleBinanceMessage = (cb?: () => void) => (e: any) => {
+const handleBinanceMessage = (_cb?: () => void) => (e: any) => {
   const {
     data: { s, c, h, l, o, p, P },
   } = JSON.parse(e.data);
@@ -157,23 +160,29 @@ const connect = (
   onMessage?: MessageCallback,
   binaryType?: BinaryType,
 ) => {
+  if (url.includes(UPBIT_SOCKET) && upbitConnected) {
+    console.log('Upbit socket is already connected.');
+    return; // Exit if Upbit is already connected
+  }
+
+  if (url.includes(BINANCE_SOCKET) && binanceConnected) {
+    console.log('Binance socket is already connected.');
+    return; // Exit if Binance is already connected
+  }
+
   let retry = false;
   const socket = new WebSocket(url);
 
-  if (binaryType) socket.binaryType = binaryType;
+  if (socket) if (binaryType) socket.binaryType = binaryType;
 
-  if (!!onOpen) {
-    socket.onopen = function () {
-      console.log(`connected to ${url}`);
-      onOpen(this);
-    };
-  }
+  socket.onopen = function () {
+    console.log(`connected to ${url}`);
+    onOpen?.(this);
+  };
 
-  if (!!onMessage) {
-    socket.onmessage = function (e) {
-      onMessage(e);
-    };
-  }
+  socket.onmessage = function (e) {
+    onMessage?.(e);
+  };
 
   socket.onclose = function () {
     console.log('reconnecting socket');
@@ -184,6 +193,11 @@ const connect = (
 
     retry = true;
     connect(url);
+  };
+
+  socket.onerror = function () {
+    upbitConnected = false;
+    binanceConnected = false;
   };
 };
 

@@ -1,9 +1,13 @@
 import type { ComponentProps } from 'react';
+import { cn } from '@/lib/utils';
 
-const Row = ({ children, style }: ComponentProps<'div'>) => {
+const Row = ({ children, style, className }: ComponentProps<'div'>) => {
   return (
     <div
-      className="flex items-center w-full border-b last:border-0 max-lg:text-[14px] max-md:text-[12px] max-sm:text-[10px]"
+      className={cn(
+        'flex items-center w-full max-lg:text-[14px] max-md:text-[12px] max-sm:text-[10px]',
+        className,
+      )}
       style={style}
     >
       {children}

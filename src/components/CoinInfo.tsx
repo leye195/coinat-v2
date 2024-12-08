@@ -55,7 +55,7 @@ const CoinInfo = ({ code }: Props) => {
           }
           body={
             <>
-              <Table.Row>
+              <Table.Row className="border-b">
                 <Table.Row>
                   <Table.Cell width="30%">프로젝트팀 제공</Table.Cell>
                   <Table.Cell width="70%">
@@ -74,7 +74,7 @@ const CoinInfo = ({ code }: Props) => {
                   </Table.Cell>
                 </Table.Row>
               </Table.Row>
-              <Table.Row>
+              <Table.Row className="border-b">
                 <Table.Row>
                   <Table.Cell width="30%">코인마켓캡 제공</Table.Cell>
                   <Table.Cell width="70%">

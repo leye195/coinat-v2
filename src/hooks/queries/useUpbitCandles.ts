@@ -10,8 +10,9 @@ type UseUpbitCandles = {
   priceSymbol: string;
   code: string;
   type: string;
+  interval: string;
   enabled?: boolean;
-  onSuccess: (data: any) => void;
+  onSuccess?: (data: any) => void;
 };
 
 const useUpbitCandles = ({
@@ -19,6 +20,7 @@ const useUpbitCandles = ({
   code,
   type,
   enabled,
+  interval,
   onSuccess,
 }: UseUpbitCandles) => {
   function selectUpbitCandles({ data }: AxiosResponse) {
@@ -34,8 +36,8 @@ const useUpbitCandles = ({
     return parsedData.reverse();
   }
 
-  const { data, ...rest } = useQuery({
-    queryKey: ['exchange', `${priceSymbol}-${code}`, type, 'upbit'],
+  const { data, isFetched, ...rest } = useQuery({
+    queryKey: ['exchange', `${priceSymbol}-${code}`, type, interval, 'upbit'],
     queryFn: ({ queryKey }) =>
       getUpbitCandles({
         market: queryKey[1],
@@ -48,12 +50,12 @@ const useUpbitCandles = ({
   });
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || !enabled) return;
 
-    onSuccess(data);
-  }, [data, onSuccess]);
+    onSuccess?.(data);
+  }, [enabled, data, onSuccess]);
 
-  return { data, ...rest };
+  return { data, isFetched, ...rest };
 };
 
 export default useUpbitCandles;
