@@ -1,5 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { Chart, Nullable } from 'klinecharts';
+'use client';
+
+import { useMemo, useRef, useState } from 'react';
+import { Chart, init, dispose, Nullable } from 'klinecharts';
+import { useMounted } from 'ownui-system';
 import { useMedia } from 'react-use';
 import {
   useBinanceCandles,
@@ -31,6 +34,8 @@ const ExchangeChart = ({
   interval,
 }: ExchangeChartProps) => {
   const chartRef = useRef<Nullable<Chart>>();
+
+  const isMounted = useMounted();
   const [isInitialized, setIsInitialized] = useState(false);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const exchangeRate =
@@ -42,11 +47,6 @@ const ExchangeChart = ({
     type,
     interval,
     enabled: exchange === 'upbit',
-    onSuccess: () => {
-      if (exchange !== 'upbit') return;
-
-      setIsInitialized(false);
-    },
   });
 
   const { data: binanceData } = useBinanceCandles({
@@ -56,59 +56,70 @@ const ExchangeChart = ({
     exchangeRate,
     interval,
     enabled: exchange === 'binance',
-    onSuccess: () => {
-      if (exchange !== 'binance') return;
-
-      setIsInitialized(false);
-    },
   });
 
+  const chartData = useMemo(() => {
+    return exchange === 'upbit' ? upbitData : binanceData;
+  }, [upbitData, binanceData, exchange]);
   useIsomorphicLayoutEffect(() => {
-    import('klinecharts').then(({ init, dispose }) => {
-      if (chartRef.current) dispose('chart');
+    setIsInitialized(false);
+  }, [exchange, interval]);
 
-      chartRef.current = init('chart', {
-        styles: {
-          candle: {
-            tooltip: {
+  useIsomorphicLayoutEffect(() => {
+    const chartStyle = {
+      styles: {
+        candle: {
+          tooltip: {
+            text: {
+              size: isSmDown ? 10 : 12,
+            },
+          },
+          priceMark: {
+            last: {
               text: {
                 size: isSmDown ? 10 : 12,
               },
-            },
-            priceMark: {
-              last: {
-                text: {
-                  size: isSmDown ? 10 : 12,
-                },
-                upColor: palette.red,
-                downColor: palette.blue,
-              },
-            },
-            bar: {
               upColor: palette.red,
               downColor: palette.blue,
-              upBorderColor: palette.red,
-              downBorderColor: palette.blue,
-              upWickColor: palette.red,
-              downWickColor: palette.blue,
             },
           },
-          xAxis: {
-            tickText: {
-              size: isSmDown ? 10 : 12,
-            },
-          },
-          yAxis: {
-            tickText: {
-              size: isSmDown ? 10 : 12,
-            },
+          bar: {
+            upColor: palette.red,
+            downColor: palette.blue,
+            upBorderColor: palette.red,
+            downBorderColor: palette.blue,
+            upWickColor: palette.red,
+            downWickColor: palette.blue,
           },
         },
-      });
-    });
-  }, [isSmDown]);
+        xAxis: {
+          tickText: {
+            size: isSmDown ? 10 : 12,
+          },
+        },
+        yAxis: {
+          tickText: {
+            size: isSmDown ? 10 : 12,
+          },
+        },
+      },
+    };
 
-  useEffect(() => {
+    if (!isMounted || isInitialized) return;
+
+    if (chartRef.current) {
+      dispose('chart');
+    }
+
+    chartRef.current = init('chart', chartStyle);
+    chartRef.current?.applyNewData(chartData, true);
+
+    const currentDataLength = chartRef.current?.getDataList().length;
+
+    setIsInitialized(!!currentDataLength);
+  }, [isSmDown, isMounted, upbitData, binanceData, exchange]);
+
+  useIsomorphicLayoutEffect(() => {
     if (!chartRef.current) return;
 
     chartRef.current.setPriceVolumePrecision(priceSymbol === 'KRW' ? 2 : 8, 8);
@@ -116,37 +127,27 @@ const ExchangeChart = ({
   }, [isSmDown, priceSymbol]);
 
   useIsomorphicLayoutEffect(() => {
-    if (newData && chartRef.current && isInitialized) {
+    if (newData && chartRef.current && isInitialized && chartData) {
+      const lastData = chartData[chartData.length - 1];
+      const isDaily = interval === 'daily';
+
       const data = {
-        timestamp: reCalculateTimeStamp(
-          newData.timestamp ?? new Date().getTime(),
-          type,
-        ),
-        open: newData.openPrice * exchangeRate,
+        timestamp: isDaily
+          ? reCalculateTimeStamp(
+              newData.timestamp ?? new Date().getTime(),
+              type,
+            )
+          : lastData.timestamp,
+        open: isDaily ? newData.openPrice * exchangeRate : lastData.open,
         close: newData.tradePrice * exchangeRate,
-        high: newData.highPrice * exchangeRate,
-        low: newData.lowPrice * exchangeRate,
+        high: isDaily ? newData.highPrice * exchangeRate : lastData.high,
+        low: isDaily ? newData.lowPrice * exchangeRate : lastData.low,
         volume: newData.volume,
       };
 
       chartRef.current.updateData(data);
     }
-  }, [newData]);
-
-  useIsomorphicLayoutEffect(() => {
-    import('klinecharts').then(() => {
-      if (isInitialized) return;
-
-      if (chartRef.current && !isInitialized) {
-        setIsInitialized(true);
-        chartRef.current?.applyNewData(
-          exchange === 'upbit' ? upbitData : binanceData,
-          true,
-        );
-        return;
-      }
-    });
-  }, [upbitData, binanceData, exchange]);
+  }, [newData, isInitialized, interval, exchange, chartData]);
 
   return <div id="chart" className="w-full h-[500px] max-sm:h-[400px]"></div>;
 };
