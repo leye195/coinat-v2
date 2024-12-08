@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getTickers } from '@/lib/socket';
+import { tickers } from '@/lib/socket';
 import type { Exchange } from '@/types/Ticker';
 
 type UseExchangeDataProps = {
@@ -17,18 +17,16 @@ const useExchangeData = ({
   exchange,
   exchangeRate,
 }: UseExchangeDataProps) => {
-  const selectFn = (response: Exchange) => {
-    const currency = exchange === 'binance' || type !== 'KRW' ? 'btc' : 'krw';
-    const data = response[exchange][currency][code?.toUpperCase()];
-    return { ...data, exchangeRate };
-  };
-
   return useQuery({
     queryKey: ['exchange', code, type, exchange],
-    queryFn: getTickers,
+    queryFn: () => {
+      const currency = exchange === 'binance' || type !== 'KRW' ? 'btc' : 'krw';
+      const data = tickers[exchange][currency][code?.toUpperCase()];
+
+      return { ...data, exchangeRate };
+    },
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
-    select: selectFn,
   });
 };
 

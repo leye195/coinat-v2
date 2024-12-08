@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { initSocket } from '@/lib/socket';

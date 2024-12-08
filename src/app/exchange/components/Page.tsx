@@ -1,4 +1,5 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+'use client';
+
 import { useEffect, useMemo, useState, useId } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -7,7 +8,6 @@ import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import ExchangeChart from '@/components/ExchangeChart';
 import { Flex } from '@/components/Flex';
-import Layout from '@/components/Layout';
 import MetaTags from '@/components/Metatags';
 import Skeleton from '@/components/Skeleton';
 import Spacing from '@/components/Spacing';
@@ -16,19 +16,21 @@ import Text from '@/components/Text';
 import { exchangeTabs, timeTabs } from '@/data/tab';
 import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
-import { btcKrw, initSocket } from '@/lib/socket';
+import { btcKrw } from '@/lib/socket';
 import { cn, formatPrice, getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
-import type { NextPageWithLayout } from '@/types/Page';
 
-const ExchangePage: NextPageWithLayout = ({
-  code,
-  type,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+type ExchangePageProps = {
+  code: string;
+  type: string;
+};
+
+const ExchangePage = ({ code, type }: ExchangePageProps) => {
   const id = useId();
+
   const [activeTimeTab, setActiveTimeTab] = useState({
     value: 'months',
     index: 0,
@@ -94,7 +96,6 @@ const ExchangePage: NextPageWithLayout = ({
         navigate.replace('/');
         return;
       }
-      initSocket(response);
     };
 
     checkCodeValidation();
@@ -249,34 +250,6 @@ const ExchangePage: NextPageWithLayout = ({
       <CoinInfo code={code} />
     </Flex>
   );
-};
-
-ExchangePage.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { code = '', type = 'KRW' } = query;
-
-  try {
-    if (!code || Array.isArray(code)) {
-      throw new Error('code invalid');
-    }
-
-    return {
-      props: {
-        code: code.toUpperCase(),
-        type,
-      },
-    };
-  } catch {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/',
-      },
-    };
-  }
 };
 
 export default ExchangePage;
