@@ -156,7 +156,7 @@ const ExchangePage = ({ code, type }: ExchangePageProps) => {
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {formatPrice(data?.changePrice ?? 0, exchangeRate, priceSymbol)}
+              {formatPrice(data?.changePrice ?? 0, exchangeRate, priceSymbol)})
             </Text>
           </Flex>
           <Flex
