@@ -11,7 +11,7 @@ type UseUpbitCandles = {
   code: string;
   type: string;
   enabled?: boolean;
-  onSuccess: (data: any) => void;
+  onSuccess?: (data: any) => void;
 };
 
 const useUpbitCandles = ({
@@ -50,7 +50,7 @@ const useUpbitCandles = ({
   useEffect(() => {
     if (!data) return;
 
-    onSuccess(data);
+    onSuccess?.(data);
   }, [data, onSuccess]);
 
   return { data, ...rest };

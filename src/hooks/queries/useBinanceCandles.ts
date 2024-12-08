@@ -13,7 +13,7 @@ type UseBinanceCandles = {
   type: string;
   enabled?: boolean;
   exchangeRate: number;
-  onSuccess: (data: any) => void;
+  onSuccess?: (data: any) => void;
 };
 
 const useBinanceCandles = ({
@@ -52,7 +52,7 @@ const useBinanceCandles = ({
   useEffect(() => {
     if (!data) return;
 
-    onSuccess(data);
+    onSuccess?.(data);
   }, [data, onSuccess]);
 
   return {
