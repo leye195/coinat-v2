@@ -10,13 +10,14 @@ import { btcKrw } from '@/lib/socket';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-import type { CandleType, ChartData } from '@/types/Candle';
+import type { CandleType } from '@/types/Candle';
 import type { Ticker } from '@/types/Ticker';
 
 type ExchangeChartProps = {
   exchange: string;
   code: string;
   type: CandleType;
+  interval: string;
   priceSymbol: string;
   newData: Extract<Ticker[keyof Ticker], object>;
 };
@@ -27,38 +28,42 @@ const ExchangeChart = ({
   newData,
   priceSymbol,
   exchange,
+  interval,
 }: ExchangeChartProps) => {
   const chartRef = useRef<Nullable<Chart>>();
   const [isInitialized, setIsInitialized] = useState(false);
-  const [chartData, setChartData] = useState<ChartData[]>([]);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
   const exchangeRate =
     priceSymbol === 'BTC' || exchange === 'upbit' ? 1 : btcKrw.upbit;
 
-  useUpbitCandles({
+  const { data: upbitData } = useUpbitCandles({
     priceSymbol,
     code,
     type,
+    interval,
     enabled: exchange === 'upbit',
-    onSuccess: (data) => {
+    onSuccess: () => {
+      if (exchange !== 'upbit') return;
+
       setIsInitialized(false);
-      setChartData(data);
     },
   });
 
-  useBinanceCandles({
+  const { data: binanceData } = useBinanceCandles({
     priceSymbol,
     code,
     type,
     exchangeRate,
+    interval,
     enabled: exchange === 'binance',
-    onSuccess: (data) => {
+    onSuccess: () => {
+      if (exchange !== 'binance') return;
+
       setIsInitialized(false);
-      setChartData(data);
     },
   });
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     import('klinecharts').then(({ init, dispose }) => {
       if (chartRef.current) dispose('chart');
 
@@ -101,7 +106,7 @@ const ExchangeChart = ({
         },
       });
     });
-  }, [exchange, isSmDown]);
+  }, [isSmDown]);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -134,11 +139,14 @@ const ExchangeChart = ({
 
       if (chartRef.current && !isInitialized) {
         setIsInitialized(true);
-        chartRef.current?.applyNewData(chartData, true);
+        chartRef.current?.applyNewData(
+          exchange === 'upbit' ? upbitData : binanceData,
+          true,
+        );
         return;
       }
     });
-  }, [chartData]);
+  }, [upbitData, binanceData, exchange]);
 
   return <div id="chart" className="w-full h-[500px] max-sm:h-[400px]"></div>;
 };

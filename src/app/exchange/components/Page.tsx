@@ -240,6 +240,7 @@ const ExchangePage = ({ code, type }: ExchangePageProps) => {
             exchange={activeExchangeTab.value}
             type={activeTimeTab.value as CandleType}
             newData={data}
+            interval={activeTimeTab.value}
             priceSymbol={priceSymbol}
           />
         ) : (

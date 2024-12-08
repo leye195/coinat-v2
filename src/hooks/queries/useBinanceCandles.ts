@@ -11,6 +11,7 @@ type UseBinanceCandles = {
   priceSymbol: string;
   code: string;
   type: string;
+  interval: string;
   enabled?: boolean;
   exchangeRate: number;
   onSuccess?: (data: any) => void;
@@ -22,6 +23,7 @@ const useBinanceCandles = ({
   type,
   enabled,
   exchangeRate,
+  interval,
   onSuccess,
 }: UseBinanceCandles) => {
   function selectBinanceCandles({ data }: AxiosResponse) {
@@ -38,7 +40,14 @@ const useBinanceCandles = ({
   }
 
   const { data, ...rest } = useQuery({
-    queryKey: ['exchange', `${code}BTC`, type, 'binance', priceSymbol],
+    queryKey: [
+      'exchange',
+      `${code}BTC`,
+      type,
+      priceSymbol,
+      interval,
+      'binance',
+    ],
     queryFn: ({ queryKey }) =>
       getBinanceCandles({
         symbol: queryKey[1],
@@ -50,10 +59,10 @@ const useBinanceCandles = ({
   });
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || !enabled) return;
 
     onSuccess?.(data);
-  }, [data, onSuccess]);
+  }, [data, enabled, onSuccess]);
 
   return {
     data,
