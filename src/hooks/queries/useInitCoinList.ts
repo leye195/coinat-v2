@@ -9,13 +9,13 @@ import { Coin } from '@/types/Coin';
 
 type UseInitCointListProps = {
   workerEnabled?: boolean;
-  initialData?: Record<'krw' | 'btc', Coin[]>;
+  initialData: Record<'krw' | 'btc', Coin[]>;
 };
 
 const useInitCoinList = ({
-  initialData = { krw: [], btc: [] },
   workerEnabled = true,
-}: UseInitCointListProps = {}) => {
+  initialData,
+}: UseInitCointListProps) => {
   const workerRef = useRef<Worker | null>(null);
   const setKrwCoinList = useSetRecoilState(krCoinListState);
   const setBtcCoinList = useSetRecoilState(btcCoinListState);
@@ -28,8 +28,6 @@ const useInitCoinList = ({
     ) {
       return;
     }
-
-    console.log('here:', initialData);
 
     const { krw, btc } = initialData;
 

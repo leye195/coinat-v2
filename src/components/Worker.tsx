@@ -3,7 +3,13 @@
 import { useInitCoinList } from 'hooks/queries';
 
 const Worker = () => {
-  useInitCoinList({ workerEnabled: true });
+  useInitCoinList({
+    workerEnabled: true,
+    initialData: {
+      krw: [],
+      btc: [],
+    },
+  });
   return null;
 };
 
