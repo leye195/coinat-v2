@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useCallback, useId, useState } from 'react';
+import { ReactNode, Suspense, useCallback, useId, useState } from 'react';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import MarketCapTable from '@/components/MarketCapTable';
@@ -12,11 +12,17 @@ import TableSkeleton from '@/components/Table/Skeleton';
 import Text from '@/components/Text';
 import { newsTabs } from '@/data/tab';
 import { useMount, useNewsData } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 
 const OFFSET = 2;
 
-const TrendPage = () => {
+type TrendPageProps = {
+  dailyAskVolumn: ReactNode;
+  dailyBidVolumn: ReactNode;
+};
+
+const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
   const isMounted = useMount();
   const id = useId();
   const [activeTab, setActiveTab] = useState({
@@ -96,6 +102,38 @@ const TrendPage = () => {
           </Flex>
         </Flex>
       )}
+      <Flex className="max-md:!flex-col" gap="8px" isFull>
+        <div
+          className={cn(
+            'px-3 py-6 flex flex-col w-full h-auto bg-white flex-1',
+          )}
+        >
+          <div>
+            <Text fontWeight={800} fontSize="18px">
+              일 매수 채결 강도 순위
+            </Text>
+            <Text fontSize="12px" color={palette.gray}>
+              (업비트 기준)
+            </Text>
+          </div>
+          {dailyBidVolumn}
+        </div>
+        <div
+          className={cn(
+            'px-3 py-6 flex flex-col w-full h-auto bg-white flex-1',
+          )}
+        >
+          <div>
+            <Text fontWeight={800} fontSize="18px">
+              일 매도 채결 강도 순위
+            </Text>
+            <Text fontSize="12px" color={palette.gray}>
+              (업비트 기준)
+            </Text>
+          </div>
+          {dailyAskVolumn}
+        </div>
+      </Flex>
       <Flex
         className="px-3 py-6 bg-white min-h-[500px]"
         isFull
