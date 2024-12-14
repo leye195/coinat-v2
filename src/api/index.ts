@@ -8,6 +8,7 @@ import type {
 } from '@/types/Candle';
 import type { Coin, CoinInfoResponse } from '@/types/Coin';
 import type { Currency } from '@/types/Currency';
+import { DailyVolumnResponse } from '@/types/DailyVolumn';
 import type { MarketCap } from '@/types/Marketcap';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
@@ -189,3 +190,27 @@ export const getCoinInfo = (
   coin: string,
 ): Promise<AxiosResponse<CoinInfoResponse>> =>
   api.get(`coin-info?code=${coin.toUpperCase()}`);
+
+export const getDailyVolumnPower = async (
+  orderBy: string,
+  count: number = 220,
+): Promise<DailyVolumnResponse> => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/upbit/daily_volume_power?count=${count}&orderBy=${orderBy}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching Upbit coins:', error);
+    return {
+      lastUpdated: 0,
+      markets: [],
+    }; // 또는 대체 데이터를 반환
+  }
+};
