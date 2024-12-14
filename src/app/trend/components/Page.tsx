@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense, useCallback, useId, useState } from 'react';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
