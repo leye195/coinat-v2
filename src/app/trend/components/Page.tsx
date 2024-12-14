@@ -3,7 +3,6 @@
 import { Suspense, useCallback, useId, useState } from 'react';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
-import Layout from '@/components/Layout';
 import MarketCapTable from '@/components/MarketCapTable';
 import MainNews from '@/components/News/MainNews';
 import NewsSkeleton from '@/components/News/NewsSkeleton';
@@ -14,11 +13,10 @@ import Text from '@/components/Text';
 import { newsTabs } from '@/data/tab';
 import { useMount, useNewsData } from '@/hooks';
 import { palette } from '@/styles/variables';
-import type { NextPageWithLayout } from '@/types/Page';
 
 const OFFSET = 2;
 
-const TrendPage: NextPageWithLayout = () => {
+const TrendPage = () => {
   const isMounted = useMount();
   const id = useId();
   const [activeTab, setActiveTab] = useState({
@@ -125,10 +123,6 @@ const TrendPage: NextPageWithLayout = () => {
       </Flex>
     </Flex>
   );
-};
-
-TrendPage.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
 };
 
 export default TrendPage;
