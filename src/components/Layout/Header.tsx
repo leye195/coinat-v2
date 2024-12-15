@@ -32,7 +32,7 @@ const Header = () => {
             >
               CoinAT
               <Image
-                className="absolute translate-x-[5rem] translate-y-[-2rem] w-auto"
+                className="absolute w-auto -translate-y-8 translate-x-20"
                 src="/assets/icons/coin.svg"
                 alt="coin"
                 width={14}

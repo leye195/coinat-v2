@@ -53,7 +53,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
       gap="8px"
     >
       <Flex
-        className="p-3 bg-white"
+        className="bg-white p-3"
         alignItems="center"
         justifyContent="space-between"
         isFull
@@ -77,7 +77,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
         <NewsSkeleton />
       ) : (
         <Flex
-          className="px-3 py-6 bg-white min-h-[500px]"
+          className="min-h-[500px] bg-white px-3 py-6"
           isFull
           flexDirection="column"
           gap="12px"
@@ -135,7 +135,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
         </div>
       </Flex>
       <Flex
-        className="px-3 py-6 bg-white min-h-[500px]"
+        className="min-h-[500px] bg-white px-3 py-6"
         isFull
         flexDirection="column"
       >

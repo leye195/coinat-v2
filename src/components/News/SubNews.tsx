@@ -26,7 +26,7 @@ const SubNews = ({ data }: SubNewsProps) => {
       onClick={onClick}
     >
       <Text
-        className="max-w-[300px] overflow-hidden whitespace-nowrap text-ellipsis"
+        className="max-w-[300px] truncate"
         fontSize="12px"
         fontWeight={800}
       >

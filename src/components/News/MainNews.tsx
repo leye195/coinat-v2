@@ -17,14 +17,14 @@ const MainNews = ({ data }: MainNewsProps) => {
     <Flex className={cn('flex-1 cursor-pointer')} onClick={onClick}>
       <Flex flexDirection="column" gap="8px">
         <Text
-          className="max-h-5 text-ellipsis break-words break-all line-clamp-1"
+          className="line-clamp-1 max-h-5 text-ellipsis break-all"
           fontSize="14px"
           fontWeight={800}
         >
           {data.title}
         </Text>
         <Text
-          className="max-h-16 text-ellipsis overflow-hidden break-words break-all line-clamp-4 leading-5"
+          className="line-clamp-4 max-h-16 overflow-hidden text-ellipsis break-all leading-5"
           fontSize="12px"
         >
           {data.content.trim()}

@@ -149,7 +149,7 @@ const ExchangeChart = ({
     }
   }, [newData, isInitialized, interval, exchange, chartData]);
 
-  return <div id="chart" className="w-full h-[500px] max-sm:h-[400px]"></div>;
+  return <div id="chart" className="h-[500px] w-full max-sm:h-[400px]"></div>;
 };
 
 export default ExchangeChart;

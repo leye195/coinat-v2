@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="w-full bg-white">
-      <div className="w-full p-3 max-w-[1410px]">Footer</div>
+      <div className="w-full max-w-[1410px] p-3">Footer</div>
     </footer>
   );
 };

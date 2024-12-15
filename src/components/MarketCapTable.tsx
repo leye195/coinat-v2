@@ -71,7 +71,7 @@ const MarketCapTable = () => {
                   </Table.Cell>
                   <Table.Cell width="30%">
                     <Flex alignItems="center" gap="8px" isFull>
-                      <picture className="flex rounded-[100px] overflow-hidden">
+                      <picture className="flex overflow-hidden rounded-[100px]">
                         <Image
                           alt={item.symbol}
                           src={getCoinSymbolImage(item.symbol)}

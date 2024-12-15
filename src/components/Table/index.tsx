@@ -10,7 +10,7 @@ type Props = {
 
 const Table = ({ header, body }: Props) => {
   return (
-    <div className="w-full border border-gray-200 rounded-lg bg-white">
+    <div className="w-full rounded-lg border border-gray-200 bg-white">
       <div className="flex items-center border-b border-b-gray-200">
         {header}
       </div>

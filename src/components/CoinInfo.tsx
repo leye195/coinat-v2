@@ -27,7 +27,7 @@ const CoinInfo = ({ code }: Props) => {
   return (
     <Flex
       flexDirection="column"
-      className="bg-white px-3 py-5 min-h-[550px]"
+      className="min-h-[550px] bg-white px-3 py-5"
       justifyContent="center"
       gap="32px"
       isFull

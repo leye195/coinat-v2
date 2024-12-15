@@ -134,7 +134,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                     >
                       <picture>
                         <img
-                          className="rounded-[2rem] max-sm:w-4 w-5 min-w-4"
+                          className="w-5 min-w-4 rounded-[2rem] max-sm:w-4"
                           alt={data.symbol}
                           src={getCoinSymbolImage(data.symbol)}
                           width={20}
