@@ -9,7 +9,7 @@ onmessage = async () => {
       krw: krwData,
       btc: btcData,
     });
-  } catch (error) {
+  } catch {
     postMessage({
       krw: [],
       btc: [],
