@@ -4,8 +4,9 @@ import InitializeClient from './Client';
 async function fetchData() {
   const krwData = await getCoinsV2('KRW');
   const btcData = await getCoinsV2('BTC');
+  const usdtData = await getCoinsV2('USDT');
 
-  return { krw: krwData, btc: btcData };
+  return { krw: krwData, btc: btcData, usdt: usdtData };
 }
 
 async function Initialize() {

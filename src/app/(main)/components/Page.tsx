@@ -5,12 +5,14 @@ import CoinTable from '@/components/CoinTable';
 import Tab from '@/components/Tab';
 import { useCoinList, useTickersData } from '@/hooks';
 import { cn } from '@/lib/utils';
+import MarketLinks from './MarketLinks';
 
 const HomePage = () => {
-  const { krwCoinData, btcCoinData } = useCoinList();
+  const { krwCoinData, btcCoinData, usdtCoinData } = useCoinList();
   const { data, handleSort } = useTickersData({
     krwCoinData,
     btcCoinData,
+    usdtCoinData,
   });
 
   return (
@@ -19,10 +21,16 @@ const HomePage = () => {
         <Suspense>
           <Tab tabs={['KRW', 'BTC']} />
         </Suspense>
-        <div className={cn('max-md:text-xs max-sm:text-[10px]')}>
+        <div
+          className={cn(
+            'max-md:text-xs max-sm:text-[10px]',
+            'flex items-center justify-between my-0.5',
+          )}
+        >
           <p className={cn('m-2 max-md:m-1')}>
             암호화폐 - {data?.length ?? 0}개
           </p>
+          <MarketLinks />
         </div>
         <CoinTable coinList={data ?? []} handleSort={handleSort} />
       </div>

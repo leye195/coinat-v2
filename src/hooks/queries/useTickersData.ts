@@ -12,9 +12,14 @@ import { exchangeState } from '@/store/exchange';
 interface UseTickerDataProps {
   krwCoinData: CoinState;
   btcCoinData: CoinState;
+  usdtCoinData: CoinState;
 }
 
-const useTickerData = ({ krwCoinData, btcCoinData }: UseTickerDataProps) => {
+const useTickerData = ({
+  krwCoinData,
+  btcCoinData,
+  usdtCoinData,
+}: UseTickerDataProps) => {
   const selectedType = useRef<string | null>(null);
   const sortType = useRef({
     symbol: false,
@@ -27,15 +32,23 @@ const useTickerData = ({ krwCoinData, btcCoinData }: UseTickerDataProps) => {
   const setExchangeState = useSetRecoilState(exchangeState);
 
   const getTickers = async () => {
+    const { data: originData } =
+      coinType === 'KRW'
+        ? krwCoinData
+        : coinType === 'USDT'
+        ? usdtCoinData
+        : btcCoinData;
+
     try {
-      const data = combineTickers(
-        coinType === 'KRW' ? krwCoinData.data : btcCoinData.data,
+      const { data: currencyData } = await getCurrencyInfo();
+
+      const combinedData = combineTickers(
+        originData,
+        currencyData.value,
         coinType,
       );
 
-      const { data: currencyData } = await getCurrencyInfo();
-
-      const btc = data.find((data) => data.symbol === 'BTC');
+      const btc = combinedData.find((data) => data.symbol === 'BTC');
       const upbitBit = btc?.last ?? 0;
       const binanceBit = btc?.blast ?? 0;
 
@@ -47,7 +60,7 @@ const useTickerData = ({ krwCoinData, btcCoinData }: UseTickerDataProps) => {
       });
 
       const result = sort(
-        data,
+        combinedData,
         selectedType.current ?? 'symbol',
         sortType.current[selectedType.current as Sort],
       );
@@ -67,10 +80,14 @@ const useTickerData = ({ krwCoinData, btcCoinData }: UseTickerDataProps) => {
   };
 
   const { data, ...rest } = useQuery({
-    queryKey: ['coins', coinType, krwCoinData.data, btcCoinData.data],
+    queryKey: ['coins', coinType],
     queryFn: getTickers,
     refetchInterval: 3000,
     refetchIntervalInBackground: true,
+    enabled:
+      !!krwCoinData.data.length &&
+      !!btcCoinData.data.length &&
+      !!usdtCoinData.data.length,
   });
 
   return {
