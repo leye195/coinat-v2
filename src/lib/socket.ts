@@ -278,7 +278,7 @@ export const combineTickers = (
             tickers.binance.btc[name] == undefined
               ? 0
               : parseFloat(
-                  (tickers.binance.btc[name].tradePrice * btcKRw).toFixed(2),
+                  (tickers.binance.btc[name].tradePrice * btcKRw).toFixed(7),
                 ),
           per:
             tickers.upbit.krw[name] == undefined ||
@@ -309,12 +309,12 @@ export const combineTickers = (
           blast:
             tickers.binance.usdt[name]?.tradePrice == undefined
               ? 0
-              : parseFloat(tickers.binance.usdt[name].tradePrice.toFixed(4)),
+              : parseFloat(tickers.binance.usdt[name].tradePrice.toFixed(7)),
           convertedBlast:
             tickers.binance.usdt[name]?.tradePrice == undefined
               ? 0
               : parseFloat(
-                  (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(2),
+                  (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(7),
                 ),
           per:
             tickers.upbit.usdt[name] == undefined ||
@@ -324,7 +324,7 @@ export const combineTickers = (
                   tickers.upbit.krw[name].tradePrice,
                   parseFloat(
                     (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(
-                      2,
+                      4,
                     ),
                   ),
                 ),
