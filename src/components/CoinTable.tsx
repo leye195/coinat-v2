@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { MARKET_SYMBOLS, TABLE_HEADERS } from 'constant';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import Spacing from '@/components/Spacing';
@@ -19,8 +20,7 @@ import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { typeState } from '@/store/coin';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
-
-const TABLE_HEADER = ['코인', '업비트(₩)', '바이낸스', '차이(%)'];
+import { TickerType } from '@/types/Coin';
 
 type Props = {
   coinList: CombinedTickers[];
@@ -96,10 +96,18 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
     <Table
       header={
         <>
-          {TABLE_HEADER.map((name, idx) => (
+          {TABLE_HEADERS.map((name, idx) => (
             <Table.Header
               key={name}
-              name={name}
+              name={
+                idx > 0 && idx < 3
+                  ? `${name}(${
+                      MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
+                        coinType as TickerType
+                      ]
+                    })`
+                  : name
+              }
               right={
                 <Image src="/assets/updown.png" alt="" width={6} height={12} />
               }
