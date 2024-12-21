@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
@@ -94,147 +93,120 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
   }, [coinList, isFavSymbol]);
 
   return (
-    <>
-      {coinType !== 'BTC' && (
-        <div
-          className={cn(
-            'flex text-center bg-white mb-0.5',
-            'max-md:text-xs',
-            'max-sm:text-[10px]',
-          )}
-        >
-          <Link className={cn('p-1 flex-1 border-b-2')} href="/?type=KRW">
-            바이낸스 - BTC 마켓
-          </Link>
-          <Link className={cn('p-1 flex-1 border-b-2')} href="/?type=USDT">
-            바이낸스 - USDT 마켓
-          </Link>
-        </div>
-      )}
-
-      <Table
-        header={
+    <Table
+      header={
+        <>
+          {TABLE_HEADER.map((name, idx) => (
+            <Table.Header
+              key={name}
+              name={name}
+              right={
+                <Image src="/assets/updown.png" alt="" width={6} height={12} />
+              }
+              width="25%"
+              onClick={handleSort(sortColumn[idx])}
+            />
+          ))}
+        </>
+      }
+      body={
+        !filteredCointList.length ? (
+          <Table.Skeleton />
+        ) : (
           <>
-            {TABLE_HEADER.map((name, idx) => (
-              <Table.Header
-                key={name}
-                name={name}
-                right={
-                  <Image
-                    src="/assets/updown.png"
-                    alt=""
-                    width={6}
-                    height={12}
-                  />
-                }
-                width="25%"
-                onClick={handleSort(sortColumn[idx])}
-              />
+            {filteredCointList.map((data) => (
+              <Table.Row key={data.symbol}>
+                <Table.Cell>
+                  <div
+                    className={cn('flex items-center gap-2', 'max-sm:gap-0.5')}
+                  >
+                    <Flex
+                      className="cursor-pointer"
+                      alignItems="center"
+                      gap="4px"
+                      onClick={() =>
+                        navigate.push(
+                          `/exchange?code=${
+                            data.symbol
+                          }&type=${coinType.toUpperCase()}`,
+                        )
+                      }
+                    >
+                      <picture>
+                        <img
+                          className="w-5 min-w-4 rounded-[2rem] max-sm:w-4"
+                          alt={data.symbol}
+                          src={getCoinSymbolImage(data.symbol)}
+                          width={20}
+                          height={20}
+                        />
+                      </picture>
+                      <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
+                    </Flex>
+                    <Spacing size="4px" />
+                    <Button
+                      padding={{
+                        top: '0',
+                        bottom: '0',
+                        left: '0',
+                        right: '0',
+                      }}
+                      onClick={toggleFav(data.symbol)}
+                    >
+                      <FontAwesomeIcon
+                        className="text-[#e2be1b]"
+                        icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
+                      />
+                    </Button>
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <div className={cn('flex flex-col gap-0.5')}>
+                    <p className="m-0">
+                      {coinType !== 'BTC'
+                        ? `${setComma(data.last)}₩`
+                        : data.last}
+                    </p>
+                    {data.upbitWarning && (
+                      <div
+                        className={cn(
+                          'text-white bg-orange-300',
+                          'p-0.5 text-sm font-semibold',
+                          'max-md:text-[10px]',
+                        )}
+                      >
+                        투자 유의
+                      </div>
+                    )}
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <div className={cn('flex flex-col')}>
+                    <p className="m-0">{data.blast}</p>
+                    {data.convertedBlast && (
+                      <p>{setComma(data.convertedBlast ?? 0)}₩</p>
+                    )}
+                  </div>
+                </Table.Cell>
+                <Table.Cell
+                  color={
+                    data.per
+                      ? data.per > 0
+                        ? palette.red
+                        : palette.blue
+                      : palette.black
+                  }
+                >
+                  <div className={cn('flex flex-col')}>
+                    <p className="m-0">{setComma(data?.per ?? 0)}%</p>
+                  </div>
+                </Table.Cell>
+              </Table.Row>
             ))}
           </>
-        }
-        body={
-          !filteredCointList.length ? (
-            <Table.Skeleton />
-          ) : (
-            <>
-              {filteredCointList.map((data) => (
-                <Table.Row key={data.symbol}>
-                  <Table.Cell>
-                    <div
-                      className={cn(
-                        'flex items-center gap-2',
-                        'max-sm:gap-0.5',
-                      )}
-                    >
-                      <Flex
-                        className="cursor-pointer"
-                        alignItems="center"
-                        gap="4px"
-                        onClick={() =>
-                          navigate.push(
-                            `/exchange?code=${
-                              data.symbol
-                            }&type=${coinType.toUpperCase()}`,
-                          )
-                        }
-                      >
-                        <picture>
-                          <img
-                            className="w-5 min-w-4 rounded-[2rem] max-sm:w-4"
-                            alt={data.symbol}
-                            src={getCoinSymbolImage(data.symbol)}
-                            width={20}
-                            height={20}
-                          />
-                        </picture>
-                        <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
-                      </Flex>
-                      <Spacing size="4px" />
-                      <Button
-                        padding={{
-                          top: '0',
-                          bottom: '0',
-                          left: '0',
-                          right: '0',
-                        }}
-                        onClick={toggleFav(data.symbol)}
-                      >
-                        <FontAwesomeIcon
-                          className="text-[#e2be1b]"
-                          icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
-                        />
-                      </Button>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className={cn('flex flex-col gap-0.5')}>
-                      <p className="m-0">
-                        {coinType !== 'BTC'
-                          ? `${setComma(data.last)}₩`
-                          : data.last}
-                      </p>
-                      {data.upbitWarning && (
-                        <div
-                          className={cn(
-                            'text-white bg-orange-300',
-                            'p-0.5 text-sm font-semibold',
-                            'max-md:text-[10px]',
-                          )}
-                        >
-                          투자 유의
-                        </div>
-                      )}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className={cn('flex flex-col')}>
-                      <p className="m-0">{data.blast}</p>
-                      {data.convertedBlast && (
-                        <p>{setComma(data.convertedBlast ?? 0)}₩</p>
-                      )}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell
-                    color={
-                      data.per
-                        ? data.per > 0
-                          ? palette.red
-                          : palette.blue
-                        : palette.black
-                    }
-                  >
-                    <div className={cn('flex flex-col')}>
-                      <p className="m-0">{setComma(data?.per ?? 0)}%</p>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </>
-          )
-        }
-      />
-    </>
+        )
+      }
+    />
   );
 };
 
