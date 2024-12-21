@@ -2,6 +2,7 @@ export type Coin = {
   name: string;
   KRW: boolean;
   BTC: boolean;
+  USDT: boolean;
   img?: string;
   upbit?: boolean;
   binance?: boolean;
@@ -14,7 +15,7 @@ export type UpbitCoin = {
   english_name: string;
 };
 
-export type TickerType = 'KRW' | 'BTC';
+export type TickerType = 'KRW' | 'BTC' | 'USDT';
 
 type MarketData = {
   market_cap: string;

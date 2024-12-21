@@ -24,10 +24,12 @@ export const tickers: Exchange = {
   upbit: {
     krw: {},
     btc: {},
+    usdt: {},
   },
   binance: {
     krw: {},
     btc: {},
+    usdt: {},
   },
 };
 
@@ -100,6 +102,19 @@ const handleUpbitMessage = (_cb?: () => void) => (e: any) => {
       volume,
       timestamp,
     };
+    tickers.upbit.usdt[symbol] = {
+      tradePrice,
+      highPrice,
+      lowPrice,
+      openPrice,
+      marketWarning,
+      changePrice,
+      changeRate,
+      change,
+      marketState,
+      volume,
+      timestamp,
+    };
   }
 
   if (code === `BTC-${symbol}`) {
@@ -130,7 +145,8 @@ const handleBinanceMessage = (_cb?: () => void) => (e: any) => {
   } = JSON.parse(e.data);
 
   const symbol = s.slice(0, s.length - 3);
-  if (symbol === 'BTCU') {
+
+  if (s.startsWith('BTCUSDT')) {
     btcKrw.binance = parseFloat(c ?? 0);
     tickers.binance.btc[s.slice(0, s.length - 4)] = {
       tradePrice: parseFloat(c ?? 0),
@@ -141,8 +157,18 @@ const handleBinanceMessage = (_cb?: () => void) => (e: any) => {
       changePrice: p,
       changeRate: P,
     };
-  } else {
+  } else if (s.endsWith('BTC')) {
     tickers.binance.btc[symbol] = {
+      tradePrice: parseFloat(c ?? 0),
+      highPrice: h ?? 0,
+      lowPrice: l ?? 0,
+      openPrice: o ?? 0,
+      marketWarning: 'None',
+      changePrice: p,
+      changeRate: P,
+    };
+  } else if (s.endsWith('USDT')) {
+    tickers.binance.usdt[s.slice(0, s.length - 4)] = {
       tradePrice: parseFloat(c ?? 0),
       highPrice: h ?? 0,
       lowPrice: l ?? 0,
@@ -207,7 +233,10 @@ export const connectUpbitSocket = () => {
 
 export const connectBinanceSocket = (coinList: Coin[]) => {
   const streams = `${coinList
-    .map((coin: Coin) => `${coin.name.toLowerCase()}btc@ticker/`)
+    .map(
+      (coin: Coin) =>
+        `${coin.name.toLowerCase()}${coin.USDT ? 'usdt' : 'btc'}@ticker/`,
+    )
     .join('')}btcusdt@ticker`;
 
   connect(`${BINANCE_SOCKET}${streams}`, onBinanceOpen, handleBinanceMessage());
@@ -225,35 +254,39 @@ export const getTickers = () => {
   return tickers;
 };
 
-export const combineTickers = (coinList: Coin[], type?: string) => {
+export const combineTickers = (
+  coinList: Coin[],
+  usdToKrw: number,
+  type?: string,
+) => {
+  const btcKRw = btcKrw.binance == undefined ? 0 : btcKrw.binance * usdToKrw;
+
   const result: CombinedTickers[] = [{ name: 'BTC' }, ...coinList].map(
     ({ name }) => {
       if (type === 'KRW' || name === 'BTC') {
         return {
           symbol: name,
           last:
-            tickers.upbit.krw[name] === undefined
+            tickers.upbit.krw[name] == undefined
               ? 0
               : tickers.upbit.krw[name].tradePrice,
           blast:
-            tickers.binance.btc[name] === undefined
+            tickers.binance.btc[name] == undefined
               ? 0
               : tickers.binance.btc[name].tradePrice,
           convertedBlast:
-            tickers.binance.btc[name] === undefined
+            tickers.binance.btc[name] == undefined
               ? 0
               : parseFloat(
-                  (tickers.binance.btc[name].tradePrice * btcKrw.upbit).toFixed(
-                    2,
-                  ),
+                  (tickers.binance.btc[name].tradePrice * btcKRw).toFixed(2),
                 ),
           per:
-            tickers.upbit.krw[name] === undefined ||
-            tickers.binance.btc[name] === undefined
+            tickers.upbit.krw[name] == undefined ||
+            tickers.binance.btc[name] == undefined
               ? 0
               : getPercent(
                   tickers.upbit.krw[name].tradePrice,
-                  tickers.binance.btc[name].tradePrice * btcKrw.upbit,
+                  tickers.binance.btc[name].tradePrice * btcKRw,
                 ),
           upbitChangePrice: tickers.upbit.krw[name]?.changePrice,
           upbitChangeRate: tickers.upbit.krw[name]?.changeRate,
@@ -266,20 +299,60 @@ export const combineTickers = (coinList: Coin[], type?: string) => {
         };
       }
 
+      if (type === 'USDT') {
+        return {
+          symbol: name,
+          last:
+            tickers.upbit.usdt[name] == undefined
+              ? 0
+              : tickers.upbit.usdt[name].tradePrice,
+          blast:
+            tickers.binance.usdt[name]?.tradePrice == undefined
+              ? 0
+              : parseFloat(tickers.binance.usdt[name].tradePrice.toFixed(4)),
+          convertedBlast:
+            tickers.binance.usdt[name]?.tradePrice == undefined
+              ? 0
+              : parseFloat(
+                  (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(2),
+                ),
+          per:
+            tickers.upbit.usdt[name] == undefined ||
+            tickers.binance.usdt[name] == undefined
+              ? 0
+              : getPercent(
+                  tickers.upbit.krw[name].tradePrice,
+                  parseFloat(
+                    (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(
+                      2,
+                    ),
+                  ),
+                ),
+          upbitChangePrice: tickers.upbit.usdt[name]?.changePrice,
+          upbitChangeRate: tickers.upbit.usdt[name]?.changeRate,
+          binanceChangePrice: tickers.binance.usdt[name]?.changePrice,
+          binanceChangeRate: tickers.binance.usdt[name]?.changeRate,
+          upbitWarning:
+            tickers.upbit.btc[name]?.marketWarning === 'CAUTION' ?? false,
+          binanceWarning:
+            tickers.binance.btc[name]?.marketWarning === 'CAUTION' ?? false,
+        };
+      }
+
       return {
         symbol: name,
         last:
-          tickers.upbit.btc[name] === undefined
+          tickers.upbit.btc[name] == undefined
             ? 0
             : tickers.upbit.btc[name].tradePrice,
         blast:
-          tickers.binance.btc[name]?.tradePrice === undefined
+          tickers.binance.btc[name]?.tradePrice == undefined
             ? 0
             : tickers.binance.btc[name].tradePrice,
         convertedBlast: undefined,
         per:
-          tickers.upbit.btc[name] === undefined ||
-          tickers.binance.btc[name] === undefined
+          tickers.upbit.btc[name] == undefined ||
+          tickers.binance.btc[name] == undefined
             ? 0
             : getPercent(
                 tickers.upbit.btc[name].tradePrice,

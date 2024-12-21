@@ -3,6 +3,7 @@ export type Exchange = Record<
   {
     krw: Ticker;
     btc: Ticker;
+    usdt: Ticker;
   }
 >;
 

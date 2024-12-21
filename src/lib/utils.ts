@@ -15,7 +15,7 @@ export function cn(...inputs: ClassValue[]) {
  * @param y  숫자
  */
 export const getPercent = (x: number, y: number) => {
-  return ((x - y) / y) * 100;
+  return (x / y - 1) * 100;
 };
 
 /**
