@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
@@ -8,7 +8,6 @@ import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MARKET_SYMBOLS, TABLE_HEADERS } from 'constant';
 import Button from '@/components/Button';
-import { Flex } from '@/components/Flex';
 import Spacing from '@/components/Spacing';
 import Table from '@/components/Table';
 import Text from '@/components/Text';
@@ -30,7 +29,6 @@ type Props = {
 const CoinTable = ({ coinList, handleSort }: Props) => {
   const coinType = useRecoilValue(typeState);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
-  const navigate = useRouter();
 
   const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage({
     key: 'krwfav',
@@ -128,17 +126,9 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                   <div
                     className={cn('flex items-center gap-2', 'max-sm:gap-0.5')}
                   >
-                    <Flex
-                      className="cursor-pointer"
-                      alignItems="center"
-                      gap="4px"
-                      onClick={() =>
-                        navigate.push(
-                          `/exchange?code=${
-                            data.symbol
-                          }&type=${coinType.toUpperCase()}`,
-                        )
-                      }
+                    <Link
+                      className={cn('flex items-center gap-1 cursor-pointer')}
+                      href={`/exchange?code=${data.symbol}&type=KRW`}
                     >
                       <picture>
                         <img
@@ -150,7 +140,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                         />
                       </picture>
                       <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
-                    </Flex>
+                    </Link>
                     <Spacing size="4px" />
                     <Button
                       padding={{
