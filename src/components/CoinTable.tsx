@@ -142,15 +142,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
                     </Link>
                     <Spacing size="4px" />
-                    <Button
-                      padding={{
-                        top: '0',
-                        bottom: '0',
-                        left: '0',
-                        right: '0',
-                      }}
-                      onClick={toggleFav(data.symbol)}
-                    >
+                    <Button className="p-0" onClick={toggleFav(data.symbol)}>
                       <FontAwesomeIcon
                         className="text-[#e2be1b]"
                         icon={isFavSymbol(data.symbol) ? Liked : UnLiked}

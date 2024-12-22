@@ -9,7 +9,7 @@ import Spacing from '@/components/Spacing';
 import Table from '@/components/Table';
 import Text from '@/components/Text';
 import { getCoinSymbolImage } from '@/lib/coin';
-import { setComma } from '@/lib/utils';
+import { cn, setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 
 const MarketCapTable = () => {
@@ -113,14 +113,7 @@ const MarketCapTable = () => {
           )
         }
       />
-      <Button
-        width="100%"
-        padding={{
-          top: '12px',
-          bottom: '12px',
-        }}
-        onClick={toggleLoadMore}
-      >
+      <Button className={cn('w-full py-3')} onClick={toggleLoadMore}>
         <Text fontSize="14px">{loadMore ? '접기' : '더보기'}</Text>
       </Button>
     </Flex>

@@ -5,7 +5,7 @@ type Props = {
   isActive?: boolean;
 } & ButtonProps;
 
-const TabButton = ({ children, isActive, ...rest }: Props) => {
+const TabButton = ({ children, isActive, className, ...rest }: Props) => {
   return (
     <div
       className={cn(
@@ -15,14 +15,13 @@ const TabButton = ({ children, isActive, ...rest }: Props) => {
       )}
     >
       <Button
+        className={cn(
+          'px-4 py-3',
+          'max-md:p-2 max-md:text-xs',
+          'max-sm:p-[0.35rem]',
+          className,
+        )}
         {...rest}
-        className={cn('max-md:!p-2 max-md:!text-xs', 'max-sm:!p-[0.35rem]')}
-        padding={{
-          top: '0.75rem',
-          bottom: '0.75rem',
-          left: '1rem',
-          right: '1rem',
-        }}
       >
         {children}
       </Button>
