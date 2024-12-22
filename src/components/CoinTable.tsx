@@ -41,7 +41,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
 
   const isFavSymbol = useCallback(
     (symbol: string) => {
-      return coinType === 'KRW'
+      return coinType !== 'BTC'
         ? krwFavList.includes(symbol)
         : btcFavList.includes(symbol);
     },
@@ -58,7 +58,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
   };
 
   const handleFav = (symbol: string) => {
-    if (coinType === 'KRW') {
+    if (coinType !== 'BTC') {
       updateKrwFavList(removeDuplicate([...krwFavList, symbol]));
       return;
     }
@@ -67,7 +67,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
   };
 
   const handleUnFav = (symbol: string) => {
-    if (coinType === 'KRW') {
+    if (coinType !== 'BTC') {
       updateKrwFavList(
         krwFavList.filter((coinSymbol: string) => symbol !== coinSymbol),
       );
