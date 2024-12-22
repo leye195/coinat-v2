@@ -25,28 +25,31 @@ const FearGreed = () => {
   return (
     <section
       className={cn(
+        'flex justify-between items-center',
         'p-3 mt-2 bg-white border border-[#d0d0d0] font-semibold',
         'max-md:p-2 max-md:mt-0 max-md:text-sm',
         'max-sm:text-[11px]',
       )}
     >
-      {isLoading ? (
-        <Skeleton width="100%" height={20} borderRadius="4px" />
-      ) : (
-        <>
-          <span>공포 · 탐욕 지수 :</span>
-          <span
-            className="ml-2 text-[var(--color)]"
-            style={{
-              '--color':
-                fearGreedColor[data?.value_classification as FearGreed],
-            }}
-          >
-            {data?.value} -{' '}
-            {fearGreedIndex[data?.value_classification as FearGreed]}
-          </span>
-        </>
-      )}
+      <div className="inline-flex">
+        {isLoading ? (
+          <Skeleton width="100%" height={20} borderRadius="4px" />
+        ) : (
+          <>
+            <span>공포 · 탐욕 지수 :</span>
+            <span
+              className="ml-2 text-[var(--color)]"
+              style={{
+                '--color':
+                  fearGreedColor[data?.value_classification as FearGreed],
+              }}
+            >
+              {data?.value} -{' '}
+              {fearGreedIndex[data?.value_classification as FearGreed]}
+            </span>
+          </>
+        )}
+      </div>
     </section>
   );
 };
