@@ -259,7 +259,10 @@ export const combineTickers = (
   usdToKrw: number,
   type?: string,
 ) => {
-  const btcKRw = btcKrw.binance == undefined ? 0 : btcKrw.binance * usdToKrw;
+  const usdtKRW =
+    tickers.upbit.krw['USDT'] == undefined
+      ? 0
+      : tickers.upbit.krw['USDT'].tradePrice;
 
   const result: CombinedTickers[] = [{ name: 'BTC' }, ...coinList].map(
     ({ name }) => {
@@ -278,7 +281,9 @@ export const combineTickers = (
             tickers.binance.btc[name] == undefined
               ? 0
               : parseFloat(
-                  (tickers.binance.btc[name].tradePrice * btcKRw).toFixed(7),
+                  (tickers.binance.btc[name].tradePrice * btcKrw.upbit).toFixed(
+                    7,
+                  ),
                 ),
           per:
             tickers.upbit.krw[name] == undefined ||
@@ -286,7 +291,7 @@ export const combineTickers = (
               ? 0
               : getPercent(
                   tickers.upbit.krw[name].tradePrice,
-                  tickers.binance.btc[name].tradePrice * btcKRw,
+                  tickers.binance.btc[name].tradePrice * btcKrw.upbit,
                 ),
           upbitChangePrice: tickers.upbit.krw[name]?.changePrice,
           upbitChangeRate: tickers.upbit.krw[name]?.changeRate,
@@ -314,7 +319,7 @@ export const combineTickers = (
             tickers.binance.usdt[name]?.tradePrice == undefined
               ? 0
               : parseFloat(
-                  (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(7),
+                  (tickers.binance.usdt[name].tradePrice * usdtKRW).toFixed(7),
                 ),
           per:
             tickers.upbit.usdt[name] == undefined ||
@@ -323,7 +328,7 @@ export const combineTickers = (
               : getPercent(
                   tickers.upbit.krw[name].tradePrice,
                   parseFloat(
-                    (tickers.binance.usdt[name].tradePrice * usdToKrw).toFixed(
+                    (tickers.binance.usdt[name].tradePrice * usdtKRW).toFixed(
                       4,
                     ),
                   ),
