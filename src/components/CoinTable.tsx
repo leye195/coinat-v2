@@ -162,7 +162,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                   <div className={cn('flex flex-col gap-0.5')}>
                     <p className="m-0">
                       {coinType !== 'BTC'
-                        ? `${setComma(data.last)}₩`
+                        ? `${setComma(data.last, 6)}₩`
                         : data.last}
                     </p>
                     {data.upbitWarning && (
@@ -182,7 +182,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                   <div className={cn('flex flex-col')}>
                     <p className="m-0">{data.blast}</p>
                     {data.convertedBlast && (
-                      <p>{setComma(data.convertedBlast ?? 0)}₩</p>
+                      <p>{setComma(data.convertedBlast ?? 0, 6)}₩</p>
                     )}
                   </div>
                 </Table.Cell>
