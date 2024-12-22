@@ -17,6 +17,10 @@ export function NavigationEvents() {
       setType('BTC');
     }
 
+    if (url.includes('type=USDT')) {
+      setType('USDT');
+    }
+
     if (!url || url === '/' || url.includes('?type=KRW')) {
       setType('KRW');
     }

@@ -6,7 +6,7 @@ import {
 } from '@/api';
 import type { Coin, UpbitCoin } from '@/types/Coin';
 
-type Currency = 'KRW' | 'BTC';
+type Currency = 'KRW' | 'BTC' | 'USDT';
 
 export const getCoinSymbolImage = (symbol: string) =>
   `https://static.upbit.com/logos/${symbol}.png`;
@@ -34,9 +34,35 @@ export const getCoinsV2 = async (type: Currency) => {
         (data: any) => data.symbol.endsWith('BTC') && data.status === 'TRADING',
       )
       .map((data: any) => data.symbol.slice(0, data.symbol.length - 3));
+    const binanceUsdtCoins = binanceData?.symbols
+      ?.filter(
+        (data: any) =>
+          data.symbol.endsWith('USDT') && data.status === 'TRADING',
+      )
+      .map((data: any) => data.symbol.slice(0, data.symbol.length - 4))
+      .slice(1);
 
     // filtered data
-    const data: Coin[] = binanceBtcCoins
+    const dataWithUSDT: Coin[] = binanceUsdtCoins
+      .filter(
+        (symbol: string) =>
+          upbitKrwCoins.findIndex(
+            ({ market }: any) => market === `KRW-${symbol}`,
+          ) !== -1,
+      )
+      .map((symbol: string) => {
+        const data = {
+          name: symbol,
+          USDT:
+            upbitKrwCoins.findIndex(
+              ({ market }: any) => market === `KRW-${symbol}`,
+            ) !== -1,
+        };
+        return data;
+      })
+      .sort((data1: Coin, data2: Coin) => (data1.name > data2.name ? 1 : -1));
+
+    const dataWithBTC: Coin[] = binanceBtcCoins
       .filter(
         (symbol: string) =>
           upbitKrwCoins.findIndex(
@@ -62,7 +88,9 @@ export const getCoinsV2 = async (type: Currency) => {
       })
       .sort((data1: Coin, data2: Coin) => (data1.name > data2.name ? 1 : -1));
 
-    return data.filter((data: Coin) => data[type as Currency]);
+    return type === 'USDT'
+      ? dataWithUSDT.filter((data: Coin) => data.USDT)
+      : dataWithBTC.filter((data: Coin) => data[type as Currency]);
   } catch (err) {
     console.error(err);
     return [];
@@ -92,9 +120,35 @@ export const getCoins = async (type: Currency) => {
         (data: any) => data.symbol.endsWith('BTC') && data.status === 'TRADING',
       )
       .map((data: any) => data.symbol.slice(0, data.symbol.length - 3));
+    const binanceUsdtCoins = binanceData?.symbols
+      ?.filter(
+        (data: any) =>
+          data.symbol.endsWith('USDT') && data.status === 'TRADING',
+      )
+      .map((data: any) => data.symbol.slice(0, data.symbol.length - 4))
+      .slice(1);
 
     // filtered data
-    const data: Coin[] = binanceBtcCoins
+    const dataWithUSDT: Coin[] = binanceUsdtCoins
+      .filter(
+        (symbol: string) =>
+          upbitKrwCoins.findIndex(
+            ({ market }: any) => market === `KRW-${symbol}`,
+          ) !== -1,
+      )
+      .map((symbol: string) => {
+        const data = {
+          name: symbol,
+          USDT:
+            upbitKrwCoins.findIndex(
+              ({ market }: any) => market === `KRW-${symbol}`,
+            ) !== -1,
+        };
+        return data;
+      })
+      .sort((data1: Coin, data2: Coin) => (data1.name > data2.name ? 1 : -1));
+
+    const dataWithBTC: Coin[] = binanceBtcCoins
       .filter(
         (symbol: string) =>
           upbitKrwCoins.findIndex(
@@ -120,7 +174,9 @@ export const getCoins = async (type: Currency) => {
       })
       .sort((data1: Coin, data2: Coin) => (data1.name > data2.name ? 1 : -1));
 
-    return data.filter((data: Coin) => data[type as Currency]);
+    return type === 'USDT'
+      ? dataWithUSDT.filter((data: Coin) => data.USDT)
+      : dataWithBTC.filter((data: Coin) => data[type as Currency]);
   } catch (err) {
     console.error(err);
     return [];

@@ -30,6 +30,14 @@ export const btcCoinListState = atom<CoinState>({
   },
 });
 
+export const usdtCoinListState = atom<CoinState>({
+  key: `usdtCoinListState/${generateUid()}`,
+  default: {
+    isLoading: true,
+    data: [],
+  },
+});
+
 export const watchListState = atom<WatchListState>({
   key: `watchListState/${generateUid()}`,
   default: {

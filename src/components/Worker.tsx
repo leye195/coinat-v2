@@ -8,6 +8,7 @@ const Worker = () => {
     initialData: {
       krw: [],
       btc: [],
+      usdt: [],
     },
   });
   return null;
