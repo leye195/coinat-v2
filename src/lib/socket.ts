@@ -267,6 +267,11 @@ export const combineTickers = (
   const result: CombinedTickers[] = [{ name: 'BTC' }, ...coinList].map(
     ({ name }) => {
       if (type === 'KRW' || name === 'BTC') {
+        const btcConvertedBlast =
+          tickers.binance.btc[name] == undefined
+            ? 0
+            : tickers.binance.btc[name].tradePrice * btcKrw.upbit;
+
         return {
           symbol: name,
           last:
@@ -277,14 +282,9 @@ export const combineTickers = (
             tickers.binance.btc[name] == undefined
               ? 0
               : tickers.binance.btc[name].tradePrice,
-          convertedBlast:
-            tickers.binance.btc[name] == undefined
-              ? 0
-              : parseFloat(
-                  (tickers.binance.btc[name].tradePrice * btcKrw.upbit).toFixed(
-                    7,
-                  ),
-                ),
+          convertedBlast: parseFloat(
+            btcConvertedBlast.toFixed(btcConvertedBlast < 1 ? 7 : 2),
+          ),
           per:
             tickers.upbit.krw[name] == undefined ||
             tickers.binance.btc[name] == undefined
@@ -305,6 +305,11 @@ export const combineTickers = (
       }
 
       if (type === 'USDT') {
+        const usdtConvertedBlast =
+          tickers.binance.usdt[name]?.tradePrice == undefined
+            ? 0
+            : tickers.binance.usdt[name].tradePrice * usdtKRW;
+
         return {
           symbol: name,
           last:
@@ -315,12 +320,9 @@ export const combineTickers = (
             tickers.binance.usdt[name]?.tradePrice == undefined
               ? 0
               : parseFloat(tickers.binance.usdt[name].tradePrice.toFixed(7)),
-          convertedBlast:
-            tickers.binance.usdt[name]?.tradePrice == undefined
-              ? 0
-              : parseFloat(
-                  (tickers.binance.usdt[name].tradePrice * usdtKRW).toFixed(7),
-                ),
+          convertedBlast: parseFloat(
+            usdtConvertedBlast.toFixed(usdtConvertedBlast < 1 ? 7 : 2),
+          ),
           per:
             tickers.upbit.usdt[name] == undefined ||
             tickers.binance.usdt[name] == undefined
