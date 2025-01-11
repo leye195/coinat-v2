@@ -1,30 +1,29 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useSetRecoilState } from 'recoil';
 import { typeState } from '@/store/coin';
 
 export function NavigationEvents() {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const setType = useSetRecoilState(typeState);
 
   useEffect(() => {
-    const url = `${pathname}?${searchParams}`;
+    const type = searchParams?.get('type');
 
-    if (url.includes('type=BTC')) {
+    if (type === 'BTC') {
       setType('BTC');
     }
 
-    if (url.includes('type=USDT')) {
+    if (type === 'USDT') {
       setType('USDT');
     }
 
-    if (!url || url === '/' || url.includes('?type=KRW')) {
+    if (!type || type === 'KRW') {
       setType('KRW');
     }
-  }, [pathname, searchParams, setType]);
+  }, [searchParams, setType]);
 
   return null;
 }
