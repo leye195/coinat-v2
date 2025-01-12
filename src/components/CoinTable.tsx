@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { Icon } from 'ownui-system';
 import { useMedia } from 'react-use';
 import { useRecoilValue } from 'recoil';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
@@ -107,7 +107,9 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                   : name
               }
               right={
-                <Image src="/assets/updown.png" alt="" width={6} height={12} />
+                <>
+                  <Icon name="ArrowUpDown" size={14} />
+                </>
               }
               width="25%"
               onClick={handleSort(sortColumn[idx])}
