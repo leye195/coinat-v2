@@ -1,41 +1,94 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Dropdown } from 'ownui-system';
+import { DropdownSelectedItem } from 'ownui-system/dist/components/Dropdown/dropdown';
 import { useRecoilValue } from 'recoil';
+import { MARKET_INFO } from 'constant';
+import { useIsomorphicLayoutEffect } from 'hooks/common';
 import { cn } from '@/lib/utils';
 import { typeState } from '@/store/coin';
 
 export default function MarketLinks() {
   const coinType = useRecoilValue(typeState);
+  const navigate = useRouter();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<DropdownSelectedItem | null>(
+    null,
+  );
+
+  function handleSelectDropdown(name: string, value: string) {
+    if (value === selectedItem?.value) return;
+
+    setSelectedItem({
+      name,
+      value,
+    });
+    navigate.push(`/?type=${value}`);
+  }
+
+  function handleOnOpenChange(isOpen: boolean) {
+    setIsOpen(isOpen);
+  }
+
+  useIsomorphicLayoutEffect(() => {
+    if (coinType) {
+      setSelectedItem(
+        MARKET_INFO.find((item) => item.value === coinType) ?? MARKET_INFO[0],
+      );
+    }
+  }, [coinType]);
 
   return (
     <>
-      {coinType !== 'BTC' && (
-        <div
-          className={cn(
-            'flex items-center text-center mb-0.5',
-            'max-md:text-xs',
-            'max-sm:text-[10px]',
-          )}
-        >
-          <Link
-            className={cn(
-              'py-0.5 px-2  text-[#d0d0d0]',
-              coinType === 'KRW' && 'text-[#f8b64c] ',
-            )}
-            href="/?type=KRW"
-          >
-            바이낸스 - BTC 마켓
-          </Link>
-          <Link
-            className={cn(
-              'p-0.5  text-[#d0d0d0]',
-              coinType === 'USDT' && 'text-[#f8b64c]',
-            )}
-            href="/?type=USDT"
-          >
-            바이낸스 - USDT 마켓
-          </Link>
+      {coinType !== 'BTC' && selectedItem && (
+        <div className="max-md:mr-1">
+          <Dropdown
+            isOpen={isOpen}
+            header={
+              <Dropdown.Header
+                className={cn(
+                  'px-3 py-1.5 rounded-md min-w-[180px]',
+                  'max-md:min-w-[150px]',
+                )}
+              />
+            }
+            body={
+              <Dropdown.Content>
+                <Dropdown.Body
+                  className={cn(
+                    'min-w-[180px] bg-white',
+                    'max-md:min-w-[150px]',
+                  )}
+                >
+                  {MARKET_INFO.map((item) => (
+                    <Dropdown.Item
+                      className={cn('px-3 py-1.5')}
+                      key={item.value}
+                      name={item.name}
+                      value={item.value}
+                    >
+                      <div className={cn('flex gap-1 items-center')}>
+                        <Image
+                          src="/assets/icons/binance.svg"
+                          alt="binance"
+                          width={16}
+                          height={16}
+                        />
+                        {item.name}
+                      </div>
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Body>
+              </Dropdown.Content>
+            }
+            selectedItem={selectedItem}
+            onSelect={handleSelectDropdown}
+            onOpenChange={handleOnOpenChange}
+          />
         </div>
       )}
     </>

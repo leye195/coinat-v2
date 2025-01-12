@@ -12,3 +12,18 @@ export const MARKET_SYMBOLS = {
     USDT: '₩',
   },
 };
+
+export const BINANCE_ICON = '/assets/icons/binance.svg';
+
+export const MARKET_INFO = [
+  {
+    name: 'BTC 마켓',
+    value: 'KRW',
+    image: BINANCE_ICON,
+  },
+  {
+    name: 'USDT 마켓',
+    value: 'USDT',
+    image: BINANCE_ICON,
+  },
+];
