@@ -57,8 +57,8 @@ dependencies:
     specifier: ^0.13.0
     version: 0.13.0
   ownui-system:
-    specifier: ^0.1.6
-    version: 0.1.6(@aws-sdk/client-sso-oidc@3.699.0)(@babel/core@7.26.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^0.1.8
+    version: 0.1.8(@aws-sdk/client-sso-oidc@3.699.0)(@babel/core@7.26.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   qs:
     specifier: ^6.12.1
     version: 6.12.1
@@ -78,9 +78,6 @@ dependencies:
     specifier: ^0.7.7
     version: 0.7.7(react-dom@18.3.1)(react@18.3.1)
   socket.io:
-    specifier: ^4.7.5
-    version: 4.7.5
-  socket.io-client:
     specifier: ^4.7.5
     version: 4.7.5
   tailwind-merge:
@@ -4768,7 +4765,7 @@ packages:
       '@storybook/client-logger': 7.6.20
       '@storybook/core-events': 7.6.20
       '@storybook/global': 5.0.0
-      qs: 6.12.1
+      qs: 6.13.0
       telejson: 7.2.0
       tiny-invariant: 1.3.3
     dev: false
@@ -4989,7 +4986,7 @@ packages:
       dequal: 2.0.3
       lodash: 4.17.21
       memoizerific: 1.11.3
-      qs: 6.12.1
+      qs: 6.13.0
       synchronous-promise: 2.0.17
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
@@ -10842,8 +10839,8 @@ packages:
       wcwidth: 1.0.1
     dev: false
 
-  /ownui-system@0.1.6(@aws-sdk/client-sso-oidc@3.699.0)(@babel/core@7.26.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-rTHG+vvosSDnpgjc8DeRJ2zX/uXsCT/ea7ZNhR0AjFXKv+WCsC5BDFKMdRe0pqeTQDIMVE8aEdh9ZV7lF/fJVw==}
+  /ownui-system@0.1.8(@aws-sdk/client-sso-oidc@3.699.0)(@babel/core@7.26.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-gp9gYKIuLHJOL598MfpMQt1uKCgv64+v2dtPpO6+FQtOCA1qnCXCasAqFct+y1vRsp2aaA91XKm0z2iVR2yXNw==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -13351,7 +13348,8 @@ packages:
       mongoose: 6.13.0(@aws-sdk/client-sso-oidc@3.699.0)
       next: 14.2.18(@babel/core@7.26.0)(react-dom@18.3.1)(react@18.3.1)
       next-connect: 0.13.0
-      qs: 6.12.1
+      ownui-system: 0.1.8(@aws-sdk/client-sso-oidc@3.699.0)(@babel/core@7.26.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      qs: 6.13.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-hook-form: 7.52.0(react@18.3.1)
@@ -13363,6 +13361,7 @@ packages:
     transitivePeerDependencies:
       - '@aws-sdk/client-sso-oidc'
       - '@babel/core'
+      - '@emotion/is-prop-valid'
       - '@opentelemetry/api'
       - '@playwright/test'
       - '@types/react'
@@ -13370,6 +13369,7 @@ packages:
       - babel-plugin-macros
       - bufferutil
       - debug
+      - encoding
       - react-native
       - sass
       - supports-color
