@@ -1,37 +1,4 @@
-import { css } from '@emotion/react';
 import { BreakPoints, breakpointsValue, Size } from '@/styles/variables';
-import type { Flex } from '@/types/Style';
-
-export const flex = ({
-  display = 'flex',
-  direction = 'row',
-  alignItems = 'flex-start',
-  justifyContents = 'flex-start',
-}: Flex) => css`
-  display: ${display};
-  flex-direction: ${direction};
-  justify-content: ${justifyContents};
-  align-items: ${alignItems};
-`;
-
-export const breakpoint = (key: Size) => {
-  const breakUp = (...args: any) => css`
-    @media (min-width: ${breakpointsValue[key as Size]}px) {
-      ${css(...args)};
-    }
-  `;
-
-  const breakDown = (...args: any) => css`
-    @media (max-width: ${breakpointsValue[key as Size]}px) {
-      ${css(...args)};
-    }
-  `;
-
-  return {
-    up: breakUp,
-    down: breakDown,
-  };
-};
 
 const breakpointsValueList = Object.values(breakpointsValue);
 export const breakpoints: BreakPoints = {
