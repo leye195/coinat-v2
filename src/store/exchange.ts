@@ -24,7 +24,7 @@ export const exchangeSelector = selector({
     const { upbitBit, binanceBit, usdToKrw, isLoading } = get(exchangeState);
     const convertedToKrw = binanceBit * usdToKrw;
     const bitDiff = ((upbitBit - convertedToKrw) / convertedToKrw) * 100;
-    const usdtToKrw = usdToKrw * (1 + bitDiff / 100) ?? 0;
+    const usdtToKrw = usdToKrw * (1 + bitDiff / 100);
 
     return {
       usdToKrw,

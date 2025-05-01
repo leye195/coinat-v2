@@ -297,10 +297,9 @@ export const combineTickers = (
           upbitChangeRate: tickers.upbit.krw[name]?.changeRate,
           binanceChangePrice: tickers.binance.btc[name]?.changePrice,
           binanceChangeRate: tickers.binance.btc[name]?.changeRate,
-          upbitWarning:
-            tickers.upbit.krw[name]?.marketWarning === 'CAUTION' ?? false,
+          upbitWarning: tickers.upbit.krw[name]?.marketWarning === 'CAUTION',
           binanceWarning:
-            tickers.binance.btc[name]?.marketWarning === 'CAUTION' ?? false,
+            tickers.binance.btc[name]?.marketWarning === 'CAUTION',
         };
       }
 
@@ -339,10 +338,9 @@ export const combineTickers = (
           upbitChangeRate: tickers.upbit.usdt[name]?.changeRate,
           binanceChangePrice: tickers.binance.usdt[name]?.changePrice,
           binanceChangeRate: tickers.binance.usdt[name]?.changeRate,
-          upbitWarning:
-            tickers.upbit.btc[name]?.marketWarning === 'CAUTION' ?? false,
+          upbitWarning: tickers.upbit.btc[name]?.marketWarning === 'CAUTION',
           binanceWarning:
-            tickers.binance.btc[name]?.marketWarning === 'CAUTION' ?? false,
+            tickers.binance.btc[name]?.marketWarning === 'CAUTION',
         };
       }
 
@@ -369,10 +367,8 @@ export const combineTickers = (
         upbitChangeRate: tickers.upbit.btc[name]?.changeRate,
         binanceChangePrice: tickers.binance.btc[name]?.changePrice,
         binanceChangeRate: tickers.binance.btc[name]?.changeRate,
-        upbitWarning:
-          tickers.upbit.btc[name]?.marketWarning === 'CAUTION' ?? false,
-        binanceWarning:
-          tickers.binance.btc[name]?.marketWarning === 'CAUTION' ?? false,
+        upbitWarning: tickers.upbit.btc[name]?.marketWarning === 'CAUTION',
+        binanceWarning: tickers.binance.btc[name]?.marketWarning === 'CAUTION',
       };
     },
   );
