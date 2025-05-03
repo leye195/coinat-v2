@@ -13,13 +13,13 @@ import Table from '@/components/Table';
 import Text from '@/components/Text';
 import { useLocalStorage } from '@/hooks';
 import { getCoinSymbolImage } from '@/lib/coin';
-import { CombinedTickers } from '@/lib/socket';
 import { sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { typeState } from '@/store/coin';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import { TickerType } from '@/types/Coin';
+import { CombinedTickers } from '@/store/socket';
 
 type Props = {
   coinList: CombinedTickers[];

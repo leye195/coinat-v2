@@ -3,13 +3,16 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useMounted } from 'ownui-system';
+import { useSetRecoilState } from 'recoil';
+import { cryptoSocketState } from '@/store/socket';
 
 export default function SharedWorkerProvider({ children }: PropsWithChildren) {
   const isMounted = useMounted();
   const [sharedWorker, setSharedWorker] = useState<SharedWorker | null>(null);
+  const setCryptoStateData = useSetRecoilState(cryptoSocketState);
 
   useQuery({
-    queryKey: ['test'],
+    queryKey: ['crypto-ws'],
     queryFn: () => {
       sharedWorker?.port.postMessage({
         type: 'tickers',
@@ -17,11 +20,10 @@ export default function SharedWorkerProvider({ children }: PropsWithChildren) {
       return true;
     },
     enabled: sharedWorker != null,
-    refetchInterval: 3000,
+    refetchInterval: 1000,
   });
 
   useEffect(() => {
-    //if (sharedWorker.current) return;
     if (!isMounted) return;
 
     const worker = new SharedWorker(
@@ -30,7 +32,22 @@ export default function SharedWorkerProvider({ children }: PropsWithChildren) {
     );
 
     worker.port.onmessage = (event) => {
-      console.log('Received message from worker:', event);
+      const { payload, type } = event.data;
+
+      if (type === 'tickers') {
+        const { upbit, binance } = payload;
+
+        setCryptoStateData({
+          tickers: {
+            upbit: upbit.data,
+            binance: binance.data,
+          },
+          btcKrw: {
+            upbit: upbit.btcKrw,
+            binance: binance.btcKrw,
+          },
+        });
+      }
     };
 
     worker.port.postMessage({
@@ -48,7 +65,7 @@ export default function SharedWorkerProvider({ children }: PropsWithChildren) {
         type: 'disconnect',
       });
     };
-  }, [isMounted]);
+  }, [isMounted, setCryptoStateData]);
 
   return <>{children}</>;
 }

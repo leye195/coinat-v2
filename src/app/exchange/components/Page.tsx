@@ -16,12 +16,13 @@ import Text from '@/components/Text';
 import { exchangeTabs, timeTabs } from '@/data/tab';
 import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
-import { btcKrw } from '@/lib/socket';
 import { cn, formatPrice, getBreakpointQuery, setComma } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
+import { useRecoilValue } from 'recoil';
+import { cryptoSocketState } from '@/store/socket';
 
 type ExchangePageProps = {
   code: string;
@@ -39,6 +40,8 @@ const ExchangePage = ({ code, type }: ExchangePageProps) => {
     value: 'upbit',
     index: 0,
   });
+  const { btcKrw } = useRecoilValue(cryptoSocketState);
+
   const priceSymbol = type === 'KRW' ? 'KRW' : 'BTC';
   const exchangeRate =
     priceSymbol === 'KRW' && activeExchangeTab.value === 'binance'
