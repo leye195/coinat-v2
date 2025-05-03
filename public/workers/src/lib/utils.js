@@ -18,7 +18,9 @@ export const getPercent = (x, y) => {
  * @description 1,000단위 콤마, 소수점 2자리 허용
  * @param num
  */
-export const setComma = (num) => num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+export const setComma = (num, maximumFractionDigits) => num.toLocaleString(undefined, {
+    maximumFractionDigits: maximumFractionDigits !== null && maximumFractionDigits !== void 0 ? maximumFractionDigits : 2,
+});
 /**
  * @description object key 목록 반환
  * @param target  object

@@ -2,8 +2,8 @@ import { atom, selector } from 'recoil';
 import { generateUid } from '@/lib/utils';
 
 type ExchangeState = {
-  upbitBit: number;
-  binanceBit: number;
+  upbitBTC: number;
+  binanceBTC: number;
   usdToKrw: number;
   isLoading: boolean;
 };
@@ -11,8 +11,8 @@ type ExchangeState = {
 export const exchangeState = atom<ExchangeState>({
   key: `exchangeState/${generateUid()}`,
   default: {
-    upbitBit: 0,
-    binanceBit: 0,
+    upbitBTC: 0,
+    binanceBTC: 0,
     usdToKrw: 0,
     isLoading: true,
   },
@@ -21,15 +21,15 @@ export const exchangeState = atom<ExchangeState>({
 export const exchangeSelector = selector({
   key: `exchangeSelector/${generateUid()}`,
   get: ({ get }) => {
-    const { upbitBit, binanceBit, usdToKrw, isLoading } = get(exchangeState);
-    const convertedToKrw = binanceBit * usdToKrw;
-    const bitDiff = ((upbitBit - convertedToKrw) / convertedToKrw) * 100;
+    const { upbitBTC, binanceBTC, usdToKrw, isLoading } = get(exchangeState);
+    const convertedToKrw = binanceBTC * usdToKrw;
+    const bitDiff = ((upbitBTC - convertedToKrw) / convertedToKrw) * 100;
     const usdtToKrw = usdToKrw * (1 + bitDiff / 100);
 
     return {
       usdToKrw,
-      upbitBit,
-      binanceBit: convertedToKrw,
+      upbitBTC,
+      binanceBTC: convertedToKrw,
       usdtToKrw: isNaN(usdtToKrw) ? 0 : usdtToKrw,
       bitDiff: isNaN(bitDiff) || !bitDiff ? 0 : bitDiff,
       isLoading,

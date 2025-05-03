@@ -42,16 +42,15 @@ const useTickerData = ({
 
     try {
       const { data: currencyData } = await getCurrencyInfo();
-
       const combinedData = combineTickers(originData, tickerState, coinType); //combineTickers(originData, coinType);
 
       const btc = combinedData.find((data) => data.symbol === 'BTC');
-      const upbitBit = btc?.last ?? 0;
-      const binanceBit = btc?.blast ?? 0;
+      const upbitBTC = btc?.last ?? 0;
+      const binanceBTC = btc?.blast ?? 0;
 
       setExchangeState({
-        upbitBit,
-        binanceBit,
+        upbitBTC,
+        binanceBTC,
         usdToKrw: currencyData.value,
         isLoading: false,
       });

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import axios from 'axios';
 import { queryStringify } from '@/lib/utils';
-const BASE_URL = 'https://coinat-vapp.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 const api = axios.create({
@@ -27,19 +27,38 @@ const binanceApi = axios.create({
 export const getCurrencyInfo = () => api.get('currency');
 export const getCoins = (type) => api.get(`coin-v2?type=${type}`);
 export const getUpbitCoinsV2 = () => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield fetch(`https://api.upbit.com/v1/market/all?isDetails=true`, {
-        cache: 'force-cache',
-    });
-    const data = yield response.json(); // 응답 본문을 읽음
-    return data; // 데이터 반환
+    try {
+        const response = yield fetch(`${BASE_URL}/api/upbit/market`, {
+            cache: 'force-cache',
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = yield response.json(); // 응답 본문을 읽음
+        return data; // 데이터 반환
+    }
+    catch (error) {
+        console.error('Error fetching Upbit coins:', error);
+        return []; // 또는 대체 데이터를 반환
+    }
 });
 export const getUpbitCoins = () => api.get('market');
 export const getBinanceCoinsV2 = () => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield fetch('https://api.binance.com/api/v3/exchangeInfo', {
-        cache: 'force-cache',
-    });
-    const data = yield response.json();
-    return data;
+    try {
+        const response = yield fetch(`${BASE_URL}/api/binance/market`, //'https://api.binance.com/api/v3/exchangeInfo',
+        {
+            cache: 'no-cache',
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = yield response.json();
+        return data;
+    }
+    catch (error) {
+        console.error('Error fetching Binance coins:', error);
+        return []; // 또는 대체 데이터를 반환
+    }
 });
 export const getBinanceCoins = () => axios.get('https://api.binance.com/api/v3/exchangeInfo');
 /**
@@ -111,3 +130,20 @@ export const postChat = (message) => api.post('chat', {
     message,
 });
 export const getCoinInfo = (coin) => api.get(`coin-info?code=${coin.toUpperCase()}`);
+export const getDailyVolumnPower = (orderBy_1, ...args_1) => __awaiter(void 0, [orderBy_1, ...args_1], void 0, function* (orderBy, count = 220) {
+    try {
+        const response = yield fetch(`${BASE_URL}/api/upbit/daily_volume_power?count=${count}&orderBy=${orderBy}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = yield response.json();
+        return data;
+    }
+    catch (error) {
+        console.error('Error fetching Upbit coins:', error);
+        return {
+            lastUpdated: 0,
+            markets: [],
+        }; // 또는 대체 데이터를 반환
+    }
+});

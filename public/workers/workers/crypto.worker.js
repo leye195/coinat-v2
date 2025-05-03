@@ -17,7 +17,7 @@ onmessage = () => __awaiter(void 0, void 0, void 0, function* () {
             btc: btcData,
         });
     }
-    catch (error) {
+    catch (_a) {
         postMessage({
             krw: [],
             btc: [],
