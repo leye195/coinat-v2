@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
-import type { Exchange } from '@/types/Ticker';
 import { cryptoSocketState } from '@/store/socket';
+import type { Exchange } from '@/types/Ticker';
 
 type UseExchangeDataProps = {
   code: string;

@@ -4,19 +4,18 @@ import { useMemo, useRef, useState } from 'react';
 import { Chart, init, dispose, Nullable } from 'klinecharts';
 import { useMounted } from 'ownui-system';
 import { useMedia } from 'react-use';
+import { useRecoilValue } from 'recoil';
 import {
   useBinanceCandles,
   useUpbitCandles,
   useIsomorphicLayoutEffect,
 } from '@/hooks';
-
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
+import { cryptoSocketState } from '@/store/socket';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Ticker } from '@/types/Ticker';
-import { useRecoilValue } from 'recoil';
-import { cryptoSocketState } from '@/store/socket';
 
 type ExchangeChartProps = {
   exchange: string;

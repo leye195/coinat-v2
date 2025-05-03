@@ -16,10 +16,10 @@ import { getCoinSymbolImage } from '@/lib/coin';
 import { sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { typeState } from '@/store/coin';
+import { CombinedTickers } from '@/store/socket';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import { TickerType } from '@/types/Coin';
-import { CombinedTickers } from '@/store/socket';
 
 type Props = {
   coinList: CombinedTickers[];

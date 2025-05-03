@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useId } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMedia } from 'react-use';
+import { useRecoilValue } from 'recoil';
 import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import ExchangeChart from '@/components/ExchangeChart';
@@ -17,12 +18,11 @@ import { exchangeTabs, timeTabs } from '@/data/tab';
 import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { cn, formatPrice, getBreakpointQuery, setComma } from '@/lib/utils';
+import { cryptoSocketState } from '@/store/socket';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Coin } from '@/types/Coin';
-import { useRecoilValue } from 'recoil';
-import { cryptoSocketState } from '@/store/socket';
 
 type ExchangePageProps = {
   code: string;

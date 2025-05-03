@@ -1,5 +1,4 @@
 import { atom } from 'recoil';
-
 import { generateUid, getPercent } from '@/lib/utils';
 import { Coin } from '@/types/Coin';
 import { Exchange } from '@/types/Ticker';

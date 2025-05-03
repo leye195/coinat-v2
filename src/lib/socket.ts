@@ -7,16 +7,6 @@ type Rate = {
   binance: number;
 };
 
-type CombinedTickers = {
-  symbol: string;
-  last: number;
-  blast: number;
-  convertedBlast?: number;
-  per?: number;
-  upbitWarning: boolean;
-  binanceWarning: boolean;
-};
-
 type OpenCallback = (socket: WebSocket) => void;
 type MessageCallback = (e: MessageEvent<any>) => void;
 
