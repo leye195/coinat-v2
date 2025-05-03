@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./public/workers",
     "module": "ES6",
-    "noEmit": false
+    "noEmit": false,
+    "types": ["./src/types/shared-worker.d.ts", "node"]
   },
   "include": ["workers/**/*.ts"]
 }
