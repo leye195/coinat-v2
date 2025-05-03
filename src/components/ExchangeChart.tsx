@@ -9,12 +9,14 @@ import {
   useUpbitCandles,
   useIsomorphicLayoutEffect,
 } from '@/hooks';
-import { btcKrw } from '@/lib/socket';
+
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
 import type { Ticker } from '@/types/Ticker';
+import { useRecoilValue } from 'recoil';
+import { cryptoSocketState } from '@/store/socket';
 
 type ExchangeChartProps = {
   exchange: string;
@@ -38,6 +40,8 @@ const ExchangeChart = ({
   const isMounted = useMounted();
   const [isInitialized, setIsInitialized] = useState(false);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+  const { btcKrw } = useRecoilValue(cryptoSocketState);
+
   const exchangeRate =
     priceSymbol === 'BTC' || exchange === 'upbit' ? 1 : btcKrw.upbit;
 
