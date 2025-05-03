@@ -4,10 +4,10 @@ import { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { getCurrencyInfo } from '@/api';
-import { combineTickers } from '@/lib/socket';
 import sort, { initSort, Sort } from '@/lib/sort';
 import { CoinState, typeState } from '@/store/coin';
 import { exchangeState } from '@/store/exchange';
+import { combineTickers, cryptoSocketState } from '@/store/socket';
 
 interface UseTickerDataProps {
   krwCoinData: CoinState;
@@ -30,6 +30,7 @@ const useTickerData = ({
 
   const coinType = useRecoilValue(typeState);
   const setExchangeState = useSetRecoilState(exchangeState);
+  const tickerState = useRecoilValue(cryptoSocketState);
 
   const getTickers = async () => {
     const { data: originData } =
@@ -42,11 +43,7 @@ const useTickerData = ({
     try {
       const { data: currencyData } = await getCurrencyInfo();
 
-      const combinedData = combineTickers(
-        originData,
-        currencyData.value,
-        coinType,
-      );
+      const combinedData = combineTickers(originData, tickerState, coinType); //combineTickers(originData, coinType);
 
       const btc = combinedData.find((data) => data.symbol === 'BTC');
       const upbitBit = btc?.last ?? 0;
