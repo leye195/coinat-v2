@@ -11,29 +11,50 @@ import { getUpbitCoins } from '@/api';
 const UPBIT_SOCKET_URL = 'wss://api.upbit.com/websocket/v1';
 export default class UpbitWebSocket {
     constructor() {
-        this.isConnected = false;
-        this.retry = false;
+        this._isConnected = false;
+        this._retry = false;
         this.btcKrw = 0;
-        this.isConnected = false;
-        this.retry = false;
+        this._isConnected = false;
+        this._retry = false;
         const socket = new WebSocket(UPBIT_SOCKET_URL);
         socket.binaryType = 'arraybuffer';
         this.data = { krw: {}, usdt: {}, btc: {} };
-        this.socket = socket;
+        this._socket = socket;
         this.onConnect(socket);
     }
+    parseTickerData(data) {
+        const enc = new TextDecoder('utf-8');
+        const arr = new Uint8Array(data);
+        return JSON.parse(enc.decode(arr));
+    }
+    updateTickerData(symbol, data, market) {
+        const { trade_price: tradePrice, opening_price: openPrice, high_price: highPrice, low_price: lowPrice, market_warning: marketWarning, signed_change_price: changePrice, signed_change_rate: changeRate, market_state: marketState, acc_trade_volume: volume, change, timestamp, } = data;
+        this.data[market][symbol] = {
+            tradePrice,
+            highPrice,
+            lowPrice,
+            openPrice,
+            marketWarning,
+            changePrice,
+            changeRate,
+            change,
+            marketState,
+            volume,
+            timestamp,
+        };
+    }
     onConnect(socket) {
-        if (this.isConnected)
+        if (this._isConnected)
             return;
         socket.onopen = () => this.onOpen(socket);
         socket.onmessage = (e) => this.onMessage(e);
         socket.onclose = () => this.onClose();
-        socket.onerror = () => this.onError();
+        socket.onerror = (e) => this.onError(e);
     }
     onOpen(socket) {
         return __awaiter(this, void 0, void 0, function* () {
             const upbitList = (yield getUpbitCoins()).data.filter((coin) => coin.market.includes('KRW-') || coin.market.includes('BTC-'));
-            this.isConnected = true;
+            this._isConnected = true;
             const data = [
                 { ticket: 'coin-at' },
                 {
@@ -45,68 +66,31 @@ export default class UpbitWebSocket {
         });
     }
     onMessage(e) {
-        const enc = new TextDecoder('utf-8');
-        const arr = new Uint8Array(e.data);
-        const { code, trade_price: tradePrice, opening_price: openPrice, high_price: highPrice, low_price: lowPrice, market_warning: marketWarning, signed_change_price: changePrice, signed_change_rate: changeRate, market_state: marketState, acc_trade_volume: volume, change, timestamp, } = JSON.parse(enc.decode(arr));
+        const tickerData = this.parseTickerData(e.data);
+        const { code } = tickerData;
         const symbol = code.slice(code.indexOf('-') + 1, code.length);
         if (code === 'KRW-BTC' && symbol === 'BTC') {
-            this.btcKrw = tradePrice;
+            this.btcKrw = tickerData.trade_price;
         }
         if (code === `KRW-${symbol}`) {
-            this.data.krw[symbol] = {
-                tradePrice,
-                highPrice,
-                lowPrice,
-                openPrice,
-                marketWarning,
-                changePrice,
-                changeRate,
-                change,
-                marketState,
-                volume,
-                timestamp,
-            };
-            this.data.usdt[symbol] = {
-                tradePrice,
-                highPrice,
-                lowPrice,
-                openPrice,
-                marketWarning,
-                changePrice,
-                changeRate,
-                change,
-                marketState,
-                volume,
-                timestamp,
-            };
+            this.updateTickerData(symbol, tickerData, 'krw');
+            this.updateTickerData(symbol, tickerData, 'usdt');
         }
         if (code === `BTC-${symbol}`) {
-            this.data.btc[symbol] = {
-                tradePrice,
-                highPrice,
-                lowPrice,
-                openPrice,
-                marketWarning,
-                changePrice,
-                changeRate,
-                change,
-                marketState,
-                volume,
-                timestamp,
-            };
+            this.updateTickerData(symbol, tickerData, 'btc');
         }
     }
     onClose() {
-        const connect = this.onConnect;
-        this.isConnected = false;
-        if (this.retry) {
-            setTimeout(() => connect(this.socket), 3000);
+        this._isConnected = false;
+        if (this._retry) {
+            setTimeout(() => this.onConnect(this._socket), 3000);
             return;
         }
-        this.retry = true;
-        connect(this.socket);
+        this._retry = true;
+        this.onConnect(this._socket);
     }
-    onError() {
-        this.isConnected = false;
+    onError(error) {
+        console.error('[error] Binance:', error);
+        this._isConnected = false;
     }
 }

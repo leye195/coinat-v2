@@ -4,24 +4,58 @@ import { Exchange } from '@/types/Ticker';
 
 const BINANCE_SOCKET_URL = 'wss://stream.binance.com:9443/stream?streams=';
 
+interface BinanceTickerData {
+  data: {
+    s: string; // symbol
+    c: string; // current price
+    h: number; // high price
+    l: number; // low price
+    o: number; // open price
+    p: number; // price change
+    P: number; // price change percent
+  };
+}
+
 export default class BinanceWebSocket {
-  private isConnected = false;
-  private retry = false;
-  private socket: WebSocket | null;
+  private _isConnected = false;
+  private _retry = false;
+  private _socket: WebSocket | null;
   public data: Exchange['binance'];
   public btcKrw: number = 0; //btc 가격
 
   constructor() {
-    this.isConnected = false;
-    this.retry = false;
-    this.socket = null;
+    this._isConnected = false;
+    this._retry = false;
+    this._socket = null;
     this.data = { krw: {}, usdt: {}, btc: {} };
 
     this.onConnect();
   }
 
+  private parseTickerData(data: string): BinanceTickerData {
+    return JSON.parse(data);
+  }
+
+  private updateTickerData(
+    symbol: string,
+    data: BinanceTickerData['data'],
+    market: 'btc' | 'usdt',
+  ) {
+    const { c, h, l, o, p, P } = data;
+
+    this.data[market][symbol] = {
+      tradePrice: parseFloat(c ?? 0),
+      highPrice: h ?? 0,
+      lowPrice: l ?? 0,
+      openPrice: o ?? 0,
+      marketWarning: 'None',
+      changePrice: p,
+      changeRate: P,
+    };
+  }
+
   async onConnect() {
-    if (this.isConnected) return;
+    if (this._isConnected) return;
 
     const krw = await getCoins('KRW');
     const btc = await getCoins('BTC');
@@ -35,72 +69,46 @@ export default class BinanceWebSocket {
       .join('')}btcusdt@ticker`;
 
     const socket = new WebSocket(`${BINANCE_SOCKET_URL}${streams}`);
-    this.socket = socket;
-    this.isConnected = true;
+    this._socket = socket;
+    this._isConnected = true;
 
     socket.onopen = () => this.onOpen();
     socket.onmessage = (e) => this.onMessage(e);
     socket.onclose = () => this.onClose();
-    socket.onerror = () => this.onError();
+    socket.onerror = (e) => this.onError(e);
   }
 
   onOpen() {}
 
   onMessage(e: any) {
-    const {
-      data: { s, c, h, l, o, p, P },
-    } = JSON.parse(e.data);
-
+    const { data } = this.parseTickerData(e.data);
+    const { s, c } = data;
     const symbol = s.slice(0, s.length - 3);
 
     if (s.startsWith('BTCUSDT')) {
       this.btcKrw = parseFloat(c ?? 0);
-      this.data.btc[s.slice(0, s.length - 4)] = {
-        tradePrice: parseFloat(c ?? 0),
-        highPrice: h ?? 0,
-        lowPrice: l ?? 0,
-        openPrice: o ?? 0,
-        marketWarning: 'None',
-        changePrice: p,
-        changeRate: P,
-      };
+      this.updateTickerData(s.slice(0, s.length - 4), data, 'btc');
     } else if (s.endsWith('BTC')) {
-      this.data.btc[symbol] = {
-        tradePrice: parseFloat(c ?? 0),
-        highPrice: h ?? 0,
-        lowPrice: l ?? 0,
-        openPrice: o ?? 0,
-        marketWarning: 'None',
-        changePrice: p,
-        changeRate: P,
-      };
+      this.updateTickerData(symbol, data, 'btc');
     } else if (s.endsWith('USDT')) {
-      this.data.usdt[s.slice(0, s.length - 4)] = {
-        tradePrice: parseFloat(c ?? 0),
-        highPrice: h ?? 0,
-        lowPrice: l ?? 0,
-        openPrice: o ?? 0,
-        marketWarning: 'None',
-        changePrice: p,
-        changeRate: P,
-      };
+      this.updateTickerData(s.slice(0, s.length - 4), data, 'usdt');
     }
   }
 
   onClose() {
-    const connect = this.onConnect;
-    this.isConnected = false;
+    this._isConnected = false;
 
-    if (this.retry) {
-      setTimeout(() => connect(), 3000);
+    if (this._retry) {
+      setTimeout(() => this.onConnect(), 3000);
       return;
     }
 
-    this.retry = true;
-    connect();
+    this._retry = true;
+    this.onConnect();
   }
 
-  onError() {
-    this.isConnected = false;
+  onError(error: Event) {
+    console.error('[ws error] Binance:', error);
+    this._isConnected = false;
   }
 }

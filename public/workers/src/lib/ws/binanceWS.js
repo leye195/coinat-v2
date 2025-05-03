@@ -11,18 +11,33 @@ import { getCoins } from '@/lib/coin';
 const BINANCE_SOCKET_URL = 'wss://stream.binance.com:9443/stream?streams=';
 export default class BinanceWebSocket {
     constructor() {
-        this.isConnected = false;
-        this.retry = false;
+        this._isConnected = false;
+        this._retry = false;
         this.btcKrw = 0; //btc 가격
-        this.isConnected = false;
-        this.retry = false;
-        this.socket = null;
+        this._isConnected = false;
+        this._retry = false;
+        this._socket = null;
         this.data = { krw: {}, usdt: {}, btc: {} };
         this.onConnect();
     }
+    parseTickerData(data) {
+        return JSON.parse(data);
+    }
+    updateTickerData(symbol, data, market) {
+        const { c, h, l, o, p, P } = data;
+        this.data[market][symbol] = {
+            tradePrice: parseFloat(c !== null && c !== void 0 ? c : 0),
+            highPrice: h !== null && h !== void 0 ? h : 0,
+            lowPrice: l !== null && l !== void 0 ? l : 0,
+            openPrice: o !== null && o !== void 0 ? o : 0,
+            marketWarning: 'None',
+            changePrice: p,
+            changeRate: P,
+        };
+    }
     onConnect() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.isConnected)
+            if (this._isConnected)
                 return;
             const krw = yield getCoins('KRW');
             const btc = yield getCoins('BTC');
@@ -31,64 +46,41 @@ export default class BinanceWebSocket {
                 .map((coin) => `${coin.name.toLowerCase()}${coin.USDT ? 'usdt' : 'btc'}@ticker/`)
                 .join('')}btcusdt@ticker`;
             const socket = new WebSocket(`${BINANCE_SOCKET_URL}${streams}`);
-            this.socket = socket;
-            this.isConnected = true;
+            this._socket = socket;
+            this._isConnected = true;
             socket.onopen = () => this.onOpen();
             socket.onmessage = (e) => this.onMessage(e);
             socket.onclose = () => this.onClose();
-            socket.onerror = () => this.onError();
+            socket.onerror = (e) => this.onError(e);
         });
     }
     onOpen() { }
     onMessage(e) {
-        const { data: { s, c, h, l, o, p, P }, } = JSON.parse(e.data);
+        const { data } = this.parseTickerData(e.data);
+        const { s, c } = data;
         const symbol = s.slice(0, s.length - 3);
         if (s.startsWith('BTCUSDT')) {
             this.btcKrw = parseFloat(c !== null && c !== void 0 ? c : 0);
-            this.data.btc[s.slice(0, s.length - 4)] = {
-                tradePrice: parseFloat(c !== null && c !== void 0 ? c : 0),
-                highPrice: h !== null && h !== void 0 ? h : 0,
-                lowPrice: l !== null && l !== void 0 ? l : 0,
-                openPrice: o !== null && o !== void 0 ? o : 0,
-                marketWarning: 'None',
-                changePrice: p,
-                changeRate: P,
-            };
+            this.updateTickerData(s.slice(0, s.length - 4), data, 'btc');
         }
         else if (s.endsWith('BTC')) {
-            this.data.btc[symbol] = {
-                tradePrice: parseFloat(c !== null && c !== void 0 ? c : 0),
-                highPrice: h !== null && h !== void 0 ? h : 0,
-                lowPrice: l !== null && l !== void 0 ? l : 0,
-                openPrice: o !== null && o !== void 0 ? o : 0,
-                marketWarning: 'None',
-                changePrice: p,
-                changeRate: P,
-            };
+            this.updateTickerData(symbol, data, 'btc');
         }
         else if (s.endsWith('USDT')) {
-            this.data.usdt[s.slice(0, s.length - 4)] = {
-                tradePrice: parseFloat(c !== null && c !== void 0 ? c : 0),
-                highPrice: h !== null && h !== void 0 ? h : 0,
-                lowPrice: l !== null && l !== void 0 ? l : 0,
-                openPrice: o !== null && o !== void 0 ? o : 0,
-                marketWarning: 'None',
-                changePrice: p,
-                changeRate: P,
-            };
+            this.updateTickerData(s.slice(0, s.length - 4), data, 'usdt');
         }
     }
     onClose() {
-        const connect = this.onConnect;
-        this.isConnected = false;
-        if (this.retry) {
-            setTimeout(() => connect(), 3000);
+        this._isConnected = false;
+        if (this._retry) {
+            setTimeout(() => this.onConnect(), 3000);
             return;
         }
-        this.retry = true;
-        connect();
+        this._retry = true;
+        this.onConnect();
     }
-    onError() {
-        this.isConnected = false;
+    onError(error) {
+        console.error('[ws error] Binance:', error);
+        this._isConnected = false;
     }
 }
