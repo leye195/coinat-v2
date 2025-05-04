@@ -30,13 +30,13 @@ function ExchangeList() {
         />
         <Exchange
           title={exchangeHeader[2]}
-          value={setComma(exchangeData.upbitBit)}
-          isLoading={exchangeData.isLoading || !exchangeData.upbitBit}
+          value={setComma(exchangeData.upbitBTC)}
+          isLoading={exchangeData.isLoading || !exchangeData.upbitBTC}
         />
         <Exchange
           title={exchangeHeader[3]}
-          value={setComma(exchangeData.binanceBit)}
-          isLoading={exchangeData.isLoading || !exchangeData.binanceBit}
+          value={setComma(exchangeData.binanceBTC)}
+          isLoading={exchangeData.isLoading || !exchangeData.binanceBTC}
         />
         <Exchange
           title={exchangeHeader[4]}
@@ -64,13 +64,13 @@ function ExchangeList() {
         />
         <Exchange
           title={exchangeHeader[2]}
-          value={setComma(exchangeData.upbitBit)}
-          isLoading={exchangeData.isLoading || !exchangeData.upbitBit}
+          value={setComma(exchangeData.upbitBTC)}
+          isLoading={exchangeData.isLoading || !exchangeData.upbitBTC}
         />
         <Exchange
           title={exchangeHeader[3]}
-          value={setComma(exchangeData.binanceBit)}
-          isLoading={exchangeData.isLoading || !exchangeData.binanceBit}
+          value={setComma(exchangeData.binanceBTC)}
+          isLoading={exchangeData.isLoading || !exchangeData.binanceBTC}
         />
         <Exchange
           title={exchangeHeader[4]}

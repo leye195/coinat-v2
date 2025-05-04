@@ -4,13 +4,14 @@ import { useMemo, useRef, useState } from 'react';
 import { Chart, init, dispose, Nullable } from 'klinecharts';
 import { useMounted } from 'ownui-system';
 import { useMedia } from 'react-use';
+import { useRecoilValue } from 'recoil';
 import {
   useBinanceCandles,
   useUpbitCandles,
   useIsomorphicLayoutEffect,
 } from '@/hooks';
-import { btcKrw } from '@/lib/socket';
 import { getBreakpointQuery, reCalculateTimeStamp } from '@/lib/utils';
+import { cryptoSocketState } from '@/store/socket';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
 import type { CandleType } from '@/types/Candle';
@@ -38,6 +39,8 @@ const ExchangeChart = ({
   const isMounted = useMounted();
   const [isInitialized, setIsInitialized] = useState(false);
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
+  const { btcKrw } = useRecoilValue(cryptoSocketState);
+
   const exchangeRate =
     priceSymbol === 'BTC' || exchange === 'upbit' ? 1 : btcKrw.upbit;
 

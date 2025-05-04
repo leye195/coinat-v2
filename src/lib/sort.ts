@@ -1,5 +1,5 @@
 import sortBy from 'lodash.sortby';
-import type { CombinedTickers } from './socket';
+import { CombinedTickers } from '@/store/socket';
 
 export type Sort = 'last' | 'blast' | 'per' | 'symbol';
 

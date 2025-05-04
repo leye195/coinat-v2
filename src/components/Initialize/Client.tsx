@@ -38,7 +38,6 @@ function InitializeClient({ btc, krw, usdt }: InitializeProps) {
       btc: data?.btc ?? btc,
       usdt: data?.usdt ?? usdt,
     },
-    workerEnabled: false,
   });
   return null;
 }
