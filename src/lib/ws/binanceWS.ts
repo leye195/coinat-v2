@@ -18,14 +18,12 @@ interface BinanceTickerData {
 
 export default class BinanceWebSocket {
   private _isConnected = false;
-  private _retry = false;
   private _socket: WebSocket | null;
   public data: Exchange['binance'];
   public btcKrw: number = 0; //btc 가격
 
   constructor() {
     this._isConnected = false;
-    this._retry = false;
     this._socket = null;
     this.data = { krw: {}, usdt: {}, btc: {} };
 
@@ -52,6 +50,22 @@ export default class BinanceWebSocket {
       changePrice: p,
       changeRate: P,
     };
+  }
+
+  private reconnect(delay = 3000) {
+    try {
+      this._socket?.close(); // 기존 연결 닫기
+    } catch (e) {
+      console.warn('[Binance] Socket close failed:', e);
+    }
+
+    this._isConnected = false;
+    this._socket = null;
+
+    setTimeout(() => {
+      console.info('🔄 Binance WebSocket reconnecting...');
+      this.onConnect(); // 새 연결 시도
+    }, delay);
   }
 
   async onConnect() {
@@ -96,19 +110,12 @@ export default class BinanceWebSocket {
   }
 
   onClose() {
-    this._isConnected = false;
-
-    if (this._retry) {
-      setTimeout(() => this.onConnect(), 3000);
-      return;
-    }
-
-    this._retry = true;
-    this.onConnect();
+    console.warn('[info] Binance Socket closed');
+    this.reconnect();
   }
 
   onError(error: Event) {
-    console.error('[ws error] Binance:', error);
-    this._isConnected = false;
+    console.error('[error] Binance Socket error:', error);
+    this.reconnect();
   }
 }

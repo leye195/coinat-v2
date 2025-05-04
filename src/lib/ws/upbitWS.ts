@@ -21,14 +21,12 @@ interface UpbitTickerData {
 
 export default class UpbitWebSocket {
   private _isConnected = false;
-  private _retry = false;
-  private _socket: WebSocket;
+  private _socket: WebSocket | null;
   public data: Exchange['upbit'];
   public btcKrw: number = 0;
 
   constructor() {
     this._isConnected = false;
-    this._retry = false;
 
     const socket = new WebSocket(UPBIT_SOCKET_URL);
     socket.binaryType = 'arraybuffer';
@@ -79,6 +77,24 @@ export default class UpbitWebSocket {
     };
   }
 
+  private reconnect(delay = 3000) {
+    try {
+      this._socket?.close();
+    } catch (e) {
+      console.warn('[Upbit] Socket close failed:', e);
+    }
+
+    this._isConnected = false;
+    this._socket = null;
+
+    setTimeout(() => {
+      const socket = new WebSocket(UPBIT_SOCKET_URL);
+      socket.binaryType = 'arraybuffer';
+      this._socket = socket;
+      this.onConnect(socket);
+    }, delay);
+  }
+
   onConnect(socket: WebSocket) {
     if (this._isConnected) return;
 
@@ -127,19 +143,12 @@ export default class UpbitWebSocket {
   }
 
   onClose() {
-    this._isConnected = false;
-
-    if (this._retry) {
-      setTimeout(() => this.onConnect(this._socket), 3000);
-      return;
-    }
-
-    this._retry = true;
-    this.onConnect(this._socket);
+    console.warn('[info] Upbit Socket closed');
+    this.reconnect();
   }
 
   onError(error: Event) {
-    console.error('[error] Binance:', error);
-    this._isConnected = false;
+    console.error('[error] Upbit Socket error:', error);
+    this.reconnect();
   }
 }
