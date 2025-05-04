@@ -83,7 +83,7 @@ const useTickerData = ({
   const { data, ...rest } = useQuery({
     queryKey: ['coins', coinType],
     queryFn: getTickers,
-    refetchInterval: 3000,
+    refetchInterval: 2000,
     refetchIntervalInBackground: true,
     enabled:
       !!krwCoinData.data.length &&
