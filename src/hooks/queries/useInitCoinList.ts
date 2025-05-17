@@ -1,12 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import {
-  btcCoinListState,
-  krCoinListState,
-  usdtCoinListState,
-} from '@/store/coin';
+import { useCoinStore } from '@/store/coin';
 import { Coin } from '@/types/Coin';
 
 type UseInitCointListProps = {
@@ -14,24 +9,25 @@ type UseInitCointListProps = {
 };
 
 const useInitCoinList = ({ initialData }: UseInitCointListProps) => {
-  const setKrwCoinList = useSetRecoilState(krCoinListState);
-  const setBtcCoinList = useSetRecoilState(btcCoinListState);
-  const setUsdtCoinList = useSetRecoilState(usdtCoinListState);
+  const { setList, isLoading } = useCoinStore();
 
   useEffect(() => {
-    if (initialData.krw.length === 0 || initialData.btc.length === 0) {
+    if (
+      initialData.krw.length === 0 ||
+      initialData.btc.length === 0 ||
+      !isLoading
+    ) {
       return;
     }
 
     const { krw, btc, usdt } = initialData;
 
-    setKrwCoinList({
-      isLoading: false,
-      data: krw,
+    setList({
+      krw,
+      btc,
+      usdt,
     });
-    setBtcCoinList({ isLoading: false, data: btc });
-    setUsdtCoinList({ isLoading: false, data: usdt });
-  }, [initialData, setBtcCoinList, setKrwCoinList, setUsdtCoinList]);
+  }, [initialData, isLoading, setList]);
 };
 
 export default useInitCoinList;

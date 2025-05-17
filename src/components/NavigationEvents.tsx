@@ -2,28 +2,27 @@
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useSetRecoilState } from 'recoil';
-import { typeState } from '@/store/coin';
+import { useCoinStore } from '@/store/coin';
 
 export function NavigationEvents() {
   const searchParams = useSearchParams();
-  const setType = useSetRecoilState(typeState);
+  const { updateType } = useCoinStore();
 
   useEffect(() => {
     const type = searchParams?.get('type');
 
     if (type === 'BTC') {
-      setType('BTC');
+      updateType('BTC');
     }
 
     if (type === 'USDT') {
-      setType('USDT');
+      updateType('USDT');
     }
 
     if (!type || type === 'KRW') {
-      setType('KRW');
+      updateType('KRW');
     }
-  }, [searchParams, setType]);
+  }, [searchParams, updateType]);
 
   return null;
 }

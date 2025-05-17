@@ -1,16 +1,13 @@
 'use client';
 
-import { useRecoilValue } from 'recoil';
-import {
-  btcCoinListState,
-  krCoinListState,
-  usdtCoinListState,
-} from '@/store/coin';
+import { useCoinStore } from '@/store/coin';
 
 const useCoinList = () => {
-  const krwCoinData = useRecoilValue(krCoinListState);
-  const btcCoinData = useRecoilValue(btcCoinListState);
-  const usdtCoinData = useRecoilValue(usdtCoinListState);
+  const {
+    krwList: krwCoinData,
+    btcList: btcCoinData,
+    usdtList: usdtCoinData,
+  } = useCoinStore();
 
   return { krwCoinData, btcCoinData, usdtCoinData };
 };
