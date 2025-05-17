@@ -3,13 +3,12 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useMounted } from 'ownui-system';
-import { useSetRecoilState } from 'recoil';
-import { cryptoSocketState } from '@/store/socket';
+import { useCryptoSocketStore } from '@/store/socket';
 
 export default function SharedWorkerProvider({ children }: PropsWithChildren) {
   const isMounted = useMounted();
   const [sharedWorker, setSharedWorker] = useState<SharedWorker | null>(null);
-  const setCryptoStateData = useSetRecoilState(cryptoSocketState);
+  const { setSocketState } = useCryptoSocketStore();
 
   useQuery({
     queryKey: ['crypto-ws'],
@@ -37,7 +36,7 @@ export default function SharedWorkerProvider({ children }: PropsWithChildren) {
       if (type === 'tickers') {
         const { upbit, binance } = payload;
 
-        setCryptoStateData({
+        setSocketState({
           tickers: {
             upbit: upbit.data,
             binance: binance.data,
@@ -65,7 +64,7 @@ export default function SharedWorkerProvider({ children }: PropsWithChildren) {
         type: 'disconnect',
       });
     };
-  }, [isMounted, setCryptoStateData]);
+  }, [isMounted, setSocketState]);
 
   return <>{children}</>;
 }
