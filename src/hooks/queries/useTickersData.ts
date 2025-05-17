@@ -2,17 +2,17 @@
 
 import { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import sort, { initSort, Sort } from '@/lib/sort';
-import { CoinState, typeState } from '@/store/coin';
-import { exchangeState } from '@/store/exchange';
-import { combineTickers, cryptoSocketState } from '@/store/socket';
+import { useCoinStore } from '@/store/coin';
+import { useExchangeStore } from '@/store/exchange';
+import { useCryptoSocketStore } from '@/store/socket';
+import { Coin } from '@/types/Coin';
 import useCurrencyInfo from './useCurrencyInfo';
 
 interface UseTickerDataProps {
-  krwCoinData: CoinState;
-  btcCoinData: CoinState;
-  usdtCoinData: CoinState;
+  krwCoinData: Coin[];
+  btcCoinData: Coin[];
+  usdtCoinData: Coin[];
 }
 
 const useTickerData = ({
@@ -28,9 +28,11 @@ const useTickerData = ({
     per: false,
   });
 
-  const coinType = useRecoilValue(typeState);
-  const setExchangeState = useSetRecoilState(exchangeState);
-  const tickerState = useRecoilValue(cryptoSocketState);
+  const { type } = useCoinStore();
+
+  const { setExchangeState } = useExchangeStore();
+  const { combineTickers } = useCryptoSocketStore();
+
   const {
     data: currencyData = {
       value: 0,
@@ -39,15 +41,15 @@ const useTickerData = ({
   } = useCurrencyInfo();
 
   const getTickers = async () => {
-    const { data: originData } =
-      coinType === 'KRW'
+    const originData =
+      type === 'KRW'
         ? krwCoinData
-        : coinType === 'USDT'
+        : type === 'USDT'
         ? usdtCoinData
         : btcCoinData;
 
     try {
-      const combinedData = combineTickers(originData, tickerState, coinType); //combineTickers(originData, coinType);
+      const combinedData = combineTickers(originData, type);
 
       const btc = combinedData.find((data) => data.symbol === 'BTC');
       const upbitBTC = btc?.last ?? 0;
@@ -81,14 +83,12 @@ const useTickerData = ({
   };
 
   const { data, ...rest } = useQuery({
-    queryKey: ['coins', coinType],
+    queryKey: ['coins', type],
     queryFn: getTickers,
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
     enabled:
-      !!krwCoinData.data.length &&
-      !!btcCoinData.data.length &&
-      !!usdtCoinData.data.length,
+      !!krwCoinData.length && !!btcCoinData.length && !!usdtCoinData.length,
   });
 
   return {

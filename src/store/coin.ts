@@ -1,47 +1,36 @@
-import { atom } from 'recoil';
-import { generateUid } from '@/lib/utils';
+import { create } from 'zustand';
 import type { Coin } from '@/types/Coin';
 
-export type CoinState = {
+// zustand
+
+type State = {
+  type: string; // KRW | USDT | BTC
+  krwList: Coin[];
+  btcList: Coin[];
+  usdtList: Coin[];
   isLoading: boolean;
-  data: Coin[];
 };
 
-export type WatchListState = Record<'krw' | 'btc', string[]>;
+type Action = {
+  updateType: (type: string) => void;
+  setList: (data: Record<'krw' | 'btc' | 'usdt', Coin[]>) => void;
+};
 
-export const typeState = atom({
-  key: `typeState/${generateUid()}`,
-  default: 'KRW',
-});
-
-export const krCoinListState = atom<CoinState>({
-  key: `krCoinListState/${generateUid()}`,
-  default: {
-    isLoading: true,
-    data: [],
+export const useCoinStore = create<State & Action>((set) => ({
+  type: 'KRW',
+  krwList: [],
+  btcList: [],
+  usdtList: [],
+  isLoading: true,
+  updateType: (type: string) => {
+    set(() => ({ type }));
   },
-});
-
-export const btcCoinListState = atom<CoinState>({
-  key: `btcCoinListState/${generateUid()}`,
-  default: {
-    isLoading: true,
-    data: [],
+  setList: (data: Record<'krw' | 'btc' | 'usdt', Coin[]>) => {
+    set({
+      isLoading: false,
+      krwList: data.krw,
+      btcList: data.btc,
+      usdtList: data.usdt,
+    });
   },
-});
-
-export const usdtCoinListState = atom<CoinState>({
-  key: `usdtCoinListState/${generateUid()}`,
-  default: {
-    isLoading: true,
-    data: [],
-  },
-});
-
-export const watchListState = atom<WatchListState>({
-  key: `watchListState/${generateUid()}`,
-  default: {
-    krw: [],
-    btc: [],
-  },
-});
+}));

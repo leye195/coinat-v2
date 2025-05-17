@@ -1,38 +1,41 @@
-import { atom, selector } from 'recoil';
-import { generateUid } from '@/lib/utils';
+import { create } from 'zustand';
 
-type ExchangeState = {
+// zustand
+
+type State = {
   upbitBTC: number;
   binanceBTC: number;
   usdToKrw: number;
+  usdtToKrw: number;
+  bitDiff: number;
   isLoading: boolean;
 };
 
-export const exchangeState = atom<ExchangeState>({
-  key: `exchangeState/${generateUid()}`,
-  default: {
-    upbitBTC: 0,
-    binanceBTC: 0,
-    usdToKrw: 0,
-    isLoading: true,
-  },
-});
+type Action = {
+  setExchangeState: (data: Omit<State, 'usdtToKrw' | 'bitDiff'>) => void;
+};
 
-export const exchangeSelector = selector({
-  key: `exchangeSelector/${generateUid()}`,
-  get: ({ get }) => {
-    const { upbitBTC, binanceBTC, usdToKrw, isLoading } = get(exchangeState);
+export const useExchangeStore = create<State & Action>((set) => ({
+  upbitBTC: 0,
+  binanceBTC: 0,
+  usdToKrw: 0,
+  usdtToKrw: 0,
+  bitDiff: 0,
+  isLoading: true,
+  setExchangeState: (data: Omit<State, 'usdtToKrw' | 'bitDiff'>) => {
+    const { upbitBTC, binanceBTC, usdToKrw, isLoading } = data;
+
     const convertedToKrw = binanceBTC * usdToKrw;
     const bitDiff = ((upbitBTC - convertedToKrw) / convertedToKrw) * 100;
     const usdtToKrw = usdToKrw * (1 + bitDiff / 100);
 
-    return {
-      usdToKrw,
+    set(() => ({
       upbitBTC,
       binanceBTC: convertedToKrw,
-      usdtToKrw: isNaN(usdtToKrw) ? 0 : usdtToKrw,
-      bitDiff: isNaN(bitDiff) || !bitDiff ? 0 : bitDiff,
+      usdToKrw,
+      usdtToKrw,
+      bitDiff,
       isLoading,
-    };
+    }));
   },
-});
+}));

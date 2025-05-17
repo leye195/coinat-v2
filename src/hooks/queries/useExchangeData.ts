@@ -1,8 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useRecoilValue } from 'recoil';
-import { cryptoSocketState } from '@/store/socket';
+import { useCryptoSocketStore } from '@/store/socket';
 import type { Exchange } from '@/types/Ticker';
 
 type UseExchangeDataProps = {
@@ -18,7 +17,7 @@ const useExchangeData = ({
   exchange,
   exchangeRate,
 }: UseExchangeDataProps) => {
-  const { tickers } = useRecoilValue(cryptoSocketState);
+  const { tickers } = useCryptoSocketStore();
 
   return useQuery({
     queryKey: ['exchange', code, type, exchange],

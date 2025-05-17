@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { Icon } from 'ownui-system';
 import { useMedia } from 'react-use';
-import { useRecoilValue } from 'recoil';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,7 +14,7 @@ import { useLocalStorage } from '@/hooks';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
-import { typeState } from '@/store/coin';
+import { useCoinStore } from '@/store/coin';
 import { CombinedTickers } from '@/store/socket';
 import { breakpoints } from '@/styles/mixin';
 import { palette } from '@/styles/variables';
@@ -27,7 +26,7 @@ type Props = {
 };
 
 const CoinTable = ({ coinList, handleSort }: Props) => {
-  const coinType = useRecoilValue(typeState);
+  const { type } = useCoinStore();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
 
   const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage({
@@ -41,11 +40,11 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
 
   const isFavSymbol = useCallback(
     (symbol: string) => {
-      return coinType !== 'BTC'
+      return type !== 'BTC'
         ? krwFavList.includes(symbol)
         : btcFavList.includes(symbol);
     },
-    [btcFavList, coinType, krwFavList],
+    [btcFavList, type, krwFavList],
   );
 
   const toggleFav = (symbol: string) => () => {
@@ -58,7 +57,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
   };
 
   const handleFav = (symbol: string) => {
-    if (coinType !== 'BTC') {
+    if (type !== 'BTC') {
       updateKrwFavList(removeDuplicate([...krwFavList, symbol]));
       return;
     }
@@ -67,7 +66,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
   };
 
   const handleUnFav = (symbol: string) => {
-    if (coinType !== 'BTC') {
+    if (type !== 'BTC') {
       updateKrwFavList(
         krwFavList.filter((coinSymbol: string) => symbol !== coinSymbol),
       );
@@ -101,7 +100,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                 idx > 0 && idx < 3
                   ? `${name}(${
                       MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
-                        coinType as TickerType
+                        type as TickerType
                       ]
                     })`
                   : name
@@ -155,7 +154,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                 <Table.Cell>
                   <div className={cn('flex flex-col gap-0.5')}>
                     <p className="m-0">
-                      {coinType !== 'BTC'
+                      {type !== 'BTC'
                         ? `${setComma(data.last, 6)}₩`
                         : data.last}
                     </p>

@@ -5,14 +5,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'ownui-system';
 import { DropdownSelectedItem } from 'ownui-system/dist/components/Dropdown/dropdown';
-import { useRecoilValue } from 'recoil';
 import { MARKET_INFO } from 'constant';
 import { useIsomorphicLayoutEffect } from 'hooks/common';
 import { cn } from '@/lib/utils';
-import { typeState } from '@/store/coin';
+import { useCoinStore } from '@/store/coin';
 
 export default function MarketLinks() {
-  const coinType = useRecoilValue(typeState);
+  const { type } = useCoinStore();
   const navigate = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -35,16 +34,16 @@ export default function MarketLinks() {
   }
 
   useIsomorphicLayoutEffect(() => {
-    if (coinType) {
+    if (type) {
       setSelectedItem(
-        MARKET_INFO.find((item) => item.value === coinType) ?? MARKET_INFO[0],
+        MARKET_INFO.find((item) => item.value === type) ?? MARKET_INFO[0],
       );
     }
-  }, [coinType]);
+  }, [type]);
 
   return (
     <>
-      {coinType !== 'BTC' && selectedItem && (
+      {type !== 'BTC' && selectedItem && (
         <div className="max-md:mr-1">
           <Dropdown
             isOpen={isOpen}
