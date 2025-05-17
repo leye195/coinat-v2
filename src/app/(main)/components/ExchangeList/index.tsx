@@ -1,13 +1,13 @@
 'use client';
 
-import { useRecoilValue } from 'recoil';
 import Exchange from '@/components/Exchange';
 import { exchangeHeader } from '@/data/table';
 import { cn, setComma } from '@/lib/utils';
-import { exchangeSelector } from '@/store/exchange';
+import { useExchangeStore } from '@/store/exchange';
 
 function ExchangeList() {
-  const exchangeData = useRecoilValue(exchangeSelector);
+  const exchangeData = useExchangeStore();
+
   return (
     <section className="max-md:overflow-auto">
       <div

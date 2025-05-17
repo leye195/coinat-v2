@@ -2,10 +2,10 @@
 
 import { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import sort, { initSort, Sort } from '@/lib/sort';
 import { useCoinStore } from '@/store/coin';
-import { exchangeState } from '@/store/exchange';
+import { useExchangeStore } from '@/store/exchange';
 import { combineTickers, cryptoSocketState } from '@/store/socket';
 import { Coin } from '@/types/Coin';
 import useCurrencyInfo from './useCurrencyInfo';
@@ -30,8 +30,8 @@ const useTickerData = ({
   });
 
   const { type } = useCoinStore();
-  // const coinType = useRecoilValue(typeState);
-  const setExchangeState = useSetRecoilState(exchangeState);
+
+  const { setExchangeState } = useExchangeStore();
   const tickerState = useRecoilValue(cryptoSocketState);
   const {
     data: currencyData = {
