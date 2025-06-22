@@ -67,3 +67,11 @@ export type ChartData = {
   open: number;
   timestamp: number;
 };
+
+export type TradingViewCandle = {
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  time: string;
+};

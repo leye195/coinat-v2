@@ -2,26 +2,30 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useCryptoSocketStore } from '@/store/socket';
-import type { Exchange } from '@/types/Ticker';
+import type { Exchange, Ticker as Tickers } from '@/types/Ticker';
 
-type UseExchangeDataProps = {
+type Ticker = Tickers[string];
+
+type UseExchangeDataProps<T = Ticker & { exchangeRate: number }> = {
   code: string;
   type: string;
   exchange: keyof Exchange;
   exchangeRate: number;
+  select?: (data: Ticker & { exchangeRate: number }) => T;
 };
 
-const useExchangeData = ({
+const useExchangeData = <T = Ticker & { exchangeRate: number }>({
   code,
   type,
   exchange,
   exchangeRate,
-}: UseExchangeDataProps) => {
+  select,
+}: UseExchangeDataProps<T>) => {
   const { tickers } = useCryptoSocketStore();
 
   return useQuery({
     queryKey: ['exchange', code, type, exchange],
-    queryFn: () => {
+    queryFn: (): Ticker & { exchangeRate: number } => {
       const currency = exchange === 'binance' || type !== 'KRW' ? 'btc' : 'krw';
       const data = tickers?.[exchange][currency][code?.toUpperCase()];
 
@@ -47,6 +51,7 @@ const useExchangeData = ({
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
     enabled: tickers != null,
+    select,
   });
 };
 
