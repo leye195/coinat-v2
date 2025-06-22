@@ -1,3 +1,6 @@
+import { format } from 'date-fns';
+import { ParsedCandle } from 'hooks/queries/useUpbitCandles';
+
 export function getCandleKey(timestamp: number, unit: '1M' | '1D' | '1W') {
   const date = new Date(timestamp);
 
@@ -30,3 +33,14 @@ export function getUnitKey(unit: Unit): '1D' | '1W' | '1M' {
   if (unit === 'months') return '1M';
   throw new Error('Invalid unit');
 }
+
+export const transformData = (data: ParsedCandle[]) => {
+  return data?.map(({ open, high, low, close, timestamp }) => ({
+    open,
+    high,
+    low,
+    close,
+    time: format(timestamp, 'yyyy-MM-dd'),
+    timestamp,
+  }));
+};

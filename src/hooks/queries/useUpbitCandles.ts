@@ -3,11 +3,11 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { type AxiosResponse } from 'axios';
-import { format } from 'date-fns';
 import { getUpbitCandles } from '@/api';
 import type { CandleType, UpbitCandle } from '@/types/Candle';
+import { transformData } from '@/lib/trading-view/utils';
 
-type ParsedCandle = {
+export type ParsedCandle = {
   close: number;
   high: number;
   low: number;
@@ -71,16 +71,6 @@ const useUpbitCandles = ({
 export const useUpbitSeriesData = (
   props: Omit<UseUpbitCandles, 'interval' | 'type' | 'onSuccess'>,
 ) => {
-  const transformData = (data: ParsedCandle[]) => {
-    return data?.map(({ open, high, low, close, timestamp }) => ({
-      open,
-      high,
-      low,
-      close,
-      time: format(timestamp, 'yyyy-MM-dd'),
-    }));
-  };
-
   const { data: dayData = [] } = useUpbitCandles({
     ...props,
     interval: 'days',
