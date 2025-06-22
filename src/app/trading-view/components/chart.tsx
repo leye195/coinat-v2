@@ -1,6 +1,8 @@
 'use client';
-import { useId, useMemo, useState } from 'react';
+
+import { useEffect, useId, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
@@ -10,29 +12,34 @@ import Tab, { ActiveBar } from '@/components/Tab';
 import Text from '@/components/Text';
 import TradingViewChart from '@/components/TradingView';
 import { timeTabs } from '@/data/tab';
-import { getCoinSymbolImage } from '@/lib/coin';
+import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { Unit } from '@/lib/trading-view/utils';
 import { cn, formatPrice, setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 import { useExchangeData } from 'hooks/queries';
 
-export default function Chart() {
+import { Coin } from '@/types/Coin';
+
+interface ChartProps {
+  code: string;
+}
+
+export default function Chart({ code }: ChartProps) {
   const id = useId();
   const [activeTimeTab, setActiveTimeTab] = useState({
     value: 'months',
     index: 0,
   });
-  const code = 'ETH';
+
   const exchangeRate = 1;
 
+  const navigate = useRouter();
   const { data } = useExchangeData({
     code,
     type: 'KRW',
     exchange: 'upbit',
     exchangeRate,
   });
-
-  const getPrice = (price: number) => {};
 
   const status = useMemo(() => {
     const color =
@@ -57,6 +64,20 @@ export default function Chart() {
       index,
     });
   };
+
+  useEffect(() => {
+    const checkCodeValidation = async () => {
+      const response = await getCoins('KRW');
+      const data = response.find((item: Coin) => item.name === code);
+
+      if (!data) {
+        navigate.replace('/');
+        return;
+      }
+    };
+
+    checkCodeValidation();
+  }, [code, navigate]);
 
   return (
     <Flex
@@ -161,7 +182,7 @@ export default function Chart() {
         </Tab.Group>
       </Flex>
       <Flex isFull>
-        <TradingViewChart code="ETH" interval={activeTimeTab.value as Unit} />
+        <TradingViewChart code={code} interval={activeTimeTab.value as Unit} />
       </Flex>
     </Flex>
   );
