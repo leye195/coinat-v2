@@ -22,6 +22,18 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
 
+  // ✅ 차트 색상 설정
+  const colors = useMemo(
+    () => ({
+      backgroundColor: 'white',
+      lineColor: '#2962FF',
+      textColor: 'black',
+      areaTopColor: '#2962FF',
+      areaBottomColor: 'rgba(41, 98, 255, 0.28)',
+    }),
+    [],
+  );
+
   const seriesDataMap = useUpbitSeriesData({ priceSymbol: 'KRW', code });
   const unitKey = getUnitKey(unit);
   const seriesData = useMemo(
@@ -57,15 +69,6 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
 
   useEffect(() => {
     if (!containerRef.current) return;
-
-    // ✅ 차트 색상 설정
-    const colors = {
-      backgroundColor: 'white',
-      lineColor: '#2962FF',
-      textColor: 'black',
-      areaTopColor: '#2962FF',
-      areaBottomColor: 'rgba(41, 98, 255, 0.28)',
-    };
 
     // ✅ 차트 생성
     const chart = createChart(containerRef.current, {
@@ -107,6 +110,7 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
     // 새 시리즈 생성
     const newSeries = chartRef.current.addSeries(CandlestickSeries);
     newSeries.setData(seriesData); // 새로운 단위 데이터 반영
+
     seriesRef.current = newSeries;
   }, [unit, seriesData]);
 
