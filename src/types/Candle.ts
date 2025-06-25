@@ -34,6 +34,7 @@ export type UpbitCandlesParams = {
   candleType: CandleType;
   count: number;
   minute?: number;
+  to?: string;
 };
 
 /*
