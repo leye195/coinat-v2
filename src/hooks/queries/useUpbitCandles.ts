@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { type AxiosResponse } from 'axios';
 import { getUpbitCandles } from '@/api';
-import type { CandleType, UpbitCandle } from '@/types/Candle';
 import { transformData } from '@/lib/trading-view/utils';
+import type { CandleType, UpbitCandle } from '@/types/Candle';
 
 export type ParsedCandle = {
   close: number;
