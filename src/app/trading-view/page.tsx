@@ -1,5 +1,5 @@
-import Chart from './components/chart';
 import { redirect } from 'next/navigation';
+import Chart from './components/chart';
 
 export default async function TradingViewPage({
   searchParams,

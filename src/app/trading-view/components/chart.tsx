@@ -3,7 +3,7 @@
 import { useEffect, useId, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
+import { useExchangeData } from 'hooks/queries';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import Skeleton from '@/components/Skeleton';
@@ -16,8 +16,6 @@ import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { Unit } from '@/lib/trading-view/utils';
 import { cn, formatPrice, setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import { useExchangeData } from 'hooks/queries';
-
 import { Coin } from '@/types/Coin';
 
 interface ChartProps {
@@ -165,7 +163,7 @@ export default function Chart({ code }: ChartProps) {
         </Flex>
       </Flex>
       <Spacing size="16px" type="vertical" />
-      <Flex className="bg-white mt-2" isFull justifyContent="space-between">
+      <Flex className="mt-2 bg-white" isFull justifyContent="space-between">
         <Tab.Group>
           {timeTabs.map(({ name, value }, idx) => (
             <Tab.Button
