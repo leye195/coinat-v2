@@ -129,7 +129,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                   >
                     <Link
                       className={cn('flex items-center gap-1 cursor-pointer')}
-                      href={`/exchange?code=${data.symbol}&type=KRW`}
+                      href={`/trading-view?code=${data.symbol}&type=KRW`}
                     >
                       <picture>
                         <img
