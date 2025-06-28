@@ -95,11 +95,8 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
         parse(oldest.time as string, 'yyyy-MM-dd', new Date()),
         getDays(),
       );
-
       //const to = dateObj.toISOString(); // → "2024-06-21T00:00:00.000Z"
       const to = format(dateObj, 'yyyy-MM-dd HH:mm:ss');
-      //console.log(dateObj.toString(), oldest.time);
-      console.log(to);
 
       const { data } = await getUpbitCandles({
         market: `KRW-${code}`,
