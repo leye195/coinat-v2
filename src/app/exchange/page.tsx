@@ -9,7 +9,7 @@ export default async function ExchangePage({
   const { code, type } = searchParams;
 
   if (!code || !type || Array.isArray(code) || Array.isArray(type)) {
-    redirect('/'); // Replace '/some-path' with your desired redirect URL
+    redirect('/');
   }
 
   return <Page code={code} type={type} />;
