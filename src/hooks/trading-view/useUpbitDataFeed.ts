@@ -14,6 +14,7 @@ import { useUpbitSeriesData } from 'hooks/queries/useUpbitCandles';
 import { getUpbitCandles } from '@/api';
 import { getCandleKey, getUnitKey } from '@/lib/trading-view/utils';
 import { useCryptoSocketStore } from '@/store/socket';
+import { palette } from '@/styles/variables';
 
 interface UseUpbitDataFeed {
   code: string; // 예: "BTC", "ETH"
@@ -136,6 +137,7 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
         background: { type: ColorType.Solid, color: colors.backgroundColor },
         textColor: colors.textColor,
       },
+
       width: containerRef.current.clientWidth,
       height: 300,
     });
@@ -169,7 +171,13 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
 
     // 새 시리즈 생성
 
-    const newSeries = chartRef.current.addSeries(CandlestickSeries);
+    const newSeries = chartRef.current.addSeries(CandlestickSeries, {
+      upColor: palette.red,
+      downColor: palette.blue,
+      wickUpColor: palette.red,
+      wickDownColor: palette.blue,
+      borderVisible: false,
+    });
     newSeries.setData(seriesData); // 새로운 단위 데이터 반영
 
     seriesRef.current = newSeries;
