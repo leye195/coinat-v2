@@ -18,7 +18,7 @@ const TradingViewChart = ({ code, interval }: TradingViewChartProps) => {
     containerRef: chartContainerRef,
   });
 
-  return <div className="w-full flex justify-center" ref={chartContainerRef} />;
+  return <div className="flex w-full justify-center" ref={chartContainerRef} />;
 };
 
 export default TradingViewChart;

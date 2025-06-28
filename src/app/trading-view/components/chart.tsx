@@ -17,6 +17,7 @@ import { Unit } from '@/lib/trading-view/utils';
 import { cn, formatPrice, setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 import { Coin } from '@/types/Coin';
+import Loading from './loading';
 
 interface ChartProps {
   code: string;
@@ -133,9 +134,9 @@ export default function Chart({ code }: ChartProps) {
           >
             <Flex alignItems="center" justifyContent="space-between">
               <Text fontSize="12px">고가</Text>
-              {data?.highPrice ? (
+              {data ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                  {formatPrice(data?.highPrice ?? 0, exchangeRate, 'KRW')}
+                  {formatPrice(data.highPrice, exchangeRate, 'KRW')}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -151,9 +152,9 @@ export default function Chart({ code }: ChartProps) {
             />
             <Flex alignItems="center" justifyContent="space-between">
               <Text fontSize="12px">저가</Text>
-              {data?.lowPrice ? (
+              {data ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                  {formatPrice(data?.lowPrice ?? 0, exchangeRate, 'KRW')}
+                  {formatPrice(data.lowPrice, exchangeRate, 'KRW')}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -179,8 +180,14 @@ export default function Chart({ code }: ChartProps) {
           />
         </Tab.Group>
       </Flex>
+
       <Flex isFull>
-        <TradingViewChart code={code} interval={activeTimeTab.value as Unit} />
+        <Loading isLoading={!data}>
+          <TradingViewChart
+            code={code}
+            interval={activeTimeTab.value as Unit}
+          />
+        </Loading>
       </Flex>
     </Flex>
   );
