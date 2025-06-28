@@ -45,8 +45,6 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
     [seriesDataMap, unitKey],
   );
 
-  //console.log(seriesData);
-
   const { btcKrw } = useCryptoSocketStore();
   const exchangeRate = btcKrw.upbit;
   const { data: wsData } = useExchangeData({
@@ -117,8 +115,6 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
 
       const merged = [...parsed, ...current];
 
-      console.log(merged);
-
       seriesRef.current?.setData(merged);
     } finally {
       isFetchingRef.current = false;
@@ -177,8 +173,9 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
     newSeries.setData(seriesData); // 새로운 단위 데이터 반영
 
     seriesRef.current = newSeries;
+    chartRef.current.timeScale().fitContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unit, JSON.stringify(seriesData)]);
+  }, [unit, code, JSON.stringify(seriesData)]);
 
   useEffect(() => {
     if (!wsData || wsData?.open === 0) return;

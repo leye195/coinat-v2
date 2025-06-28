@@ -4,8 +4,11 @@ import { useEffect, useId, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useExchangeData } from 'hooks/queries';
+import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
+import MetaTags from '@/components/Metatags';
+import { KrwCoinSelector } from '@/components/Selector';
 import Skeleton from '@/components/Skeleton';
 import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
@@ -23,21 +26,23 @@ interface ChartProps {
   code: string;
 }
 
+const DEFAULT_TAB = {
+  value: 'days',
+  index: 2,
+};
+
+const EXCHANGE_RATE = 1;
+
 export default function Chart({ code }: ChartProps) {
   const id = useId();
-  const [activeTimeTab, setActiveTimeTab] = useState({
-    value: 'months',
-    index: 0,
-  });
-
-  const exchangeRate = 1;
+  const [activeTimeTab, setActiveTimeTab] = useState(DEFAULT_TAB);
 
   const navigate = useRouter();
   const { data } = useExchangeData({
     code,
     type: 'KRW',
     exchange: 'upbit',
-    exchangeRate,
+    exchangeRate: EXCHANGE_RATE,
   });
 
   const status = useMemo(() => {
@@ -78,28 +83,42 @@ export default function Chart({ code }: ChartProps) {
     checkCodeValidation();
   }, [code, navigate]);
 
+  useEffect(() => {
+    setActiveTimeTab(DEFAULT_TAB);
+  }, [code]);
+
   return (
     <Flex
       className={cn('mt-2 mx-auto mb-0 max-w-[1024px]')}
       flexDirection="column"
     >
+      <MetaTags
+        title={`${formatPrice(
+          data?.tradePrice ?? 0,
+          EXCHANGE_RATE,
+          'KRW',
+        )} ${code.toUpperCase()}/KRW`}
+      />
       <Flex
         className="bg-white p-3"
         isFull
         flexDirection="column"
         justifyContent="center"
       >
-        <Flex alignItems="center" gap="4px">
-          <Image
-            alt={code}
-            src={getCoinSymbolImage(code)}
-            width={24}
-            height={24}
-            unoptimized
-          />
-          <Text fontWeight={800} fontSize="18px">
-            {code}
-          </Text>
+        <Flex alignItems="center" justifyContent="space-between" isFull>
+          <Flex alignItems="center" gap="4px">
+            <Image
+              alt={code}
+              src={getCoinSymbolImage(code)}
+              width={24}
+              height={24}
+              unoptimized
+            />
+            <Text fontWeight={800} fontSize="18px">
+              {code}
+            </Text>
+          </Flex>
+          {code && <KrwCoinSelector code={code} />}
         </Flex>
         <Divider
           type="horizontal"
@@ -118,13 +137,13 @@ export default function Chart({ code }: ChartProps) {
           >
             <Flex alignItems="flex-end" gap="2px">
               <Text fontSize="24px" fontWeight={800} color={status.color}>
-                {formatPrice(data?.tradePrice ?? 0, exchangeRate, 'KRW')}
+                {formatPrice(data?.tradePrice ?? 0, EXCHANGE_RATE, 'KRW')}
               </Text>
             </Flex>
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {formatPrice(data?.changePrice ?? 0, exchangeRate, 'KRW')})
+              {formatPrice(data?.changePrice ?? 0, EXCHANGE_RATE, 'KRW')})
             </Text>
           </div>
           <Flex
@@ -136,7 +155,7 @@ export default function Chart({ code }: ChartProps) {
               <Text fontSize="12px">고가</Text>
               {data ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                  {formatPrice(data.highPrice, exchangeRate, 'KRW')}
+                  {formatPrice(data.highPrice, EXCHANGE_RATE, 'KRW')}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -154,7 +173,7 @@ export default function Chart({ code }: ChartProps) {
               <Text fontSize="12px">저가</Text>
               {data ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                  {formatPrice(data.lowPrice, exchangeRate, 'KRW')}
+                  {formatPrice(data.lowPrice, EXCHANGE_RATE, 'KRW')}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -180,7 +199,6 @@ export default function Chart({ code }: ChartProps) {
           />
         </Tab.Group>
       </Flex>
-
       <Flex isFull>
         <Loading isLoading={!data}>
           <TradingViewChart
@@ -189,6 +207,8 @@ export default function Chart({ code }: ChartProps) {
           />
         </Loading>
       </Flex>
+      <Spacing size="16px" type="vertical" />
+      <CoinInfo code={code} />
     </Flex>
   );
 }
