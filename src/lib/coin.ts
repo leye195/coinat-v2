@@ -104,14 +104,9 @@ export const getCoins = async (type: Currency) => {
     const upbitKrwCoins: UpbitCoin[] = upbitData.filter((coin: UpbitCoin) =>
       coin.market.includes('KRW-'),
     );
-    const upbitBtcCoins: UpbitCoin[] = upbitData
-      .filter((coin: UpbitCoin) => coin.market.includes('BTC-'))
-      .filter((coin: UpbitCoin) => {
-        const symbol = coin.market.replace(/BTC-/, '');
-        return !upbitKrwCoins.some((coin: UpbitCoin) =>
-          coin.market.includes(symbol),
-        );
-      });
+    const upbitBtcCoins: UpbitCoin[] = upbitData.filter((coin: UpbitCoin) =>
+      coin.market.includes('BTC-'),
+    );
 
     // binance coin data
     const { data: binanceData } = await getBinanceCoins();

@@ -34,6 +34,7 @@ export type UpbitCandlesParams = {
   candleType: CandleType;
   count: number;
   minute?: number;
+  to?: string;
 };
 
 /*
@@ -66,4 +67,12 @@ export type ChartData = {
   low: number;
   open: number;
   timestamp: number;
+};
+
+export type TradingViewCandle = {
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  time: string;
 };

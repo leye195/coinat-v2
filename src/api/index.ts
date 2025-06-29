@@ -102,36 +102,39 @@ export const getFearGreedIndex = (): Promise<AxiosResponse<FearGreed>> =>
 
 export const getUpbitCandles = async ({
   market,
+  to,
   candleType = 'months',
   count = 200,
   minute = 3,
 }: UpbitCandlesParams): Promise<AxiosResponse<UpbitCandle[]>> => {
+  const params = {
+    market,
+    count,
+    to,
+  };
+
   try {
     if (candleType === 'minutes') {
-      const response = await upbitApi.get(
-        `/candles/minutes/${minute}?market=${market}&count=${count}`,
-      );
+      const response = await upbitApi.get(`/candles/minutes/${minute}`, {
+        params,
+      });
 
       return response;
     }
 
-    const response = await upbitApi.get(
-      `/candles/${candleType}?market=${market}&count=${count}`,
-    );
+    const response = await upbitApi.get(`/candles/${candleType}`, {
+      params,
+    });
 
     return response;
   } catch {
-    if (candleType === 'minutes') {
-      const response = await api.get(
-        `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
-      );
+    const response = await api.get(`upbit/candles`, {
+      params: {
+        candleType,
+        ...params,
+      },
+    });
 
-      return response;
-    }
-
-    const response = await api.get(
-      `upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`,
-    );
     return response;
   }
 };

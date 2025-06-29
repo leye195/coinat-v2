@@ -4,7 +4,17 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { type AxiosResponse } from 'axios';
 import { getUpbitCandles } from '@/api';
+import { transformData } from '@/lib/trading-view/utils';
 import type { CandleType, UpbitCandle } from '@/types/Candle';
+
+export type ParsedCandle = {
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  timestamp: number;
+  volume: number;
+};
 
 type UseUpbitCandles = {
   priceSymbol: string;
@@ -12,7 +22,7 @@ type UseUpbitCandles = {
   type: string;
   interval: string;
   enabled?: boolean;
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: ParsedCandle[]) => void;
 };
 
 const useUpbitCandles = ({
@@ -24,7 +34,7 @@ const useUpbitCandles = ({
   onSuccess,
 }: UseUpbitCandles) => {
   function selectUpbitCandles({ data }: AxiosResponse) {
-    const parsedData = data.map((item: UpbitCandle) => ({
+    const parsedData: ParsedCandle[] = data.map((item: UpbitCandle) => ({
       close: item.trade_price,
       high: item.high_price,
       low: item.low_price,
@@ -53,9 +63,39 @@ const useUpbitCandles = ({
     if (!data || !enabled) return;
 
     onSuccess?.(data);
-  }, [enabled, data, onSuccess]);
+  }, [enabled, data, onSuccess, isFetched]);
 
   return { data, isFetched, ...rest };
+};
+
+export const useUpbitSeriesData = (
+  props: Omit<UseUpbitCandles, 'interval' | 'type' | 'onSuccess'>,
+) => {
+  const { data: dayData = [] } = useUpbitCandles({
+    ...props,
+    interval: 'days',
+    type: 'days',
+  });
+
+  const { data: weekData = [] } = useUpbitCandles({
+    ...props,
+    interval: 'weeks',
+    type: 'weeks',
+  });
+
+  const { data: monthData = [] } = useUpbitCandles({
+    ...props,
+    interval: 'months',
+    type: 'months',
+  });
+
+  const seriesesData = new Map([
+    ['1D', transformData(dayData)],
+    ['1W', transformData(weekData)],
+    ['1M', transformData(monthData)],
+  ]);
+
+  return seriesesData;
 };
 
 export default useUpbitCandles;

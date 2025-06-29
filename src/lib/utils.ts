@@ -124,5 +124,5 @@ export const formatPrice = (
   symbol: string,
 ) => {
   const value = price * exchangeRate;
-  return symbol === 'KRW' ? setComma(value) : price;
+  return symbol === 'KRW' ? setComma(value) : price.toFixed(8);
 };

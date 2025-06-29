@@ -59,7 +59,7 @@ export const spacing: Spacing = Object.keys(spacingNumber).reduce(
 /*Palette*/
 export const palette = {
   red: '#ef5350',
-  blue: '#42a5f5',
+  blue: '#0062df',
   black: '#000000',
   white: '#ffffff',
   gray: '#999',

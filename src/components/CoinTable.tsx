@@ -105,11 +105,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                     })`
                   : name
               }
-              right={
-                <>
-                  <Icon name="ArrowUpDown" size={14} />
-                </>
-              }
+              right={<Icon name="ArrowUpDown" size={14} />}
               width="25%"
               onClick={handleSort(sortColumn[idx])}
             />
@@ -127,9 +123,16 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                   <div
                     className={cn('flex items-center gap-2', 'max-sm:gap-0.5')}
                   >
+                    <Button className="p-0" onClick={toggleFav(data.symbol)}>
+                      <FontAwesomeIcon
+                        className="text-[#e2be1b]"
+                        icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
+                      />
+                    </Button>
+                    <Spacing size="4px" />
                     <Link
                       className={cn('flex items-center gap-1 cursor-pointer')}
-                      href={`/exchange?code=${data.symbol}&type=KRW`}
+                      href={`/trading-view?code=${data.symbol}&type=${type}`}
                     >
                       <picture>
                         <img
@@ -142,13 +145,6 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                       </picture>
                       <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
                     </Link>
-                    <Spacing size="4px" />
-                    <Button className="p-0" onClick={toggleFav(data.symbol)}>
-                      <FontAwesomeIcon
-                        className="text-[#e2be1b]"
-                        icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
-                      />
-                    </Button>
                   </div>
                 </Table.Cell>
                 <Table.Cell>
@@ -156,7 +152,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                     <p className="m-0">
                       {type !== 'BTC'
                         ? `${setComma(data.last, 6)}₩`
-                        : data.last}
+                        : data.last.toFixed(8)}
                     </p>
                     {data.upbitWarning && (
                       <div
@@ -173,7 +169,7 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
                 </Table.Cell>
                 <Table.Cell>
                   <div className={cn('flex flex-col')}>
-                    <p className="m-0">{data.blast}</p>
+                    <p className="m-0">{data.blast.toFixed(8)}</p>
                     {data.convertedBlast && (
                       <p>{setComma(data.convertedBlast ?? 0, 6)}₩</p>
                     )}

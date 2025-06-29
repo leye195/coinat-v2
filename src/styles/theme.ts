@@ -11,7 +11,7 @@ export const globalTheme: Theme = {
     black: '#252323',
     white: '#ffffff',
     gray: '#d0d0d0',
-    blue: '#42a5f5',
+    blue: '#0062df',
     red: '#ef5350',
     yellow: '#fcf242',
     primary: '#3772FF',
