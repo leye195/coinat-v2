@@ -3,11 +3,12 @@
 import React, { useRef } from 'react';
 import useUpbitDataFeed from 'hooks/trading-view/useUpbitDataFeed';
 import { Unit } from '@/lib/trading-view/utils';
+import { TickerType } from '@/types/Coin';
 
 interface TradingViewChartProps {
   code: string;
   interval: Unit;
-  type: 'KRW' | 'USDT';
+  type: TickerType;
 }
 
 const TradingViewChart = ({ code, interval, type }: TradingViewChartProps) => {

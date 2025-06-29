@@ -8,7 +8,11 @@ import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import MetaTags from '@/components/Metatags';
-import { KrwCoinSelector, UsdtCoinSelector } from '@/components/Selector';
+import {
+  BtcCoinSelector,
+  KrwCoinSelector,
+  UsdtCoinSelector,
+} from '@/components/Selector';
 import Skeleton from '@/components/Skeleton';
 import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
@@ -19,7 +23,7 @@ import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { Unit } from '@/lib/trading-view/utils';
 import { cn, formatPrice, setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import { Coin } from '@/types/Coin';
+import { Coin, TickerType } from '@/types/Coin';
 import Loading from './loading';
 
 interface ChartProps {
@@ -38,12 +42,12 @@ export default function Chart({ code, type }: ChartProps) {
   const id = useId();
   const [activeTimeTab, setActiveTimeTab] = useState(DEFAULT_TAB);
 
-  const priceSymbol = type === 'KRW' ? 'KRW' : 'USDT';
+  const priceSymbol = type as TickerType;
   const navigate = useRouter();
 
   const { data } = useExchangeData({
     code,
-    type: 'KRW',
+    type: type === 'BTC' ? 'BTC' : 'KRW',
     exchange: 'upbit',
     exchangeRate: EXCHANGE_RATE,
   });
@@ -74,7 +78,7 @@ export default function Chart({ code, type }: ChartProps) {
 
   useEffect(() => {
     const checkCodeValidation = async () => {
-      const response = await getCoins(priceSymbol);
+      const response = await getCoins(type === 'BTC' ? 'BTC' : 'KRW');
       const data = response.find((item: Coin) => item.name === code);
 
       if (!data) {
@@ -84,7 +88,7 @@ export default function Chart({ code, type }: ChartProps) {
     };
 
     checkCodeValidation();
-  }, [code, navigate, priceSymbol]);
+  }, [code, navigate, type]);
 
   useEffect(() => {
     setActiveTimeTab(DEFAULT_TAB);
@@ -123,6 +127,7 @@ export default function Chart({ code, type }: ChartProps) {
           </Flex>
           {priceSymbol === 'KRW' && code && <KrwCoinSelector code={code} />}
           {priceSymbol === 'USDT' && code && <UsdtCoinSelector code={code} />}
+          {priceSymbol === 'BTC' && code && <BtcCoinSelector code={code} />}
         </Flex>
         <Divider
           type="horizontal"
@@ -141,13 +146,22 @@ export default function Chart({ code, type }: ChartProps) {
           >
             <Flex alignItems="flex-end" gap="2px">
               <Text fontSize="24px" fontWeight={800} color={status.color}>
-                {formatPrice(data?.tradePrice ?? 0, EXCHANGE_RATE, 'KRW')}
+                {formatPrice(
+                  data?.tradePrice ?? 0,
+                  EXCHANGE_RATE,
+                  priceSymbol === 'BTC' ? 'BTC' : 'KRW',
+                )}
               </Text>
             </Flex>
             <Text fontSize="14px" color={status.color}>
               ({status.changeSymbol}
               {status.changeRate}%, {status.changeSymbol}
-              {formatPrice(data?.changePrice ?? 0, EXCHANGE_RATE, 'KRW')})
+              {formatPrice(
+                data?.changePrice ?? 0,
+                EXCHANGE_RATE,
+                priceSymbol === 'BTC' ? 'BTC' : 'KRW',
+              )}
+              )
             </Text>
           </div>
           <Flex
@@ -159,7 +173,11 @@ export default function Chart({ code, type }: ChartProps) {
               <Text fontSize="12px">고가</Text>
               {data ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.red}>
-                  {formatPrice(data.highPrice, EXCHANGE_RATE, 'KRW')}
+                  {formatPrice(
+                    data.highPrice,
+                    EXCHANGE_RATE,
+                    priceSymbol === 'BTC' ? 'BTC' : 'KRW',
+                  )}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />
@@ -177,7 +195,11 @@ export default function Chart({ code, type }: ChartProps) {
               <Text fontSize="12px">저가</Text>
               {data ? (
                 <Text fontSize="12px" fontWeight={800} color={palette.blue}>
-                  {formatPrice(data.lowPrice, EXCHANGE_RATE, 'KRW')}
+                  {formatPrice(
+                    data.lowPrice,
+                    EXCHANGE_RATE,
+                    priceSymbol === 'BTC' ? 'BTC' : 'KRW',
+                  )}
                 </Text>
               ) : (
                 <Skeleton height={12} width={32} />

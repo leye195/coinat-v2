@@ -15,12 +15,13 @@ import { getUpbitCandles } from '@/api';
 import { getCandleKey, getUnitKey } from '@/lib/trading-view/utils';
 import { useCryptoSocketStore } from '@/store/socket';
 import { palette } from '@/styles/variables';
+import { TickerType } from '@/types/Coin';
 
 interface UseUpbitDataFeed {
   code: string; // 예: "BTC", "ETH"
   unit: 'days' | 'weeks' | 'months';
   containerRef: React.RefObject<HTMLDivElement>;
-  type?: 'KRW' | 'USDT';
+  type?: TickerType;
 }
 
 const useUpbitDataFeed = ({
@@ -32,6 +33,7 @@ const useUpbitDataFeed = ({
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
   const isFetchingRef = useRef(false);
+  const priceSymbol = type === 'BTC' ? 'BTC' : 'KRW';
 
   // ✅ 차트 색상 설정
   const colors = useMemo(
@@ -45,7 +47,10 @@ const useUpbitDataFeed = ({
     [],
   );
 
-  const seriesDataMap = useUpbitSeriesData({ priceSymbol: 'KRW', code });
+  const seriesDataMap = useUpbitSeriesData({
+    priceSymbol,
+    code,
+  });
   const unitKey = getUnitKey(unit);
   const seriesData = useMemo(
     () => seriesDataMap.get(unitKey) ?? [],
@@ -57,7 +62,7 @@ const useUpbitDataFeed = ({
   const { data: wsData } = useExchangeData({
     code,
     exchange: 'upbit',
-    type: 'KRW',
+    type: priceSymbol,
     exchangeRate,
     select: ({
       openPrice: open,
@@ -104,7 +109,7 @@ const useUpbitDataFeed = ({
       const to = format(dateObj, 'yyyy-MM-dd HH:mm:ss');
 
       const { data } = await getUpbitCandles({
-        market: `KRW-${code}`,
+        market: `${priceSymbol}-${code}`,
         candleType: unit,
         count: 200,
         to,
@@ -120,13 +125,15 @@ const useUpbitDataFeed = ({
         }))
         .toReversed();
 
-      const merged = [...parsed, ...current];
+      const merged = [...parsed, ...current].filter(
+        (item, idx, arr) => arr.findIndex((v) => v.time === item.time) === idx,
+      );
 
       seriesRef.current?.setData(merged);
     } finally {
       isFetchingRef.current = false;
     }
-  }, [code, unit]);
+  }, [code, priceSymbol, unit]);
 
   const throttledFetch = useMemo(() => {
     return throttle(() => {
@@ -183,6 +190,11 @@ const useUpbitDataFeed = ({
       wickUpColor: palette.red,
       wickDownColor: palette.blue,
       borderVisible: false,
+      priceFormat: {
+        type: 'price',
+        precision: type === 'BTC' ? 10 : 2, // 보여줄 소수점 자릿수
+        minMove: type === 'BTC' ? 0.0000000001 : 0.001, // 최소 단위
+      },
     });
     newSeries.setData(seriesData); // 새로운 단위 데이터 반영
 

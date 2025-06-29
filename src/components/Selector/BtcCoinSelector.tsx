@@ -22,7 +22,7 @@ const BtcCoinSelector = ({ code }: BtcCoinSelectorProps) => {
   function handleSelectDropdown(_: string, value: string) {
     if (value === selectedItem?.value) return;
 
-    navigate.push(`/trading-view?code=${value}`, {});
+    navigate.push(`/trading-view?code=${value}&type=BTC`);
   }
 
   function handleOnOpenChange(isOpen: boolean) {
