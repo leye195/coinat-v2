@@ -47,9 +47,6 @@ importers:
       es-toolkit:
         specifier: ^1.39.5
         version: 1.39.5
-      klinecharts:
-        specifier: ^9.8.10
-        version: 9.8.12
       lightweight-charts:
         specifier: ^5.0.7
         version: 5.0.7
@@ -9660,6 +9657,7 @@ snapshots:
       clsx: 2.1.1
       color: 4.2.3
       date-fns: 2.30.0
+      es-toolkit: 1.39.5
       klinecharts: 9.8.12
       lightweight-charts: 5.0.7
       lodash.sortby: 4.7.0
