@@ -35,14 +35,10 @@ const useUpbitDataFeed = ({
   const isFetchingRef = useRef(false);
   const priceSymbol = type === 'BTC' ? 'BTC' : 'KRW';
 
-  // ✅ 차트 색상 설정
   const colors = useMemo(
     () => ({
       backgroundColor: 'white',
-      lineColor: '#2962FF',
       textColor: 'black',
-      areaTopColor: '#2962FF',
-      areaBottomColor: 'rgba(41, 98, 255, 0.28)',
     }),
     [],
   );
@@ -107,7 +103,6 @@ const useUpbitDataFeed = ({
       );
       //const to = dateObj.toISOString(); // → "2024-06-21T00:00:00.000Z"
       const to = format(dateObj, 'yyyy-MM-dd HH:mm:ss');
-
       const { data } = await getUpbitCandles({
         market: `${priceSymbol}-${code}`,
         candleType: unit,
@@ -125,9 +120,11 @@ const useUpbitDataFeed = ({
         }))
         .toReversed();
 
-      const merged = [...parsed, ...current].filter(
-        (item, idx, arr) => arr.findIndex((v) => v.time === item.time) === idx,
-      );
+      const mergedMap = new Map();
+      [...parsed, ...current].forEach((item) => {
+        mergedMap.set(item.time, item);
+      });
+      const merged = Array.from(mergedMap.values());
 
       seriesRef.current?.setData(merged);
     } finally {
@@ -183,7 +180,6 @@ const useUpbitDataFeed = ({
     }
 
     // 새 시리즈 생성
-
     const newSeries = chartRef.current.addSeries(CandlestickSeries, {
       upColor: palette.red,
       downColor: palette.blue,
@@ -209,7 +205,6 @@ const useUpbitDataFeed = ({
     seriesRef.current?.update(wsData);
   }, [wsData]);
 
-  // todo: infinite history
   useEffect(() => {
     if (!chartRef.current) return;
 
