@@ -103,8 +103,8 @@ export default function Chart({ code, type }: ChartProps) {
         title={`${formatPrice(
           data?.tradePrice ?? 0,
           EXCHANGE_RATE,
-          'KRW',
-        )} ${code.toUpperCase()}/KRW`}
+          type === 'BTC' ? 'BTC' : 'KRW',
+        )} ${code.toUpperCase()}/${type === 'BTC' ? 'BTC' : 'KRW'}`}
       />
       <Flex
         className="bg-white p-3"
