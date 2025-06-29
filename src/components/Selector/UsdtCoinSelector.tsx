@@ -22,7 +22,7 @@ const UsdtCoinSelector = ({ code }: UsdtCoinSelectorProps) => {
   function handleSelectDropdown(_: string, value: string) {
     if (value === selectedItem?.value) return;
 
-    navigate.push(`/trading-view?code=${value}`, {});
+    navigate.push(`/trading-view?code=${value}&type=USDT`);
   }
 
   function handleOnOpenChange(isOpen: boolean) {

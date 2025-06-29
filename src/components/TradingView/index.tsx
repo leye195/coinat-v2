@@ -7,13 +7,15 @@ import { Unit } from '@/lib/trading-view/utils';
 interface TradingViewChartProps {
   code: string;
   interval: Unit;
+  type: 'KRW' | 'USDT';
 }
 
-const TradingViewChart = ({ code, interval }: TradingViewChartProps) => {
+const TradingViewChart = ({ code, interval, type }: TradingViewChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useUpbitDataFeed({
     code,
+    type,
     unit: interval,
     containerRef: chartContainerRef,
   });

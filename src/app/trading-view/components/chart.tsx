@@ -8,7 +8,7 @@ import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import MetaTags from '@/components/Metatags';
-import { KrwCoinSelector } from '@/components/Selector';
+import { KrwCoinSelector, UsdtCoinSelector } from '@/components/Selector';
 import Skeleton from '@/components/Skeleton';
 import Spacing from '@/components/Spacing';
 import Tab, { ActiveBar } from '@/components/Tab';
@@ -24,6 +24,7 @@ import Loading from './loading';
 
 interface ChartProps {
   code: string;
+  type: string;
 }
 
 const DEFAULT_TAB = {
@@ -33,11 +34,13 @@ const DEFAULT_TAB = {
 
 const EXCHANGE_RATE = 1;
 
-export default function Chart({ code }: ChartProps) {
+export default function Chart({ code, type }: ChartProps) {
   const id = useId();
   const [activeTimeTab, setActiveTimeTab] = useState(DEFAULT_TAB);
 
+  const priceSymbol = type === 'KRW' ? 'KRW' : 'USDT';
   const navigate = useRouter();
+
   const { data } = useExchangeData({
     code,
     type: 'KRW',
@@ -71,7 +74,7 @@ export default function Chart({ code }: ChartProps) {
 
   useEffect(() => {
     const checkCodeValidation = async () => {
-      const response = await getCoins('KRW');
+      const response = await getCoins(priceSymbol);
       const data = response.find((item: Coin) => item.name === code);
 
       if (!data) {
@@ -81,7 +84,7 @@ export default function Chart({ code }: ChartProps) {
     };
 
     checkCodeValidation();
-  }, [code, navigate]);
+  }, [code, navigate, priceSymbol]);
 
   useEffect(() => {
     setActiveTimeTab(DEFAULT_TAB);
@@ -118,7 +121,8 @@ export default function Chart({ code }: ChartProps) {
               {code}
             </Text>
           </Flex>
-          {code && <KrwCoinSelector code={code} />}
+          {priceSymbol === 'KRW' && code && <KrwCoinSelector code={code} />}
+          {priceSymbol === 'USDT' && code && <UsdtCoinSelector code={code} />}
         </Flex>
         <Divider
           type="horizontal"
@@ -204,6 +208,7 @@ export default function Chart({ code }: ChartProps) {
           <TradingViewChart
             code={code}
             interval={activeTimeTab.value as Unit}
+            type={priceSymbol}
           />
         </Loading>
       </Flex>

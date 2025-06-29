@@ -20,9 +20,15 @@ interface UseUpbitDataFeed {
   code: string; // 예: "BTC", "ETH"
   unit: 'days' | 'weeks' | 'months';
   containerRef: React.RefObject<HTMLDivElement>;
+  type?: 'KRW' | 'USDT';
 }
 
-const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
+const useUpbitDataFeed = ({
+  code,
+  unit,
+  containerRef,
+  type = 'KRW',
+}: UseUpbitDataFeed) => {
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
   const isFetchingRef = useRef(false);
@@ -183,7 +189,7 @@ const useUpbitDataFeed = ({ code, unit, containerRef }: UseUpbitDataFeed) => {
     seriesRef.current = newSeries;
     chartRef.current.timeScale().fitContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unit, code, JSON.stringify(seriesData)]);
+  }, [unit, code, type, JSON.stringify(seriesData)]);
 
   useEffect(() => {
     if (!wsData || wsData?.open === 0) return;

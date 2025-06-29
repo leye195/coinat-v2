@@ -22,7 +22,7 @@ const KrwCoinSelector = ({ code }: KrwCoinSelectorProps) => {
   function handleSelectDropdown(_: string, value: string) {
     if (value === selectedItem?.value) return;
 
-    navigate.push(`/trading-view?code=${value}`, {});
+    navigate.push(`/trading-view?code=${value}&type=KRW`);
   }
 
   function handleOnOpenChange(isOpen: boolean) {

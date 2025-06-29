@@ -6,11 +6,11 @@ export default async function TradingViewPage({
 }: {
   searchParams: { [key: string]: string | string[] };
 }) {
-  const { code } = searchParams;
+  const { code, type } = searchParams;
 
-  if (!code || Array.isArray(code)) {
+  if (!code || Array.isArray(code) || Array.isArray(type)) {
     redirect('/'); // Replace '/some-path' with your desired redirect URL
   }
 
-  return <Chart code={code ?? 'ETH'} />;
+  return <Chart code={code ?? 'ETH'} type={type ?? 'KRW'} />;
 }
