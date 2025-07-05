@@ -1,0 +1,1 @@
+{"version":3,"file":"coin.d.ts","sourceRoot":"","sources":["../../../../src/lib/coin.ts"],"names":[],"mappings":"AAMA,OAAO,KAAK,EAAE,IAAI,EAAa,MAAM,cAAc,CAAC;AAEpD,KAAK,QAAQ,GAAG,KAAK,GAAG,KAAK,GAAG,MAAM,CAAC;AAEvC,eAAO,MAAM,kBAAkB,GAAI,QAAQ,MAAM,WACD,CAAC;AAEjD,eAAO,MAAM,UAAU,GAAU,MAAM,QAAQ,oBAoF9C,CAAC;AAEF,eAAO,MAAM,QAAQ,GAAU,MAAM,QAAQ,oBA+E5C,CAAC"}

@@ -63,12 +63,7 @@ export const getCoins = (type) => __awaiter(void 0, void 0, void 0, function* ()
         // upbit coin data
         const { data: upbitData } = yield getUpbitCoins();
         const upbitKrwCoins = upbitData.filter((coin) => coin.market.includes('KRW-'));
-        const upbitBtcCoins = upbitData
-            .filter((coin) => coin.market.includes('BTC-'))
-            .filter((coin) => {
-            const symbol = coin.market.replace(/BTC-/, '');
-            return !upbitKrwCoins.some((coin) => coin.market.includes(symbol));
-        });
+        const upbitBtcCoins = upbitData.filter((coin) => coin.market.includes('BTC-'));
         // binance coin data
         const { data: binanceData } = yield getBinanceCoins();
         const binanceBtcCoins = binanceData.symbols

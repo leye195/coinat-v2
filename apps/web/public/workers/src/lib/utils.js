@@ -91,5 +91,5 @@ export const reCalculateTimeStamp = (timestamp, type = 'days') => {
 };
 export const formatPrice = (price, exchangeRate, symbol) => {
     const value = price * exchangeRate;
-    return symbol === 'KRW' ? setComma(value) : price;
+    return symbol === 'KRW' ? setComma(value) : price.toFixed(8);
 };

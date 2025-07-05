@@ -12,10 +12,8 @@ const UPBIT_SOCKET_URL = 'wss://api.upbit.com/websocket/v1';
 export default class UpbitWebSocket {
     constructor() {
         this._isConnected = false;
-        this._retry = false;
         this.btcKrw = 0;
         this._isConnected = false;
-        this._retry = false;
         const socket = new WebSocket(UPBIT_SOCKET_URL);
         socket.binaryType = 'arraybuffer';
         this.data = { krw: {}, usdt: {}, btc: {} };
@@ -42,6 +40,23 @@ export default class UpbitWebSocket {
             volume,
             timestamp,
         };
+    }
+    reconnect(delay = 3000) {
+        var _a;
+        try {
+            (_a = this._socket) === null || _a === void 0 ? void 0 : _a.close();
+        }
+        catch (e) {
+            console.warn('[Upbit] Socket close failed:', e);
+        }
+        this._isConnected = false;
+        this._socket = null;
+        setTimeout(() => {
+            const socket = new WebSocket(UPBIT_SOCKET_URL);
+            socket.binaryType = 'arraybuffer';
+            this._socket = socket;
+            this.onConnect(socket);
+        }, delay);
     }
     onConnect(socket) {
         if (this._isConnected)
@@ -81,16 +96,11 @@ export default class UpbitWebSocket {
         }
     }
     onClose() {
-        this._isConnected = false;
-        if (this._retry) {
-            setTimeout(() => this.onConnect(this._socket), 3000);
-            return;
-        }
-        this._retry = true;
-        this.onConnect(this._socket);
+        console.warn('[info] Upbit Socket closed');
+        this.reconnect();
     }
     onError(error) {
-        console.error('[error] Binance:', error);
-        this._isConnected = false;
+        console.error('[error] Upbit Socket error:', error);
+        this.reconnect();
     }
 }

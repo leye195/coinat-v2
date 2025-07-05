@@ -12,10 +12,8 @@ const BINANCE_SOCKET_URL = 'wss://stream.binance.com:9443/stream?streams=';
 export default class BinanceWebSocket {
     constructor() {
         this._isConnected = false;
-        this._retry = false;
         this.btcKrw = 0; //btc 가격
         this._isConnected = false;
-        this._retry = false;
         this._socket = null;
         this.data = { krw: {}, usdt: {}, btc: {} };
         this.onConnect();
@@ -34,6 +32,21 @@ export default class BinanceWebSocket {
             changePrice: p,
             changeRate: P,
         };
+    }
+    reconnect(delay = 3000) {
+        var _a;
+        try {
+            (_a = this._socket) === null || _a === void 0 ? void 0 : _a.close(); // 기존 연결 닫기
+        }
+        catch (e) {
+            console.warn('[Binance] Socket close failed:', e);
+        }
+        this._isConnected = false;
+        this._socket = null;
+        setTimeout(() => {
+            console.info('🔄 Binance WebSocket reconnecting...');
+            this.onConnect(); // 새 연결 시도
+        }, delay);
     }
     onConnect() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -71,16 +84,11 @@ export default class BinanceWebSocket {
         }
     }
     onClose() {
-        this._isConnected = false;
-        if (this._retry) {
-            setTimeout(() => this.onConnect(), 3000);
-            return;
-        }
-        this._retry = true;
-        this.onConnect();
+        console.warn('[info] Binance Socket closed');
+        this.reconnect();
     }
     onError(error) {
-        console.error('[ws error] Binance:', error);
-        this._isConnected = false;
+        console.error('[error] Binance Socket error:', error);
+        this.reconnect();
     }
 }

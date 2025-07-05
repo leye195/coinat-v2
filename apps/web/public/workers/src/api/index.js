@@ -73,21 +73,28 @@ export const getMarketcap = () => axios.get('https://crix-api-cdn.upbit.com/v1/c
  * @returns
  */
 export const getFearGreedIndex = () => axios.get('https://api.alternative.me/fng/?limit=1');
-export const getUpbitCandles = (_a) => __awaiter(void 0, [_a], void 0, function* ({ market, candleType = 'months', count = 200, minute = 3, }) {
+export const getUpbitCandles = (_a) => __awaiter(void 0, [_a], void 0, function* ({ market, to, candleType = 'months', count = 200, minute = 3, }) {
+    const params = {
+        market,
+        count,
+        to,
+    };
     try {
         if (candleType === 'minutes') {
-            const response = yield upbitApi.get(`/candles/minutes/${minute}?market=${market}&count=${count}`);
+            const response = yield upbitApi.get(`/candles/minutes/${minute}`, {
+                params,
+            });
             return response;
         }
-        const response = yield upbitApi.get(`/candles/${candleType}?market=${market}&count=${count}`);
+        const response = yield upbitApi.get(`/candles/${candleType}`, {
+            params,
+        });
         return response;
     }
     catch (_b) {
-        if (candleType === 'minutes') {
-            const response = yield api.get(`upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`);
-            return response;
-        }
-        const response = yield api.get(`upbit/candles?type=${candleType}&minute=${minute}&market=${market}&count=${count}`);
+        const response = yield api.get(`upbit/candles`, {
+            params: Object.assign({ type: candleType }, params),
+        });
         return response;
     }
 });
