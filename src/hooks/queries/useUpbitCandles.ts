@@ -56,11 +56,30 @@ const useUpbitCandles = ({
       }),
     enabled,
     select: selectUpbitCandles,
+    staleTime: 1000 * 60 * 60 * 12,
+    gcTime: 1000 * 60 * 60 * 24,
     refetchOnWindowFocus: false,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 429) return failureCount < 3;
+      return false;
+    },
+    retryDelay: (_, error: any) => {
+      const remainingReq = error.response?.headers?.['remaining-req'];
+
+      if (remainingReq) {
+        const match = /min=(\d+); sec=(\d+)/.exec(remainingReq);
+        if (match) {
+          const [_, min, sec] = match;
+          const delay = (+min * 60 + +sec) * 1000;
+          return delay || 1000; // 최소 1초
+        }
+      }
+      return 1000;
+    },
   });
 
   useEffect(() => {
-    if (!data || !enabled) return;
+    if (!data || !enabled || !isFetched) return;
 
     onSuccess?.(data);
   }, [enabled, data, onSuccess, isFetched]);
