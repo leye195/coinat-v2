@@ -88,7 +88,14 @@ const useUpbitDataFeed = ({
       const current = seriesRef.current?.data() ?? [];
       const oldest = current?.[0];
 
-      if (!oldest || !current || current.length % 200 > 1) return;
+      if (
+        !oldest ||
+        !current ||
+        current.length < 200 ||
+        current.length % 200 > 1
+      ) {
+        return;
+      }
 
       const getDays = () => {
         if (unit === 'days') return 1;
