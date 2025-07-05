@@ -46,6 +46,7 @@ const useUpbitDataFeed = ({
   const seriesDataMap = useUpbitSeriesData({
     priceSymbol,
     code,
+    type: unit,
   });
   const unitKey = getUnitKey(unit);
   const seriesData = useMemo(
