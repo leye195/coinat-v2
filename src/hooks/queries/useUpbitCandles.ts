@@ -67,13 +67,14 @@ const useUpbitCandles = ({
       const remainingReq = error.response?.headers?.['remaining-req'];
 
       if (remainingReq) {
-        const match = /min=(\d+); sec=(\d+)/.exec(remainingReq);
+        const match = /sec=(\d+)/.exec(remainingReq);
         if (match) {
-          const [_, min, sec] = match;
-          const delay = (+min * 60 + +sec) * 1000;
+          const [, sec] = match;
+          const delay = Number(sec) * 1000;
           return delay || 1000; // 최소 1초
         }
       }
+
       return 1000;
     },
   });

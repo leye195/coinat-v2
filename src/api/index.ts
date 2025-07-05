@@ -130,7 +130,7 @@ export const getUpbitCandles = async ({
   } catch {
     const response = await api.get(`upbit/candles`, {
       params: {
-        candleType,
+        type: candleType,
         ...params,
       },
     });
