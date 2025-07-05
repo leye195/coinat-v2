@@ -85,7 +85,7 @@ const useUpbitDataFeed = ({
     isFetchingRef.current = true;
 
     try {
-      const current = seriesRef.current?.data();
+      const current = seriesRef.current?.data() ?? [];
       const oldest = current?.[0];
 
       if (!oldest || !current || current.length % 200 > 1) return;
