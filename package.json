@@ -6,12 +6,14 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "dev:web": "turbo dev --filter=web",
-    "build:web": "turbo build --filter=web"
+    "build:web": "turbo build --filter=web",
+    "dev:api": "turbo dev --filter=api",
+    "build:api": "turbo build --filter=api"
   },
   "devDependencies": {
-    "turbo": "^2.5.4",
+    "prettier": "^2.8.8",
     "stylelint": "^16.10.0",
-    "prettier": "^2.8.8"
+    "turbo": "^2.5.4"
   },
-  "packageManager": "pnpm@10.9.0"
+  "packageManager": "pnpm@10.12.4"
 }
