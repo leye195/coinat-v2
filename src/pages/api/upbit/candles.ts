@@ -7,18 +7,26 @@ const app = createHandler();
 
 app.get(async (req, res) => {
   try {
-    const { market, type = 'months', count = 200, minute = 3 } = req.query;
+    const { market, type = 'months', count = 200, minute = 3, to } = req.query;
 
     if (type === 'minutes') {
-      const { data } = await axios.get(
-        `${API_URL}minutes/${minute}?market=${market}&count=${count}`,
-      );
+      const { data } = await axios.get(`${API_URL}minutes/${minute}`, {
+        params: {
+          market,
+          count,
+          to,
+        },
+      });
       return res.status(200).json(data);
     }
 
-    const { data } = await axios.get(
-      `${API_URL}${type}?market=${market}&count=${count}`,
-    );
+    const { data } = await axios.get(`${API_URL}${type}`, {
+      params: {
+        market,
+        count,
+        to,
+      },
+    });
     return res.status(200).json(data);
   } catch (err) {
     console.error(err);
