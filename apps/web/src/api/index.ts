@@ -6,12 +6,13 @@ import type {
   UpbitCandle,
   UpbitCandlesParams,
 } from '@/types/Candle';
-import type { Coin, CoinInfoResponse } from '@/types/Coin';
+import type { CoinInfoResponse } from '@/types/Coin';
 import type { Currency } from '@/types/Currency';
 import { DailyVolumnResponse } from '@/types/DailyVolumn';
 import type { MarketCap } from '@/types/Marketcap';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 
@@ -21,6 +22,13 @@ const api = axios.create({
   },
   baseURL: '/api/',
 });
+
+const baseApi = axios.create({
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  baseURL: BASE_URL,
+})
 
 const upbitApi = axios.create({
   baseURL: UPBIT_API,
@@ -33,8 +41,6 @@ const binanceApi = axios.create({
 export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
   api.get('currency');
 
-export const getCoins = (type: 'KRW' | 'BTC'): Promise<AxiosResponse<Coin[]>> =>
-  api.get(`coin-v2?type=${type}`);
 
 export const getUpbitCoinsV2 = async () => {
   try {
@@ -84,8 +90,8 @@ export const getBinanceCoins = () =>
  * news api
  */
 export const getNews = (category?: string) =>
-  api.get(
-    `news?${queryStringify({
+  baseApi.get(
+    `/api/upbit/news?${queryStringify({
       category,
     })}`,
   );
@@ -128,7 +134,7 @@ export const getUpbitCandles = async ({
 
     return response;
   } catch {
-    const response = await api.get(`upbit/candles`, {
+    const response = await baseApi.get(`/api/upbit/candles`, {
       params: {
         type: candleType,
         ...params,
@@ -184,15 +190,12 @@ export const getBinanceCandles = ({
   );
 };
 
-export const postChat = (message: string) =>
-  api.post('chat', {
-    message,
-  });
+
 
 export const getCoinInfo = (
   coin: string,
 ): Promise<AxiosResponse<CoinInfoResponse>> =>
-  api.get(`coin-info?code=${coin.toUpperCase()}`);
+  baseApi.get(`/api/coin-info?code=${coin.toUpperCase()}`);
 
 export const getDailyVolumnPower = async (
   orderBy: string,
