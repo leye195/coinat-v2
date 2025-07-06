@@ -96,21 +96,18 @@ export const useUpbitSeriesData = ({
     ...props,
     interval: 'days',
     type: 'days',
-    enabled: type === 'days',
   });
 
   const { data: weekData = [] } = useUpbitCandles({
     ...props,
     interval: 'weeks',
     type: 'weeks',
-    enabled: type === 'weeks',
   });
 
   const { data: monthData = [] } = useUpbitCandles({
     ...props,
     interval: 'months',
     type: 'months',
-    enabled: type === 'months',
   });
 
   const seriesesData = new Map([
