@@ -8,6 +8,7 @@ import {
   CandlestickSeries,
   ISeriesApi,
   LogicalRange,
+  BusinessDay,
 } from 'lightweight-charts';
 import { useExchangeData } from 'hooks/queries';
 import { useUpbitSeriesData } from 'hooks/queries/useUpbitCandles';
@@ -16,6 +17,7 @@ import { getCandleKey, getUnitKey } from '@/lib/trading-view/utils';
 import { useCryptoSocketStore } from '@/store/socket';
 import { palette } from '@/styles/variables';
 import { TickerType } from '@/types/Coin';
+
 
 interface UseUpbitDataFeed {
   code: string; // 예: "BTC", "ETH"
@@ -68,17 +70,22 @@ const useUpbitDataFeed = ({
       lowPrice: low,
       timestamp,
     }) => {
-      const time = format(getCandleKey(timestamp ?? 0, unitKey), 'yyyy-MM-dd');
+      const date = getCandleKey(timestamp ?? 0, unitKey);
 
       return {
         open,
         close,
         high,
         low,
-        time,
+        time: {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate(),
+        },
       };
     },
   });
+
 
   const fetchPreviousCandles = useCallback(async () => {
     if (isFetchingRef.current) return;
@@ -105,9 +112,10 @@ const useUpbitDataFeed = ({
         return 30;
       };
 
+      const oldTime = oldest.time as BusinessDay;
       const dateObj = subDays(
-        parse(oldest.time as string, 'yyyy-MM-dd', new Date()),
-        getDays(),
+        new Date(oldTime.year, oldTime.month - 1, oldTime.day),
+        getDays()
       );
       //const to = dateObj.toISOString(); // → "2024-06-21T00:00:00.000Z"
       const to = format(dateObj, 'yyyy-MM-dd HH:mm:ss');
@@ -119,13 +127,20 @@ const useUpbitDataFeed = ({
       });
 
       const parsed = data
-        .map((d) => ({
-          time: format(d.timestamp, 'yyyy-MM-dd'),
-          open: d.opening_price,
-          high: d.high_price,
-          low: d.low_price,
-          close: d.trade_price,
-        }))
+        .map((d) => {
+          const date = new Date(d.timestamp);
+          return  {
+            time: {
+              year: date.getFullYear(),
+              month: date.getMonth() + 1,
+              day: date.getDate(),
+            },
+            open: d.opening_price,
+            high: d.high_price,
+            low: d.low_price,
+            close: d.trade_price,
+          }
+        })
         .toReversed();
 
       const mergedMap = new Map();
@@ -135,7 +150,9 @@ const useUpbitDataFeed = ({
       const merged = Array.from(mergedMap.values());
 
       seriesRef.current?.setData(merged);
-    } finally {
+    } catch(err) {
+      console.error(err);
+    }finally {
       isFetchingRef.current = false;
     }
   }, [code, priceSymbol, unit]);
@@ -199,6 +216,7 @@ const useUpbitDataFeed = ({
         precision: type === 'BTC' ? 10 : 2, // 보여줄 소수점 자릿수
         minMove: type === 'BTC' ? 0.0000000001 : 0.001, // 최소 단위
       },
+      
     });
     newSeries.setData(seriesData); // 새로운 단위 데이터 반영
 
@@ -209,6 +227,7 @@ const useUpbitDataFeed = ({
 
   useEffect(() => {
     if (!wsData || wsData?.open === 0) return;
+
 
     seriesRef.current?.update(wsData);
   }, [wsData]);

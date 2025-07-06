@@ -35,12 +35,18 @@ export function getUnitKey(unit: Unit): '1D' | '1W' | '1M' {
 }
 
 export const transformData = (data: ParsedCandle[]) => {
-  return data?.map(({ open, high, low, close, timestamp }) => ({
-    open,
-    high,
-    low,
-    close,
-    time: format(timestamp, 'yyyy-MM-dd'),
-    timestamp,
-  }));
+  return data?.map(({ open, high, low, close, timestamp }) => {
+    const date = new Date(timestamp);
+    return{ open,
+      high,
+      low,
+      close,
+      time: {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+      },
+      timestamp,
+    }
+  });
 };
