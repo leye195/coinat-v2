@@ -11,7 +11,7 @@ import type { Currency } from '@/types/Currency';
 import { DailyVolumnResponse } from '@/types/DailyVolumn';
 import type { MarketCap } from '@/types/Marketcap';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001';
 
 const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
@@ -60,7 +60,7 @@ export const getUpbitCoinsV2 = async () => {
   }
 };
 
-export const getUpbitCoins = () => api.get('market');
+export const getUpbitCoins = () => baseApi.get('/api/upbit/market');
 
 export const getBinanceCoinsV2 = async () => {
   try {
