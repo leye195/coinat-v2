@@ -111,7 +111,6 @@ export const getUpbitCandles = async ({
   to,
   candleType = 'months',
   count = 200,
-  minute = 3,
 }: UpbitCandlesParams): Promise<AxiosResponse<UpbitCandle[]>> => {
   const params = {
     market,
@@ -119,30 +118,14 @@ export const getUpbitCandles = async ({
     to,
   };
 
-  try {
-    if (candleType === 'minutes') {
-      const response = await upbitApi.get(`/candles/minutes/${minute}`, {
-        params,
-      });
+  const response = await baseApi.get(`/api/upbit/candles`, {
+    params: {
+      type: candleType,
+      ...params,
+    },
+  });
 
-      return response;
-    }
-
-    const response = await upbitApi.get(`/candles/${candleType}`, {
-      params,
-    });
-
-    return response;
-  } catch {
-    const response = await baseApi.get(`/api/upbit/candles`, {
-      params: {
-        type: candleType,
-        ...params,
-      },
-    });
-
-    return response;
-  }
+  return response;
 };
 /**
  * 두나무 환율 정보
