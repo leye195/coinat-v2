@@ -1,0 +1,65 @@
+{
+  "extends": "@repo/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
+      ],
+      "@/server/*": [
+        "./server/*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
+      "@/types/*": [
+        "./types/*"
+      ],
+      "@/store/*": [
+        "./store/*"
+      ],
+      "@/data/*": [
+        "./data/*"
+      ],
+      "@/hooks": [
+        "./hooks"
+      ],
+      "@/api": [
+        "./api"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "postcss.config.js",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
