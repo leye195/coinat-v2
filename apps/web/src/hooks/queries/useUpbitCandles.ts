@@ -88,10 +88,9 @@ const useUpbitCandles = ({
   return { data, isFetched, ...rest };
 };
 
-export const useUpbitSeriesData = ({
-  type,
-  ...props
-}: Omit<UseUpbitCandles, 'interval' | 'onSuccess'>) => {
+export const useUpbitSeriesData = (
+  props
+: Omit<UseUpbitCandles, 'interval' | 'onSuccess'>) => {
   const { data: dayData = [] } = useUpbitCandles({
     ...props,
     interval: 'days',

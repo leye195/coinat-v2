@@ -30,7 +30,7 @@ const baseApi = axios.create({
   baseURL: BASE_URL,
 })
 
-const upbitApi = axios.create({
+const _upbitApi = axios.create({
   baseURL: UPBIT_API,
 });
 

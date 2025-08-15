@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { format, parse, subDays } from 'date-fns';
-import { throttle } from 'es-toolkit';
 import {
   createChart,
   ColorType,
@@ -10,6 +8,8 @@ import {
   LogicalRange,
   BusinessDay,
 } from 'lightweight-charts';
+import { format, subDays } from 'date-fns';
+import { throttle } from 'es-toolkit';
 import { useExchangeData } from 'hooks/queries';
 import { useUpbitSeriesData } from 'hooks/queries/useUpbitCandles';
 import { getUpbitCandles } from '@/api';
@@ -17,6 +17,7 @@ import { getCandleKey, getUnitKey } from '@/lib/trading-view/utils';
 import { useCryptoSocketStore } from '@/store/socket';
 import { palette } from '@/styles/variables';
 import { TickerType } from '@/types/Coin';
+
 
 
 interface UseUpbitDataFeed {

@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+
 import { ParsedCandle } from 'hooks/queries/useUpbitCandles';
 
 export function getCandleKey(timestamp: number, unit: '1M' | '1D' | '1W') {

@@ -1,0 +1,21 @@
+{
+  "extends": "./packages/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@repo/*": ["packages/*"],
+      "api/*": ["apps/api/*"],
+      "web/*": ["apps/web/*"]
+    }
+  },
+  "include": [
+    "apps/api/**/*.ts",
+    "apps/api/**/*.tsx",
+    "apps/web/**/*.ts",
+    "apps/web/**/*.tsx",
+    "packages/config/**/*.js",
+    "packages/eslint-config-custom/**/*.js",
+    "packages/typescript-config/**/*.json"
+  ],
+  "exclude": ["node_modules"]
+}
