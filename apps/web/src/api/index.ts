@@ -28,7 +28,7 @@ const baseApi = axios.create({
     'Content-Type': 'application/json',
   },
   baseURL: BASE_URL,
-})
+});
 
 const _upbitApi = axios.create({
   baseURL: UPBIT_API,
@@ -40,7 +40,6 @@ const binanceApi = axios.create({
 
 export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
   api.get('currency');
-
 
 export const getUpbitCoinsV2 = async () => {
   try {
@@ -172,8 +171,6 @@ export const getBinanceCandles = ({
     `/api/v3/uiKlines?symbol=${symbol}&interval=${intervalValue[interval]}`,
   );
 };
-
-
 
 export const getCoinInfo = (
   coin: string,

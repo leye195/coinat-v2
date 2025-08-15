@@ -1,8 +1,8 @@
 'use client';
 
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useMounted } from 'ownui-system';
+import { useQuery } from '@tanstack/react-query';
 import { useCryptoSocketStore } from '@/store/socket';
 
 export default function SharedWorkerProvider({ children }: PropsWithChildren) {

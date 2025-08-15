@@ -82,19 +82,23 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
           flexDirection="column"
           gap="12px"
         >
-          <Flex className="max-md:!flex-col" gap="8px">
-            {data?.featured_list.slice(OFFSET, OFFSET + 2).map((news) => (
-              <MainNews key={news.id} data={news} />
-            ))}
-          </Flex>
-          <Divider
-            type="horizontal"
-            size="1px"
-            style={{
-              width: '100%',
-              marginBlock: '8px',
-            }}
-          />
+          {data?.featured_list && data.featured_list.length > 0 && (
+            <>
+              <Flex className="max-md:!flex-col" gap="8px">
+                {data?.featured_list.slice(OFFSET, OFFSET + 2).map((news) => (
+                  <MainNews key={news.id} data={news} />
+                ))}
+              </Flex>
+              <Divider
+                type="horizontal"
+                size="1px"
+                style={{
+                  width: '100%',
+                  marginBlock: '8px',
+                }}
+              />
+            </>
+          )}
           <Flex className="flex-wrap" isFull gap="16px">
             {data?.list.slice(OFFSET, OFFSET + 20).map((news) => (
               <SubNews key={news.id} data={news} />

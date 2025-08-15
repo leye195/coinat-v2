@@ -25,11 +25,7 @@ const SubNews = ({ data }: SubNewsProps) => {
       gap="6px"
       onClick={onClick}
     >
-      <Text
-        className="max-w-[300px] truncate"
-        fontSize="12px"
-        fontWeight={800}
-      >
+      <Text className="max-w-[300px] truncate" fontSize="12px" fontWeight={800}>
         {data.title}
       </Text>
       <Text fontSize="10px" color={palette.gray}>

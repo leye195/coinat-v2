@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import { useCallback, useId, useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import Image from 'next/image';
 import { marketCapHeader } from 'data/table';
 import { getMarketcap } from '@/api';
 import Button from '@/components/Button';

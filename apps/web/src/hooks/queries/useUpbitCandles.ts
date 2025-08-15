@@ -89,8 +89,8 @@ const useUpbitCandles = ({
 };
 
 export const useUpbitSeriesData = (
-  props
-: Omit<UseUpbitCandles, 'interval' | 'onSuccess'>) => {
+  props: Omit<UseUpbitCandles, 'interval' | 'onSuccess'>,
+) => {
   const { data: dayData = [] } = useUpbitCandles({
     ...props,
     interval: 'days',

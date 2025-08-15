@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useId, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { useExchangeData } from 'hooks/queries';
 import CoinInfo from '@/components/CoinInfo';
 import { Divider } from '@/components/Divider';

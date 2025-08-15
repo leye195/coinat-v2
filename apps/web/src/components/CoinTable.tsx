@@ -1,15 +1,15 @@
-import { useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import { useCallback, useMemo } from 'react';
 import { Icon } from 'ownui-system';
 import { useMedia } from 'react-use';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MARKET_SYMBOLS, TABLE_HEADERS } from 'constant';
 import Button from '@/components/Button';
 import Spacing from '@/components/Spacing';
 import Table from '@/components/Table';
 import Text from '@/components/Text';
+import { MARKET_SYMBOLS, TABLE_HEADERS } from '@/constant';
 import { useLocalStorage } from '@/hooks';
 import { getCoinSymbolImage } from '@/lib/coin';
 import { sortColumn } from '@/lib/sort';

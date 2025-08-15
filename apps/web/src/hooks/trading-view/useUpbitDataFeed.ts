@@ -18,8 +18,6 @@ import { useCryptoSocketStore } from '@/store/socket';
 import { palette } from '@/styles/variables';
 import { TickerType } from '@/types/Coin';
 
-
-
 interface UseUpbitDataFeed {
   code: string; // 예: "BTC", "ETH"
   unit: 'days' | 'weeks' | 'months';
@@ -87,7 +85,6 @@ const useUpbitDataFeed = ({
     },
   });
 
-
   const fetchPreviousCandles = useCallback(async () => {
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
@@ -116,7 +113,7 @@ const useUpbitDataFeed = ({
       const oldTime = oldest.time as BusinessDay;
       const dateObj = subDays(
         new Date(oldTime.year, oldTime.month - 1, oldTime.day),
-        getDays()
+        getDays(),
       );
       //const to = dateObj.toISOString(); // → "2024-06-21T00:00:00.000Z"
       const to = format(dateObj, 'yyyy-MM-dd HH:mm:ss');
@@ -130,7 +127,7 @@ const useUpbitDataFeed = ({
       const parsed = data
         .map((d) => {
           const date = new Date(d.timestamp);
-          return  {
+          return {
             time: {
               year: date.getFullYear(),
               month: date.getMonth() + 1,
@@ -140,7 +137,7 @@ const useUpbitDataFeed = ({
             high: d.high_price,
             low: d.low_price,
             close: d.trade_price,
-          }
+          };
         })
         .toReversed();
 
@@ -151,9 +148,9 @@ const useUpbitDataFeed = ({
       const merged = Array.from(mergedMap.values());
 
       seriesRef.current?.setData(merged);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
-    }finally {
+    } finally {
       isFetchingRef.current = false;
     }
   }, [code, priceSymbol, unit]);
@@ -217,7 +214,6 @@ const useUpbitDataFeed = ({
         precision: type === 'BTC' ? 10 : 2, // 보여줄 소수점 자릿수
         minMove: type === 'BTC' ? 0.0000000001 : 0.001, // 최소 단위
       },
-      
     });
     newSeries.setData(seriesData); // 새로운 단위 데이터 반영
 
@@ -228,7 +224,6 @@ const useUpbitDataFeed = ({
 
   useEffect(() => {
     if (!wsData || wsData?.open === 0) return;
-
 
     seriesRef.current?.update(wsData);
   }, [wsData]);

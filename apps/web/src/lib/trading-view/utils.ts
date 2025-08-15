@@ -1,4 +1,3 @@
-
 import { ParsedCandle } from 'hooks/queries/useUpbitCandles';
 
 export function getCandleKey(timestamp: number, unit: '1M' | '1D' | '1W') {
@@ -37,7 +36,8 @@ export function getUnitKey(unit: Unit): '1D' | '1W' | '1M' {
 export const transformData = (data: ParsedCandle[]) => {
   return data?.map(({ open, high, low, close, timestamp }) => {
     const date = new Date(timestamp);
-    return{ open,
+    return {
+      open,
       high,
       low,
       close,
@@ -47,6 +47,6 @@ export const transformData = (data: ParsedCandle[]) => {
         day: date.getDate(),
       },
       timestamp,
-    }
+    };
   });
 };

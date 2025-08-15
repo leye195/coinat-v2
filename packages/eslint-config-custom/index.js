@@ -14,6 +14,7 @@ module.exports = {
   ignorePatterns: ["*.config.js", "*.setup.js", "mockServiceWorker.js"],
   extends: [
     "next/core-web-vitals",
+    "plugin:prettier/recommended",
     "plugin:jest/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:tailwindcss/recommended",
@@ -66,12 +67,27 @@ module.exports = {
             position: "before",
           },
           {
+            pattern: "next/**",
+            group: "external",
+            position: "before",
+          },
+          {
             pattern: "react",
             group: "external",
             position: "before",
           },
           {
             pattern: "lightweight-charts",
+            group: "external",
+            position: "before",
+          },
+          {
+            pattern: "ownui-system",
+            group: "external",
+            position: "before",
+          },
+          {
+            pattern: "ownui-system/**",
             group: "external",
             position: "before",
           },
