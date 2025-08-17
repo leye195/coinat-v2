@@ -4,21 +4,16 @@ import { useState } from 'react';
 import { useIsomorphicLayoutEffect } from '@/hooks';
 import { getLocalStorageData, setLocalStorageData } from '@/lib/storage';
 
-type UseLocalStorageProps = {
-  key: string;
-  defaultValue?: any;
-};
+function useLocalStorage<T>(key: string, defaultValue: T) {
+  const [value, setValue] = useState<T>(defaultValue);
 
-const useLocalStorage = ({ key, defaultValue }: UseLocalStorageProps) => {
-  const [value, setValue] = useState(defaultValue);
-
-  const updateValue = (value: any) => {
+  const updateValue = (value: T) => {
     setValue(value);
     setLocalStorageData(key, value);
   };
 
   useIsomorphicLayoutEffect(() => {
-    const storedData = getLocalStorageData(key) ?? defaultValue;
+    const storedData = (getLocalStorageData(key) ?? defaultValue) as T;
 
     if (storedData === defaultValue) {
       setLocalStorageData(key, storedData);
@@ -29,6 +24,6 @@ const useLocalStorage = ({ key, defaultValue }: UseLocalStorageProps) => {
   }, []);
 
   return { value, updateValue };
-};
+}
 
 export default useLocalStorage;

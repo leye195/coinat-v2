@@ -29,14 +29,12 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
   const { type } = useCoinStore();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
 
-  const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage({
-    key: 'krwfav',
-    defaultValue: [],
-  });
-  const { value: btcFavList, updateValue: updateBtcFavList } = useLocalStorage({
-    key: 'btcfav',
-    defaultValue: [],
-  });
+  const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage<
+    string[]
+  >('krwfav', []);
+  const { value: btcFavList, updateValue: updateBtcFavList } = useLocalStorage<
+    string[]
+  >('btcfav', []);
 
   const isFavSymbol = useCallback(
     (symbol: string) => {
