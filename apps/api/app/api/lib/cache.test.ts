@@ -17,6 +17,7 @@ function test(name: string, fn: AsyncTest) {
 
 test("returns cached value on subsequent reads", async () => {
   __testing.clearMemoryCache();
+  __testing.resetUpstashConfig();
 
   let callCount = 0;
   const fetcher = async () => {
@@ -40,8 +41,90 @@ test("returns cached value on subsequent reads", async () => {
   assert.equal(callCount, 1);
 });
 
+test("falls back to fetcher when redis miss", async () => {
+  __testing.clearMemoryCache();
+  __testing.resetUpstashConfig();
+
+  const originalFetch = globalThis.fetch;
+  process.env.UPSTASH_REDIS_REST_URL = "https://redis.example.com";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "token";
+
+  const pipelineBodies: unknown[] = [];
+
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = typeof input === "string" ? input : String(input);
+    if (url === "https://redis.example.com/pipeline") {
+      const bodyText = init?.body ? String(init.body) : "";
+      const body = JSON.parse(bodyText) as unknown;
+      pipelineBodies.push(body);
+
+      const command = Array.isArray(body) && Array.isArray(body[0]) ? body[0][0] : null;
+      if (command === "GET") {
+        return new Response(JSON.stringify([{ result: null }]), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      if (command === "SETEX") {
+        return new Response(JSON.stringify([{}]), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      throw new Error(`Unexpected redis command: ${JSON.stringify(body)}`);
+    }
+
+    throw new Error(`Unexpected fetch call to ${url}`);
+  }) as typeof fetch;
+
+  let fetcherCalls = 0;
+  const fetcher = async () => {
+    fetcherCalls += 1;
+    return { payload: "fresh" };
+  };
+
+  try {
+    const value = await readThroughCache({
+      key: "test:redis-miss",
+      ttlSeconds: 60,
+      fetcher,
+    });
+
+    assert.deepEqual(value, { payload: "fresh" });
+    assert.equal(fetcherCalls, 1);
+
+    const cached = await readThroughCache({
+      key: "test:redis-miss",
+      ttlSeconds: 60,
+      fetcher,
+    });
+
+    assert.deepEqual(cached, value);
+    assert.equal(fetcherCalls, 1);
+
+    assert.equal(pipelineBodies.length, 2);
+    assert.deepEqual(pipelineBodies[0], [["GET", "test:redis-miss"]]);
+
+    const setCommand = pipelineBodies[1] as unknown[];
+    assert.ok(Array.isArray(setCommand));
+    assert.ok(Array.isArray(setCommand[0] as unknown[]));
+    const [cmd, key, ttl, storedValue] = setCommand[0] as unknown[];
+    assert.equal(cmd, "SETEX");
+    assert.equal(key, "test:redis-miss");
+    assert.equal(ttl, "60");
+    assert.equal(typeof storedValue, "string");
+  } finally {
+    globalThis.fetch = originalFetch;
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    __testing.resetUpstashConfig();
+  }
+});
+
 test("re-fetches value after TTL expiration", async () => {
   __testing.clearMemoryCache();
+  __testing.resetUpstashConfig();
 
   let callCount = 0;
   const fetcher = async () => {
@@ -73,6 +156,7 @@ test("re-fetches value after TTL expiration", async () => {
 
 test("refreshCache bypasses stale memory entry", async () => {
   __testing.clearMemoryCache();
+  __testing.resetUpstashConfig();
 
   let fetchCallCount = 0;
   const fetcher = async () => {
@@ -110,6 +194,7 @@ test("refreshCache bypasses stale memory entry", async () => {
 
 test("revalidate API refreshes upbit market cache", async () => {
   __testing.clearMemoryCache();
+  __testing.resetUpstashConfig();
 
   const originalFetch = globalThis.fetch;
   let upbitFetchCount = 0;
@@ -177,6 +262,7 @@ test("revalidate API refreshes upbit market cache", async () => {
 
 test("revalidate API rejects missing token when required", async () => {
   __testing.clearMemoryCache();
+  __testing.resetUpstashConfig();
 
   process.env.MARKET_CACHE_REVALIDATE_TOKEN = "secret";
 

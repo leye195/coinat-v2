@@ -89,12 +89,10 @@ function setMemoryEntry<T>(key: string, value: T, ttlSeconds: number) {
   });
 }
 
-async function upstashRequest(body: unknown): Promise<UpstashPipelineResult[]> {
-  const config = getUpstashConfig();
-  if (!config) {
-    return [];
-  }
-
+async function upstashRequest(
+  config: UpstashConfig,
+  body: unknown
+): Promise<UpstashPipelineResult[]> {
   try {
     const response = await fetch(`${config.url}/pipeline`, {
       method: "POST",
@@ -118,7 +116,12 @@ async function upstashRequest(body: unknown): Promise<UpstashPipelineResult[]> {
 }
 
 async function upstashGet(key: string): Promise<string | null> {
-  const [result] = await upstashRequest([["GET", key]]);
+  const config = getUpstashConfig();
+  if (!config) {
+    return null;
+  }
+
+  const [result] = await upstashRequest(config, [["GET", key]]);
 
   if (!result) {
     return null;
@@ -137,12 +140,36 @@ async function upstashSet(
   value: string,
   ttlSeconds: number
 ): Promise<void> {
-  if (ttlSeconds <= 0) {
-    await upstashRequest([["SET", key, value]]);
+  const config = getUpstashConfig();
+  if (!config) {
     return;
   }
 
-  await upstashRequest([["SETEX", key, String(ttlSeconds), value]]);
+  if (ttlSeconds <= 0) {
+    await upstashRequest(config, [["SET", key, value]]);
+    return;
+  }
+
+  await upstashRequest(config, [["SETEX", key, String(ttlSeconds), value]]);
+}
+
+async function fetchAndPersist<T>(
+  { key, ttlSeconds, fetcher }: ReadThroughCacheOptions<T>,
+  persistToRedis: boolean
+): Promise<T> {
+  const freshValue = await fetcher();
+
+  if (persistToRedis) {
+    try {
+      await upstashSet(key, JSON.stringify(freshValue), ttlSeconds);
+    } catch (err) {
+      logUpstashError(err);
+    }
+  }
+
+  setMemoryEntry(key, freshValue, ttlSeconds);
+
+  return freshValue;
 }
 
 export async function readThroughCache<T>(
@@ -155,18 +182,22 @@ export async function readThroughCache<T>(
     return cachedValue;
   }
 
-  const redisValue = await upstashGet(key);
-  if (redisValue !== null) {
-    try {
-      const parsed = JSON.parse(redisValue) as T;
-      setMemoryEntry(key, parsed, ttlSeconds);
-      return parsed;
-    } catch (err) {
-      logUpstashError(err);
+  const hasRedis = getUpstashConfig() !== null;
+
+  if (hasRedis) {
+    const redisValue = await upstashGet(key);
+    if (redisValue !== null) {
+      try {
+        const parsed = JSON.parse(redisValue) as T;
+        setMemoryEntry(key, parsed, ttlSeconds);
+        return parsed;
+      } catch (err) {
+        logUpstashError(err);
+      }
     }
   }
 
-  return refreshCache(options);
+  return fetchAndPersist(options, hasRedis);
 }
 
 export async function refreshCache<T>({
@@ -174,19 +205,19 @@ export async function refreshCache<T>({
   ttlSeconds,
   fetcher,
 }: ReadThroughCacheOptions<T>): Promise<T> {
-  const freshValue = await fetcher();
-
-  try {
-    await upstashSet(key, JSON.stringify(freshValue), ttlSeconds);
-  } catch (err) {
-    logUpstashError(err);
+  const hasRedis = getUpstashConfig() !== null;
+  if (!hasRedis) {
+    memoryCache.delete(key);
   }
 
-  setMemoryEntry(key, freshValue, ttlSeconds);
-
-  return freshValue;
+  return fetchAndPersist({ key, ttlSeconds, fetcher }, hasRedis);
 }
 
 export const __testing = {
   clearMemoryCache: () => memoryCache.clear(),
+  resetUpstashConfig: () => {
+    upstashConfigInitialized = false;
+    upstashConfig = null;
+    upstashErrorLogged = false;
+  },
 };
