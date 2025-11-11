@@ -148,7 +148,7 @@ async function upstashSet(
 export async function readThroughCache<T>(
   options: ReadThroughCacheOptions<T>
 ): Promise<T> {
-  const { key, ttlSeconds, fetcher } = options;
+  const { key, ttlSeconds } = options;
 
   const cachedValue = getMemoryEntry<T>(key);
   if (cachedValue !== null) {
@@ -166,6 +166,14 @@ export async function readThroughCache<T>(
     }
   }
 
+  return refreshCache(options);
+}
+
+export async function refreshCache<T>({
+  key,
+  ttlSeconds,
+  fetcher,
+}: ReadThroughCacheOptions<T>): Promise<T> {
   const freshValue = await fetcher();
 
   try {

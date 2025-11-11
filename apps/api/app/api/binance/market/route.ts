@@ -1,18 +1,23 @@
 import { readThroughCache } from "../../lib/cache";
 import { FetchJsonError, fetchJson } from "../../lib/fetchJson";
 
-const API_URL = "https://api.binance.com/api/v3/exchangeInfo";
-const CACHE_KEY = "binance:market:exchange-info";
-const DEFAULT_TTL_SECONDS = 600;
+export const BINANCE_MARKET_API_URL =
+  "https://api.binance.com/api/v3/exchangeInfo";
+export const BINANCE_MARKET_CACHE_KEY = "binance:market:exchange-info";
+export const BINANCE_MARKET_DEFAULT_TTL_SECONDS = 600;
 
-function resolveTtlSeconds(): number {
+export function resolveBinanceMarketTtlSeconds(): number {
   const ttlFromEnv = Number(
-    process.env.BINANCE_MARKET_CACHE_TTL ?? DEFAULT_TTL_SECONDS
+    process.env.BINANCE_MARKET_CACHE_TTL ?? BINANCE_MARKET_DEFAULT_TTL_SECONDS
   );
   if (Number.isFinite(ttlFromEnv) && ttlFromEnv > 0) {
     return Math.floor(ttlFromEnv);
   }
-  return DEFAULT_TTL_SECONDS;
+  return BINANCE_MARKET_DEFAULT_TTL_SECONDS;
+}
+
+export function fetchBinanceMarketMetadata() {
+  return fetchJson(BINANCE_MARKET_API_URL);
 }
 
 export const config = {
@@ -24,9 +29,9 @@ export const config = {
 export async function GET() {
   try {
     const data = await readThroughCache({
-      key: CACHE_KEY,
-      ttlSeconds: resolveTtlSeconds(),
-      fetcher: () => fetchJson(API_URL),
+      key: BINANCE_MARKET_CACHE_KEY,
+      ttlSeconds: resolveBinanceMarketTtlSeconds(),
+      fetcher: fetchBinanceMarketMetadata,
     });
 
     return new Response(JSON.stringify(data), {
