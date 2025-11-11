@@ -1,6 +1,19 @@
+import { readThroughCache } from "../../lib/cache";
 import { FetchJsonError, fetchJson } from "../../lib/fetchJson";
 
 const API_URL = "https://api.binance.com/api/v3/exchangeInfo";
+const CACHE_KEY = "binance:market:exchange-info";
+const DEFAULT_TTL_SECONDS = 600;
+
+function resolveTtlSeconds(): number {
+  const ttlFromEnv = Number(
+    process.env.BINANCE_MARKET_CACHE_TTL ?? DEFAULT_TTL_SECONDS
+  );
+  if (Number.isFinite(ttlFromEnv) && ttlFromEnv > 0) {
+    return Math.floor(ttlFromEnv);
+  }
+  return DEFAULT_TTL_SECONDS;
+}
 
 export const config = {
   api: {
@@ -10,7 +23,11 @@ export const config = {
 
 export async function GET() {
   try {
-    const data = await fetchJson(API_URL);
+    const data = await readThroughCache({
+      key: CACHE_KEY,
+      ttlSeconds: resolveTtlSeconds(),
+      fetcher: () => fetchJson(API_URL),
+    });
 
     return new Response(JSON.stringify(data), {
       status: 200,
