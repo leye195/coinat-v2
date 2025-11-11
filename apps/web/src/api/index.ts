@@ -12,8 +12,6 @@ import { DailyVolumnResponse } from '@/types/DailyVolumn';
 import type { MarketCap } from '@/types/Marketcap';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001';
-
-const UPBIT_API = `https://api.upbit.com/v1`;
 const BINANCE_API = `https://api.binance.com`;
 
 const api = axios.create({
@@ -30,10 +28,6 @@ const baseApi = axios.create({
   baseURL: BASE_URL,
 });
 
-const _upbitApi = axios.create({
-  baseURL: UPBIT_API,
-});
-
 const binanceApi = axios.create({
   baseURL: BINANCE_API,
 });
@@ -44,7 +38,7 @@ export const getCurrencyInfo = (): Promise<AxiosResponse<Currency>> =>
 export const getUpbitCoinsV2 = async () => {
   try {
     const response = await fetch(`${BASE_URL}/api/upbit/market`, {
-      cache: 'force-cache',
+      cache: 'no-cache',
     });
 
     if (!response.ok) {
@@ -75,6 +69,7 @@ export const getBinanceCoinsV2 = async () => {
     }
 
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('Error fetching Binance coins:', error);

@@ -1,5 +1,6 @@
 import { readThroughCache } from "../../lib/cache";
 import { FetchJsonError, fetchJson } from "../../lib/fetchJson";
+import { SymbolInfo } from "./type";
 
 export const BINANCE_MARKET_API_URL =
   "https://api.binance.com/api/v3/exchangeInfo";
@@ -17,7 +18,11 @@ export function resolveBinanceMarketTtlSeconds(): number {
 }
 
 export function fetchBinanceMarketMetadata() {
-  return fetchJson(BINANCE_MARKET_API_URL);
+  return fetchJson(BINANCE_MARKET_API_URL).then((res: any) => ({
+    symbols: res.symbols.filter(
+      (symbol: SymbolInfo) => symbol.status === "TRADING"
+    ),
+  }));
 }
 
 export const config = {
