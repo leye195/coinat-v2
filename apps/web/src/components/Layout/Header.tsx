@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Text from '@/components/Text';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-import PreFetcher from '../PreFetcher';
 
 const Header = () => {
   return (
@@ -14,7 +13,6 @@ const Header = () => {
         'max-md:h-9',
       )}
     >
-      <PreFetcher />
       <nav
         className={cn(
           'flex items-center justify-between',

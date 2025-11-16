@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, Suspense, useCallback, useId, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import MarketCapTable from '@/components/MarketCapTable';
@@ -159,9 +160,11 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
             marginBlock: '12px',
           }}
         />
-        <Suspense fallback={<TableSkeleton />}>
-          <MarketCapTable />
-        </Suspense>
+        <ErrorBoundary fallback={<></>}>
+          <Suspense fallback={<TableSkeleton />}>
+            <MarketCapTable />
+          </Suspense>
+        </ErrorBoundary>
       </Flex>
     </Flex>
   );
