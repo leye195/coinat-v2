@@ -2,9 +2,11 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { Suspense, useEffect, useId, useMemo, useState } from 'react';
 import { useExchangeData } from 'hooks/queries';
+import { ErrorBoundary } from 'react-error-boundary';
 import CoinInfo from '@/components/CoinInfo';
+import { CoinInfoSkeleton } from '@/components/CoinInfo/CoinInfoSkeleton';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import MetaTags from '@/components/Metatags';
@@ -235,7 +237,11 @@ export default function Chart({ code, type }: ChartProps) {
         </Loading>
       </Flex>
       <Spacing size="16px" type="vertical" />
-      <CoinInfo code={code} />
+      <ErrorBoundary fallback={<></>}>
+        <Suspense fallback={<CoinInfoSkeleton />}>
+          <CoinInfo code={code} />
+        </Suspense>
+      </ErrorBoundary>
     </Flex>
   );
 }

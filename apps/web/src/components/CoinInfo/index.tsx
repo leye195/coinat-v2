@@ -1,11 +1,11 @@
 import { useId, memo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { getCoinInfo } from '@/api';
-import { Flex } from './Flex';
-import MultilineText from './MultilineText';
-import { SectionWithTitle } from './SectionWithTitle';
-import Table from './Table';
-import Text from './Text';
+import { Flex } from '@/components/Flex';
+import MultilineText from '@/components/MultilineText';
+import { SectionWithTitle } from '@/components/SectionWithTitle';
+import Table from '@/components/Table';
+import Text from '@/components/Text';
 
 type Props = {
   code: string;
@@ -13,7 +13,7 @@ type Props = {
 
 const CoinInfo = ({ code }: Props) => {
   const id = useId();
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: [code, 'coin-info'],
     queryFn: () => getCoinInfo(code),
     select: (res) => {
