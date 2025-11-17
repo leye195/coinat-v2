@@ -3,20 +3,18 @@
 import { ReactNode, Suspense, useCallback, useId, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Divider } from '@/components/Divider';
+import ErrorMessage from '@/components/ErrorMessage';
 import { Flex } from '@/components/Flex';
 import MarketCapTable from '@/components/MarketCapTable';
-import MainNews from '@/components/News/MainNews';
 import NewsSkeleton from '@/components/News/NewsSkeleton';
-import SubNews from '@/components/News/SubNews';
+import NewsList from '@/components/NewsList';
 import Tab, { ActiveBar } from '@/components/Tab';
 import TableSkeleton from '@/components/Table/Skeleton';
 import Text from '@/components/Text';
 import { newsTabs } from '@/data/tab';
-import { useMount, useNewsData } from '@/hooks';
+import { useMount } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
-
-const OFFSET = 2;
 
 type TrendPageProps = {
   dailyAskVolumn: ReactNode;
@@ -29,9 +27,6 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
   const [activeTab, setActiveTab] = useState({
     name: 'all',
     index: 0,
-  });
-  const { data, isLoading } = useNewsData({
-    category: activeTab.name,
   });
 
   const onClickTab = useCallback(
@@ -74,39 +69,26 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
           />
         </Tab.Group>
       </Flex>
-      {isLoading ? (
-        <NewsSkeleton />
-      ) : (
-        <Flex
-          className="min-h-[500px] bg-white px-3 py-6"
-          isFull
-          flexDirection="column"
-          gap="12px"
-        >
-          {data?.featured_list && data.featured_list.length > 0 && (
-            <>
-              <Flex className="max-md:!flex-col" gap="8px">
-                {data?.featured_list.slice(OFFSET, OFFSET + 2).map((news) => (
-                  <MainNews key={news.id} data={news} />
-                ))}
-              </Flex>
-              <Divider
-                type="horizontal"
-                size="1px"
-                style={{
-                  width: '100%',
-                  marginBlock: '8px',
-                }}
-              />
-            </>
-          )}
-          <Flex className="flex-wrap" isFull gap="16px">
-            {data?.list.slice(OFFSET, OFFSET + 20).map((news) => (
-              <SubNews key={news.id} data={news} />
-            ))}
+      <ErrorBoundary
+        fallback={
+          <Flex
+            className="my-auto min-h-[500px] bg-white"
+            isFull
+            alignItems="center"
+            justifyContent="center"
+          >
+            <ErrorMessage
+              title="디지털 자산 뉴스을 불러오지 못했어요."
+              description="잠시 후 다시 시도해주세요."
+              className="max-w-lg text-center"
+            />
           </Flex>
-        </Flex>
-      )}
+        }
+      >
+        <Suspense fallback={<NewsSkeleton />}>
+          <NewsList category={activeTab.name} />
+        </Suspense>
+      </ErrorBoundary>
       <Flex className="max-md:!flex-col" gap="8px" isFull>
         <div
           className={cn(
@@ -160,7 +142,22 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
             marginBlock: '12px',
           }}
         />
-        <ErrorBoundary fallback={<></>}>
+        <ErrorBoundary
+          fallback={
+            <Flex
+              className="my-auto"
+              isFull
+              alignItems="center"
+              justifyContent="center"
+            >
+              <ErrorMessage
+                title="디지털 자산 시총을 불러오지 못했어요."
+                description="잠시 후 다시 시도해주세요."
+                className="max-w-lg text-center"
+              />
+            </Flex>
+          }
+        >
           <Suspense fallback={<TableSkeleton />}>
             <MarketCapTable />
           </Suspense>

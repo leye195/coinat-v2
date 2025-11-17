@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { getNews } from '@/api';
 import type { NewsResponse } from '@/types/News';
 
@@ -9,7 +9,7 @@ type UseNewsDataProps = {
 };
 
 const useNewsData = ({ category }: UseNewsDataProps) => {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: ['news', category],
     queryFn: ({ queryKey }) =>
       getNews(queryKey[1] === 'all' ? undefined : queryKey[1]),
