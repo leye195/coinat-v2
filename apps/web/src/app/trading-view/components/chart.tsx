@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Suspense, useEffect, useId, useMemo, useState } from 'react';
-import { useExchangeData } from 'hooks/queries';
 import { ErrorBoundary } from 'react-error-boundary';
 import CoinInfo from '@/components/CoinInfo';
 import { CoinInfoSkeleton } from '@/components/CoinInfo/CoinInfoSkeleton';
@@ -21,6 +20,7 @@ import Tab, { ActiveBar } from '@/components/Tab';
 import Text from '@/components/Text';
 import TradingViewChart from '@/components/TradingView';
 import { timeTabs } from '@/data/tab';
+import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
 import { Unit } from '@/lib/trading-view/utils';
 import { cn, formatPrice, setComma } from '@/lib/utils';
