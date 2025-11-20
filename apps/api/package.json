@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "pnpm run test:build && pnpm run test:run && pnpm run test:clean",
+    "test:build": "tsc -p tsconfig.test.json",
+    "test:run": "node dist-test/lib/cache.test.js",
+    "test:clean": "node -e \"const fs=require('fs'); if (fs.existsSync('dist-test')) fs.rmSync('dist-test', { recursive: true, force: true });\""
   },
   "dependencies": {
     "next": "15.3.5",

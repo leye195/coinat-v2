@@ -1,9 +1,4 @@
-import {
-  getBinanceCoins,
-  getUpbitCoins,
-  getUpbitCoinsV2,
-  getBinanceCoinsV2,
-} from '@/api';
+import { getUpbitCoinsV2, getBinanceCoinsV2 } from '@/api';
 import type { Coin, UpbitCoin } from '@/types/Coin';
 
 type Currency = 'KRW' | 'BTC' | 'USDT';
@@ -100,7 +95,7 @@ export const getCoinsV2 = async (type: Currency) => {
 export const getCoins = async (type: Currency) => {
   try {
     // upbit coin data
-    const { data: upbitData } = await getUpbitCoins();
+    const upbitData = await getUpbitCoinsV2();
     const upbitKrwCoins: UpbitCoin[] = upbitData.filter((coin: UpbitCoin) =>
       coin.market.includes('KRW-'),
     );
@@ -109,7 +104,7 @@ export const getCoins = async (type: Currency) => {
     );
 
     // binance coin data
-    const { data: binanceData } = await getBinanceCoins();
+    const binanceData = await getBinanceCoinsV2();
     const binanceBtcCoins = binanceData.symbols
       .filter(
         (data: any) => data.symbol.endsWith('BTC') && data.status === 'TRADING',
