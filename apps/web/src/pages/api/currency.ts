@@ -4,7 +4,8 @@ import currencyModel from '@/server/models/Currency';
 import type { Currency } from '@/types/Currency';
 
 const RATE_API =
-  'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD';
+  'https://crix-api-cdn.upbit.com/v1/forex/recent?codes=FRX.KRWUSD';
+//'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD';
 //'https://www.mexc.com/api/platform/common/currency/exchange/rate';
 
 const app = createHandler();
