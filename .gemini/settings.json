@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  },
+  "general": {
+    "defaultApprovalMode": "plan"
+  },
+  "experimental": {
+    "plan": true,
+    "enableAgents": true
+  }
+}
