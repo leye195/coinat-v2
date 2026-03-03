@@ -96,10 +96,11 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
               key={name}
               name={
                 idx > 0 && idx < 3
-                  ? `${name}(${MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
-                  type as TickerType
-                  ]
-                  })`
+                  ? `${name}(${
+                      MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
+                        type as TickerType
+                      ]
+                    })`
                   : name
               }
               right={<Icon name="ArrowUpDown" size={14} />}
