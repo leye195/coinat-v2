@@ -1,13 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import sort, { initSort, Sort } from '@/lib/sort';
 import { useCoinStore } from '@/store/coin';
-import { useExchangeStore } from '@/store/exchange';
 import { useCryptoSocketStore } from '@/store/socket';
 import { Coin } from '@/types/Coin';
-import useCurrencyInfo from './useCurrencyInfo';
 
 interface UseTickerDataProps {
   krwCoinData: Coin[];
@@ -15,84 +13,74 @@ interface UseTickerDataProps {
   usdtCoinData: Coin[];
 }
 
+const INIT_SORT_TYPE = {
+  symbol: false,
+  last: false,
+  blast: false,
+  per: false,
+};
+
 const useTickerData = ({
   krwCoinData,
   btcCoinData,
   usdtCoinData,
 }: UseTickerDataProps) => {
-  const selectedType = useRef<string | null>(null);
-  const sortType = useRef({
-    symbol: false,
-    last: false,
-    blast: false,
-    per: false,
-  });
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [sortType, setSortType] = useState(INIT_SORT_TYPE);
 
   const { type } = useCoinStore();
-
-  const { setExchangeState } = useExchangeStore();
   const { combineTickers } = useCryptoSocketStore();
+  const isSocketLoaded = useCryptoSocketStore(
+    (state) => state.tickers !== null,
+  );
 
-  const {
-    data: currencyData = {
-      value: 0,
-      name: 'KRW_USD',
-    },
-  } = useCurrencyInfo();
+  const coinData: Coin[] = useMemo(() => {
+    if (type === 'KRW') {
+      return krwCoinData;
+    } else if (type === 'USDT') {
+      return usdtCoinData;
+    } else {
+      return btcCoinData;
+    }
+  }, [type, krwCoinData, usdtCoinData, btcCoinData]);
 
-  const getTickers = async () => {
-    const originData =
-      type === 'KRW'
-        ? krwCoinData
-        : type === 'USDT'
-        ? usdtCoinData
-        : btcCoinData;
-
+  const getTickers = async (coinData: Coin[]) => {
     try {
-      const combinedData = combineTickers(originData, type);
-
-      const btc = combinedData.find((data) => data.symbol === 'BTC');
-      const upbitBTC = btc?.last ?? 0;
-      const binanceBTC = btc?.blast ?? 0;
-
-      setExchangeState({
-        upbitBTC,
-        binanceBTC,
-        usdToKrw: currencyData?.value ?? 0,
-        isLoading: false,
-      });
-
-      const result = sort(
-        combinedData,
-        selectedType.current ?? 'symbol',
-        sortType.current[selectedType.current as Sort],
-      );
-      return result;
+      const combinedData = combineTickers(coinData, type);
+      return combinedData;
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleSort = (type: string) => () => {
-    sortType.current = {
+  const handleSort = (sortKey: string) => () => {
+    setSortType((prev) => ({
       ...initSort,
-      [type]: !sortType.current[type as Sort],
-    };
+      [sortKey]: !prev[sortKey as keyof typeof initSort],
+    }));
 
-    selectedType.current = type;
+    setSelectedType(sortKey);
   };
 
   const { data, ...rest } = useQuery({
-    queryKey: ['coins', type],
-    queryFn: getTickers,
+    queryKey: ['coins', type, isSocketLoaded],
+    queryFn: () => getTickers(coinData),
     refetchInterval: 2000,
     refetchIntervalInBackground: true,
-    enabled:
-      !!krwCoinData.length && !!btcCoinData.length && !!usdtCoinData.length,
+    enabled: coinData.length > 0 && isSocketLoaded,
   });
 
+  const sortedData = useMemo(() => {
+    if (!data) return undefined;
+    return sort(
+      data,
+      selectedType ?? 'symbol',
+      sortType[(selectedType ?? 'symbol') as Sort],
+    );
+  }, [data, selectedType, sortType]);
+
   return {
-    data,
+    data: sortedData,
     handleSort,
     ...rest,
   };
