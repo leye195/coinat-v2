@@ -53,10 +53,10 @@ const useTickerData = ({
     }
   };
 
-  const handleSort = (sortKey: string) => () => {
+  const handleSort = (sortKey: Sort) => () => {
     setSortType((prev) => ({
       ...initSort,
-      [sortKey]: !prev[sortKey as keyof typeof initSort],
+      [sortKey]: !prev[sortKey],
     }));
 
     setSelectedType(sortKey);
