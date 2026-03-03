@@ -3,7 +3,7 @@ import { CombinedTickers } from '@/store/socket';
 
 export type Sort = 'last' | 'blast' | 'per' | 'symbol';
 
-export const sortColumn = ['symbol', 'last', 'blast', 'per'];
+export const sortColumn: Sort[] = ['symbol', 'last', 'blast', 'per'];
 
 export const initSort = {
   symbol: false,

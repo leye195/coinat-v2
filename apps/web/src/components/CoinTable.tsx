@@ -12,7 +12,7 @@ import Text from '@/components/Text';
 import { MARKET_SYMBOLS, TABLE_HEADERS } from '@/constant';
 import { useLocalStorage } from '@/hooks';
 import { getCoinSymbolImage } from '@/lib/coin';
-import { sortColumn } from '@/lib/sort';
+import { Sort, sortColumn } from '@/lib/sort';
 import { cn, getBreakpointQuery, removeDuplicate, setComma } from '@/lib/utils';
 import { useCoinStore } from '@/store/coin';
 import { CombinedTickers } from '@/store/socket';
@@ -22,7 +22,7 @@ import { TickerType } from '@/types/Coin';
 
 type Props = {
   coinList: CombinedTickers[];
-  handleSort: (type: string) => () => void;
+  handleSort: (type: Sort) => () => void;
 };
 
 const CoinTable = ({ coinList, handleSort }: Props) => {
@@ -96,11 +96,10 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
               key={name}
               name={
                 idx > 0 && idx < 3
-                  ? `${name}(${
-                      MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
-                        type as TickerType
-                      ]
-                    })`
+                  ? `${name}(${MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
+                  type as TickerType
+                  ]
+                  })`
                   : name
               }
               right={<Icon name="ArrowUpDown" size={14} />}
