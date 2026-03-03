@@ -7,6 +7,8 @@
     "lint": "turbo lint",
     "dev:web": "turbo dev --filter=web",
     "build:web": "turbo build --filter=web",
+    "lint:web": "turbo lint --filter=web",
+    "lint:fix:web": "turbo lint:fix --filter=web",
     "dev:api": "turbo dev --filter=api",
     "build:api": "turbo build --filter=api"
   },

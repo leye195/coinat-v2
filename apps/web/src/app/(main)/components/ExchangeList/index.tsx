@@ -2,11 +2,11 @@
 
 import Exchange from '@/components/Exchange';
 import { exchangeHeader } from '@/data/table';
+import { useExchangeMetrics } from '@/hooks';
 import { cn, setComma } from '@/lib/utils';
-import { useExchangeStore } from '@/store/exchange';
 
 function ExchangeList() {
-  const exchangeData = useExchangeStore();
+  const exchangeData = useExchangeMetrics();
 
   return (
     <section className="max-md:overflow-auto">
