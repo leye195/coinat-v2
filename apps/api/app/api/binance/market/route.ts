@@ -18,7 +18,7 @@ export async function GET() {
     });
   } catch (err) {
     console.error("API Error:", err);
-    const status = err instanceof FetchJsonError ? err.status : 400;
+    const status = err instanceof FetchJsonError ? err.status : 500;
     const message = err instanceof Error ? err.message : "Unknown error";
     return new Response(JSON.stringify({ error: message }), {
       status,

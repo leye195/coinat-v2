@@ -4,16 +4,11 @@ const API_URL = "https://crix-api-cdn.upbit.com/v1/crix/marketcap?currency=KRW";
 
 export async function GET(request: Request) {
     try {
-        const url = new URL(API_URL);
-        const data = await fetchJson(url.toString());
-
-        return new Response(JSON.stringify(data), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-        });
+        const data = await fetchJson(API_URL);
+        return Response.json(data);
     } catch (err) {
         console.error(err);
-        const status = err instanceof FetchJsonError ? err.status : 400;
+        const status = err instanceof FetchJsonError ? err.status : 500;
         const message = err instanceof Error ? err.message : "Unknown error";
         return new Response(JSON.stringify({ error: message }), {
             status,
