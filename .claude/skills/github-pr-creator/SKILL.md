@@ -7,71 +7,79 @@ description: Generates and creates a Pull Request on GitHub based on current bra
 
 ## Role
 
-You are an expert in **GitHub workflow and PR automation**.
-You understand how to analyze local changes, compare them with a target branch (defaulting to `develop`), and use the `gh` CLI to create a structured Pull Request that follows the project's standards.
+You are an expert in **GitHub workflow and PR automation** for the **coinat-v2** monorepo.
+You analyze local changes, compare them against the target branch (default `develop`), and use the `gh` CLI to create a structured Pull Request that follows this project's template and conventions.
 
 ---
 
 ## Workflow
 
 1. **Pre-check & Branch Detection**
-   - Identify the current branch using `git rev-parse --abbrev-ref HEAD`.
-   - Identify the target branch (default to `develop` if not explicitly specified by the user).
-   - Ensure the current branch is pushed to the remote (`git status` and check for "up to date with origin"). If not, ask the user to push it first.
+   - Current branch: `git rev-parse --abbrev-ref HEAD`. If it is `develop`, stop and ask the user to switch to a feature branch first.
+   - Target branch: default `develop` unless the user specifies otherwise.
+   - Existing PR check: `gh pr list --head <current-branch> --json number,url`. If one exists, share the link instead of creating a duplicate.
+   - Push state: compare local vs remote.
+     ```bash
+     git rev-list --left-right --count @{u}...HEAD 2>/dev/null
+     ```
+     - If there is no upstream, push: `git push -u origin <current-branch>`.
+     - If the local branch is ahead, push: `git push`.
+     - Only create the PR once the remote tip matches local `HEAD`.
 
 2. **Analysis & Content Generation**
-   - Read `.github/pull_request_template.md` to use as the base structure.
-   - Run `git diff <target-branch>...HEAD` to analyze the changes.
-   - Generate a concise and descriptive **PR Title** (e.g., `feat: user login implementation`).
-   - Generate the **PR Body** by filling in the fields of the template:
-     - **Summary**: High-level goal.
-     - **Details**: Specific technical changes, implementation details, or migrations.
-     - **Notes**: Related issues, context, or any additional information for reviewers.
+   - Read `.github/pull_request_template.md` and follow its structure **exactly**.
+   - Analyze the diff: `git diff <target-branch>...HEAD` and `git log <target-branch>..HEAD --oneline`.
+   - **PR Title** — Conventional Commits style in **English**, matching this repo's history (e.g. `feat(web): update RATE_API`, `refactor: improve real-time data handling`). Use a scope of `web` or `api` when the change is confined to one app; omit the scope for monorepo-wide / tooling changes.
+   - **PR Body** — write in **Korean** to match the template, filling each section:
+     - `# 요약` — high-level goal (1–2 lines).
+     - `## 주요 작업:` — primary technical changes (bullets).
+     - `## 기타 작업:` — secondary/incidental changes (config, tooling, cleanup).
+     - `## 고민사항 및 추후 고려사항:` — trade-offs, follow-ups, reviewer notes, intentionally excluded changes.
 
 3. **Auto-Label Detection**
-   - Detect labels from commit type and changed file paths, then apply them to the PR.
-   - Run `gh label list --json name` to verify labels exist in the repository before applying.
+   - **Always** run `gh label list --json name` first and apply **only labels that actually exist** in the repo. Never pass a label that is not returned.
+   - Map the dominant commit type to a label:
 
-   **Commit type → Label mapping:**
+     | Commit Type | Label |
+     | ----------- | ----- |
+     | `feat` | `enhancement` |
+     | `fix` | `bug` |
+     | `docs` | `documentation` |
+     | `refactor`, `perf`, `chore`, `style`, `test` | _(no label)_ |
 
-   | Commit Type              | Label           |
-   | ------------------------ | --------------- |
-   | `feat`                   | `feature`       |
-   | `fix`                    | `bug`           |
-   | `refactor`               | `refactor`      |
-   | `docs`                   | `documentation` |
-   | `chore`, `style`, `test` | _(no label)_    |
-
-   **Changed file path → Label mapping:**
-
-   | Path Pattern                        | Label   |
-   | ----------------------------------- | ------- |
-   | `apps/admin/**`                     | `admin` |
-   | `messages/**` or i18n-related files | `i18n`  |
-
-   Combine all detected labels into a comma-separated string (e.g., `refactor,admin`).
+   - This repo currently has **no path/app-scoped labels** (no `web`/`api`/`admin`/`i18n`). Do not invent them; rely on `gh label list`. If the repo later adds scoped labels, extend this section accordingly.
+   - The current label set is roughly: `bug`, `documentation`, `enhancement`, `duplicate`, `question`, `wontfix`, `invalid`, `good first issue`, `help wanted`, `codex`. Treat `gh label list` as the source of truth.
+   - Combine detected labels into a comma-separated string (e.g. `enhancement`). If none apply, omit `--label`.
 
 4. **PR Creation**
-   - Propose or execute the `gh` command to create the PR with labels:
+   - Create the PR (use a heredoc for the body to preserve newlines/markdown):
      ```bash
-     gh pr create --base <target-branch> --head <current-branch> --title "<title>" --body "<generated-body>" --label "<detected-labels>"
+     gh pr create --base <target-branch> --head <current-branch> \
+       --title "<title>" \
+       --body "$(cat <<'EOF'
+     <generated-korean-body>
+     EOF
+     )" \
+       --label "<detected-labels>"
      ```
-   - If no labels were detected, omit the `--label` flag.
-   - **Environment Note**: If the `gh` CLI is not installed (e.g., `command not found`), generate the PR content clearly so the user can copy-paste it into the GitHub web UI.
-   - If the PR is successfully created, provide the link to the user.
+   - Omit `--label` when no label was detected.
+   - **Environment Note**: If `gh` is not installed/authenticated, output the full title + body so the user can paste it into the GitHub web UI.
+   - On success, share the PR link.
 
 ---
 
 ## Key Considerations
 
-- **Target Branch**: Default to `develop` unless the user says otherwise.
-- **Template Adherence**: Strictly follow the structure of `.github/pull_request_template.md`.
-- **Clarity**: Ensure the title and body are professional and useful for reviewers.
-- **Environment**: If `gh` CLI is not installed or authenticated, provide instructions to the user on how to proceed manually or fix the environment.
+- **Target Branch**: default `develop`.
+- **Title language**: English, Conventional Commits, with `web`/`api` scope when single-app.
+- **Body language**: Korean, strictly following `.github/pull_request_template.md`.
+- **Labels**: existing labels only — verify via `gh label list` before applying.
+- **No duplicates**: check for an existing PR on the branch first.
+- **Push first**: never create a PR before the branch is pushed and in sync.
 
 ---
 
 ## Example Interaction
 
-**User**: "Create a PR for this feature branch."
-**Assistant**: "I'll create a PR from `feat/search-api` to `develop`. I've analyzed the changes and prepared the following PR content based on our template. Detected labels: `feature`, `admin`. Shall I proceed with `gh pr create`?"
+**User**: "Create a PR for this branch."
+**Assistant**: "Current branch `feat/rate-api` is pushed and in sync with origin. I'll open a PR to `develop`. Based on the diff (changes only under `apps/web`), proposed title: `feat(web): update RATE_API`. Body follows our template (요약/주요 작업/기타 작업/고민사항). Detected label: `enhancement` (verified via `gh label list`). Proceeding with `gh pr create`."

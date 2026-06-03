@@ -51,17 +51,17 @@ You safely merge a Pull Request specified by its number using the `gh` CLI, afte
 
    Use `baseRefName` and `headRefName` captured in step 1.
 
-   - If the current local branch is `headRefName`:
+   - **Always check out the base branch first** — never run `git pull` on whatever branch happens to be checked out. If the current branch is some unrelated branch, skipping this would merge the base branch's latest code into the wrong branch:
      ```bash
      git checkout <baseRefName>
      ```
-   - Sync the base branch:
+   - Sync the base branch (now safely on `baseRefName`):
      ```bash
      git pull origin <baseRefName>
      ```
-   - Delete the local feature branch:
+   - Delete the local feature branch **only if it exists locally** (it may never have been checked out on this machine):
      ```bash
-     git branch -d <headRefName>
+     git show-ref --verify --quiet refs/heads/<headRefName> && git branch -d <headRefName>
      ```
      - If the delete fails because Git considers it unmerged (common after squash/rebase merges, but here we use a merge commit so this is unusual), show the warning and ask the user before falling back to `git branch -D <headRefName>`.
    - Print a concise summary: PR number, merge commit, branches removed (remote/local), current local branch.
