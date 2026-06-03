@@ -96,7 +96,7 @@ export const getNews = (category?: string) =>
   );
 
 export const getMarketcap = (): Promise<AxiosResponse<MarketCap[]>> =>
-  axios.get('https://crix-api-cdn.upbit.com/v1/crix/marketcap?currency=KRW');
+  baseApi.get('/api/upbit/market_cap');
 
 /**
  * 탐욕 지수 api
