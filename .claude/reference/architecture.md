@@ -31,6 +31,32 @@ sequenceDiagram
     Note over SW: port removed & closed
 ```
 
+## Real-time fallback for browsers without SharedWorker
+
+`SharedWorker` is unavailable on Safari, most mobile browsers, and Android Chrome. `SharedWorkerProvider` therefore selects a source **progressively — SharedWorker → Dedicated Worker → main thread** — via `apps/web/src/lib/ticker-source/createTickerSource.ts`. All tiers expose the same `TickerSource` interface and emit the same payload, so the provider and store don't care which is active. Each worker tier is guarded by capability detection plus a ~4s watchdog: a missing API, a thrown constructor, or a worker script that fails to load degrades to the next tier. The main-thread tier always works, so unsupported browsers keep live data instead of crashing the error boundary.
+
+```mermaid
+flowchart TD
+    Start([createTickerSource]) --> SW{SharedWorker<br/>supported?}
+    SW -- yes --> SWbuild[SharedWorker source<br/>+ 4s watchdog]
+    SW -- no --> DWq{Worker<br/>supported?}
+
+    SWbuild --> SWok{first ticker<br/>within 4s?}
+    SWok -- yes --> Active[active source locked in]
+    SWok -- "no / onerror" --> DWq
+
+    DWq -- yes --> DWbuild[Dedicated Worker source<br/>+ 4s watchdog]
+    DWq -- no --> MT[Main-thread source<br/>WS on main thread]
+
+    DWbuild --> DWok{first ticker<br/>within 4s?}
+    DWok -- yes --> Active
+    DWok -- "no / onerror" --> MT
+
+    MT --> Active
+```
+
+Details: `apps/web/src/lib/ticker-source/README.md`.
+
 ## Build pipeline (apps/web)
 
 ```mermaid

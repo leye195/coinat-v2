@@ -12,6 +12,8 @@ const UPBIT_SOCKET_URL = 'wss://api.upbit.com/websocket/v1';
 export default class UpbitWebSocket {
     constructor() {
         this._isConnected = false;
+        this._isClosed = false;
+        this._reconnectTimer = null;
         this.btcKrw = 0;
         this._isConnected = false;
         const socket = new WebSocket(UPBIT_SOCKET_URL);
@@ -43,6 +45,8 @@ export default class UpbitWebSocket {
     }
     reconnect(delay = 3000) {
         var _a;
+        if (this._isClosed)
+            return;
         try {
             (_a = this._socket) === null || _a === void 0 ? void 0 : _a.close();
         }
@@ -51,7 +55,9 @@ export default class UpbitWebSocket {
         }
         this._isConnected = false;
         this._socket = null;
-        setTimeout(() => {
+        this._reconnectTimer = setTimeout(() => {
+            if (this._isClosed)
+                return;
             const socket = new WebSocket(UPBIT_SOCKET_URL);
             socket.binaryType = 'arraybuffer';
             this._socket = socket;
@@ -102,5 +108,28 @@ export default class UpbitWebSocket {
     onError(error) {
         console.error('[error] Upbit Socket error:', error);
         this.reconnect();
+    }
+    /** Permanently close the socket and stop reconnecting. */
+    close() {
+        this._isClosed = true;
+        if (this._reconnectTimer) {
+            clearTimeout(this._reconnectTimer);
+            this._reconnectTimer = null;
+        }
+        if (this._socket) {
+            // Detach handlers so the close below doesn't trigger reconnect().
+            this._socket.onopen = null;
+            this._socket.onmessage = null;
+            this._socket.onclose = null;
+            this._socket.onerror = null;
+            try {
+                this._socket.close();
+            }
+            catch (e) {
+                console.warn('[Upbit] Socket close failed:', e);
+            }
+            this._socket = null;
+        }
+        this._isConnected = false;
     }
 }
