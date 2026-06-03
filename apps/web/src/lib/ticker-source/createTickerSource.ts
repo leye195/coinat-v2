@@ -66,13 +66,6 @@ export function createTickerSource(
     }
   };
 
-  const handleTickers: TickerListener = (payload) => {
-    // First successful payload locks in the current tier.
-    settled = true;
-    clearWatchdog();
-    onTickers(payload);
-  };
-
   const startTier = () => {
     if (disposed) return;
 
@@ -80,10 +73,14 @@ export function createTickerSource(
     if (index >= tiers.length) return;
 
     const tier = tiers[index];
+    // Capture this tier's slot. Late callbacks from an already-superseded tier
+    // (e.g. a stale worker `onerror` arriving after the watchdog downgraded)
+    // must not tear down or settle whatever tier is now active.
+    const activeIndex = index;
     settled = false;
 
     const downgrade = () => {
-      if (disposed || settled) return;
+      if (disposed || settled || index !== activeIndex) return;
       clearWatchdog();
       try {
         current?.disconnect();
@@ -95,25 +92,35 @@ export function createTickerSource(
       startTier();
     };
 
+    const handleTickers: TickerListener = (payload) => {
+      // Ignore late payloads from a superseded tier.
+      if (disposed || index !== activeIndex) return;
+      // First successful payload locks in the current tier.
+      settled = true;
+      clearWatchdog();
+      onTickers(payload);
+    };
+
     try {
-      current = tier.build(handleTickers, downgrade);
+      const activeSource = tier.build(handleTickers, downgrade);
+      current = activeSource;
       onKind?.(tier.kind);
+
+      // The main-thread tier is synchronous and always works — no watchdog needed.
+      if (tier.kind !== 'main-thread') {
+        watchdog = setTimeout(() => {
+          if (!settled) downgrade();
+        }, FIRST_TICKER_TIMEOUT);
+        // Nudge the worker so it emits a first snapshot before the watchdog fires.
+        try {
+          activeSource.requestTickers();
+        } catch {
+          downgrade();
+        }
+      }
     } catch {
       downgrade();
       return;
-    }
-
-    // The main-thread tier is synchronous and always works — no watchdog needed.
-    if (tier.kind !== 'main-thread') {
-      watchdog = setTimeout(() => {
-        if (!settled) downgrade();
-      }, FIRST_TICKER_TIMEOUT);
-      // Nudge the worker so it emits a first snapshot before the watchdog fires.
-      try {
-        current.requestTickers();
-      } catch {
-        downgrade();
-      }
     }
   };
 
