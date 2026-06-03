@@ -12,6 +12,8 @@ const BINANCE_SOCKET_URL = 'wss://stream.binance.com:9443/stream?streams=';
 export default class BinanceWebSocket {
     constructor() {
         this._isConnected = false;
+        this._isClosed = false;
+        this._reconnectTimer = null;
         this.btcKrw = 0; //btc 가격
         this._isConnected = false;
         this._socket = null;
@@ -35,6 +37,8 @@ export default class BinanceWebSocket {
     }
     reconnect(delay = 3000) {
         var _a;
+        if (this._isClosed)
+            return;
         try {
             (_a = this._socket) === null || _a === void 0 ? void 0 : _a.close(); // 기존 연결 닫기
         }
@@ -43,7 +47,9 @@ export default class BinanceWebSocket {
         }
         this._isConnected = false;
         this._socket = null;
-        setTimeout(() => {
+        this._reconnectTimer = setTimeout(() => {
+            if (this._isClosed)
+                return;
             console.info('🔄 Binance WebSocket reconnecting...');
             this.onConnect(); // 새 연결 시도
         }, delay);
@@ -90,5 +96,28 @@ export default class BinanceWebSocket {
     onError(error) {
         console.error('[error] Binance Socket error:', error);
         this.reconnect();
+    }
+    /** Permanently close the socket and stop reconnecting. */
+    close() {
+        this._isClosed = true;
+        if (this._reconnectTimer) {
+            clearTimeout(this._reconnectTimer);
+            this._reconnectTimer = null;
+        }
+        if (this._socket) {
+            // Detach handlers so the close below doesn't trigger reconnect().
+            this._socket.onopen = null;
+            this._socket.onmessage = null;
+            this._socket.onclose = null;
+            this._socket.onerror = null;
+            try {
+                this._socket.close();
+            }
+            catch (e) {
+                console.warn('[Binance] Socket close failed:', e);
+            }
+            this._socket = null;
+        }
+        this._isConnected = false;
     }
 }

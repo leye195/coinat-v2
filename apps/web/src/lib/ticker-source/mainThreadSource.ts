@@ -20,8 +20,14 @@ export function createMainThreadSource(
       });
     },
     disconnect() {
-      // The WS clients self-reconnect and expose no public close(); page unload
-      // closes the sockets. Acceptable for this app-lifetime provider.
+      // Close both sockets so remounts (StrictMode, Fast Refresh, route changes)
+      // don't leak accumulating WebSocket connections.
+      try {
+        upbitSocket.close();
+        binanceSocket.close();
+      } catch (error) {
+        console.error('Failed to close main-thread sockets:', error);
+      }
     },
   };
 }
