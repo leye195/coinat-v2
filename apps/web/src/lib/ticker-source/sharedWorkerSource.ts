@@ -7,8 +7,11 @@ import {
 // Keep the same path convention as the rest of the app (see SharedWorkerProvider history).
 const SHARED_WORKER_URL = '/public/workers/workers/shared.worker.js';
 
+const WS_BASE = process.env.NEXT_PUBLIC_BRIDGE_WS_BASE ?? '';
+const TOKEN = process.env.NEXT_PUBLIC_BRIDGE_TOKEN ?? '';
+
 /**
- * One SharedWorker holds a single Upbit/Binance WebSocket shared across all tabs.
+ * One SharedWorker holds a single bridge WebSocket shared across all tabs.
  * Used when `typeof SharedWorker !== 'undefined'`.
  */
 export function createSharedWorkerSource(
@@ -27,6 +30,11 @@ export function createSharedWorkerSource(
   // Script load failures surface on the worker object, not the port.
   worker.onerror = () => onError();
 
+  // Bridge config is inlined here (Next bundle) and handed to the worker.
+  worker.port.postMessage({
+    type: 'init',
+    payload: { wsBase: WS_BASE, token: TOKEN },
+  });
   worker.port.postMessage({ type: 'ping' });
 
   return {

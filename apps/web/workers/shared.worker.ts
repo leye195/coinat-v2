@@ -1,15 +1,15 @@
 import BrowserPort from '@/lib/browser-port';
-import BinanceWebSocket from '@/lib/ws/binanceWS';
-import UpbitWebSocket from '@/lib/ws/upbitWS';
+import { buildPayload, createBook } from '@/lib/ws/bridgeMapper';
+import BridgeWebSocket, { type BridgeConfig } from '@/lib/ws/bridgeWS';
 
 const _self = self as unknown as SharedWorkerGlobalScope;
 
 // chrome://inspect/#workers
 
-const upbitSocket = new UpbitWebSocket();
-const binanceSocket = new BinanceWebSocket(); // BinanceSocket 생셩
-
+let bridge: BridgeWebSocket | null = null;
 let ports: BrowserPort[] = [];
+
+const emptyPayload = () => buildPayload(createBook());
 
 _self.onconnect = (e: MessageEvent) => {
   const port = new BrowserPort(e.ports[0]);
@@ -17,14 +17,17 @@ _self.onconnect = (e: MessageEvent) => {
   console.log('Port connected:', port);
 
   port.addEventListener('message', (e) => {
-    const { type } = e.data;
+    const { type, payload } = e.data;
+
+    if (type === 'init') {
+      // Config arrives from the main thread (env is inlined there, not in the tsc worker build).
+      if (!bridge && payload) bridge = new BridgeWebSocket(payload as BridgeConfig);
+      return;
+    }
 
     if (type === 'ping') {
-      ports.forEach((p) =>
-        p.postMessage({
-          type: 'pong',
-        }),
-      );
+      ports.forEach((p) => p.postMessage({ type: 'pong' }));
+      return;
     }
 
     if (type === 'disconnect') {
@@ -36,21 +39,8 @@ _self.onconnect = (e: MessageEvent) => {
 
     if (type === 'tickers') {
       try {
-        ports.forEach((p) =>
-          p.postMessage({
-            type: 'tickers',
-            payload: {
-              upbit: {
-                data: upbitSocket.data,
-                btcKrw: upbitSocket.btcKrw,
-              },
-              binance: {
-                data: binanceSocket.data,
-                btcKrw: binanceSocket.btcKrw,
-              },
-            },
-          }),
-        );
+        const data = bridge ? bridge.getPayload() : emptyPayload();
+        ports.forEach((p) => p.postMessage({ type: 'tickers', payload: data }));
       } catch (error) {
         console.error('Error sending data:', error);
       }
