@@ -1,21 +1,26 @@
 import BrowserPort from '@/lib/browser-port';
-import BinanceWebSocket from '@/lib/ws/binanceWS';
-import UpbitWebSocket from '@/lib/ws/upbitWS';
+import { buildPayload, createBook } from '@/lib/ws/bridgeMapper';
+import BridgeWebSocket from '@/lib/ws/bridgeWS';
 const _self = self;
 // chrome://inspect/#workers
-const upbitSocket = new UpbitWebSocket();
-const binanceSocket = new BinanceWebSocket(); // BinanceSocket 생셩
+let bridge = null;
 let ports = [];
+const emptyPayload = () => buildPayload(createBook());
 _self.onconnect = (e) => {
     const port = new BrowserPort(e.ports[0]);
     ports.push(port);
     console.log('Port connected:', port);
     port.addEventListener('message', (e) => {
-        const { type } = e.data;
+        const { type, payload } = e.data;
+        if (type === 'init') {
+            // Config arrives from the main thread (env is inlined there, not in the tsc worker build).
+            if (!bridge && payload)
+                bridge = new BridgeWebSocket(payload);
+            return;
+        }
         if (type === 'ping') {
-            ports.forEach((p) => p.postMessage({
-                type: 'pong',
-            }));
+            ports.forEach((p) => p.postMessage({ type: 'pong' }));
+            return;
         }
         if (type === 'disconnect') {
             ports = ports.filter((p) => p !== port);
@@ -25,19 +30,8 @@ _self.onconnect = (e) => {
         }
         if (type === 'tickers') {
             try {
-                ports.forEach((p) => p.postMessage({
-                    type: 'tickers',
-                    payload: {
-                        upbit: {
-                            data: upbitSocket.data,
-                            btcKrw: upbitSocket.btcKrw,
-                        },
-                        binance: {
-                            data: binanceSocket.data,
-                            btcKrw: binanceSocket.btcKrw,
-                        },
-                    },
-                }));
+                const data = bridge ? bridge.getPayload() : emptyPayload();
+                ports.forEach((p) => p.postMessage({ type: 'tickers', payload: data }));
             }
             catch (error) {
                 console.error('Error sending data:', error);
