@@ -29,7 +29,25 @@ _self.onconnect = (e) => {
         if (type === WorkerMsg.Tickers) {
             try {
                 const data = core.payload();
-                ports.forEach((p) => p.postMessage({ type: WorkerMsg.Tickers, payload: data }));
+                // Guard each send: a closed-but-not-GC'd port can throw, and one bad
+                // port must not stop the broadcast to the others. Drop the failed ones.
+                const alive = [];
+                ports.forEach((p) => {
+                    try {
+                        p.postMessage({ type: WorkerMsg.Tickers, payload: data });
+                        alive.push(p);
+                    }
+                    catch (error) {
+                        console.error('Dropping unreachable port:', error);
+                        try {
+                            p.close();
+                        }
+                        catch (_a) {
+                            // ignore
+                        }
+                    }
+                });
+                ports = alive;
             }
             catch (error) {
                 console.error('Error sending data:', error);

@@ -100,6 +100,36 @@ describe('BridgeWebSocket', () => {
     expect(MockWebSocket.last).toBeNull();
   });
 
+  it('skips null/non-object items inside a snapshot without throwing', () => {
+    const bridge = new BridgeWebSocket({ wsBase: 'wss://x', token: 't' });
+    const sock = MockWebSocket.last!;
+    expect(() =>
+      sock.onmessage?.({
+        data: JSON.stringify({
+          type: 'snapshot',
+          data: [
+            null,
+            42,
+            {
+              symbol: 'BTC',
+              exchange: 'upbit',
+              quote: 'KRW',
+              tradePrice: 9e7,
+              highPrice: 0,
+              lowPrice: 0,
+              openPrice: 0,
+              changePrice: 0,
+              changeRate: 0,
+              marketWarning: 'NONE',
+            },
+          ],
+        }),
+      }),
+    ).not.toThrow();
+    // The one valid record still landed.
+    expect(bridge.getPayload().upbit.btcKrw).toBe(9e7);
+  });
+
   it('close() detaches handlers and closes the socket', () => {
     const bridge = new BridgeWebSocket({ wsBase: 'wss://x', token: 't' });
     const sock = MockWebSocket.last!;

@@ -24,7 +24,17 @@ export default class BridgeWebSocket {
             this._isClosed = true;
             return;
         }
-        const socket = new WebSocket(this._url);
+        // Even a well-formed ws/wss url can throw (CSP/SecurityError, port limits).
+        // Stop reconnecting and let the ticker-source factory degrade to the next tier.
+        let socket;
+        try {
+            socket = new WebSocket(this._url);
+        }
+        catch (error) {
+            console.error('[BridgeWebSocket] failed to open ws:', error);
+            this._isClosed = true;
+            return;
+        }
         this._socket = socket;
         socket.onopen = () => {
             this._backoff = 1000;
@@ -52,12 +62,17 @@ export default class BridgeWebSocket {
         // `.type` access below, so bail unless we got an object.
         if (!msg || typeof msg !== 'object')
             return;
-        // Defensive: a malformed frame must not reach the mapper as undefined.
+        // Defensive: a null/non-object item would throw in the mapper (`t.exchange`),
+        // so validate each record before it reaches the book.
         if (msg.type === 'snapshot' && Array.isArray(msg.data)) {
-            for (const t of msg.data)
-                applyTicker(this._book, t);
+            for (const t of msg.data) {
+                if (t && typeof t === 'object')
+                    applyTicker(this._book, t);
+            }
         }
-        else if (msg.type === 'ticker' && msg.data) {
+        else if (msg.type === 'ticker' &&
+            msg.data &&
+            typeof msg.data === 'object') {
             applyTicker(this._book, msg.data);
         }
     }
