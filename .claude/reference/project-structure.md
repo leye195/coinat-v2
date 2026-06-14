@@ -4,7 +4,7 @@ Monorepo orchestrated by **Turbo** over **pnpm workspaces**.
 
 ## System context
 
-Real-time tickers stream **directly** from the browser's SharedWorker to the exchange WebSockets. REST data (candles, news, market, coin-info) is proxied through `apps/api`; some calls also hit the exchanges' REST APIs directly.
+Real-time tickers stream from the browser's SharedWorker over a **single WebSocket** to the unified 시세 브릿지, which aggregates the Upbit + Binance feeds server-side. REST data (candles, news, market, coin-info) is proxied through `apps/api`; some calls also hit the exchanges' REST APIs directly.
 
 ```mermaid
 flowchart TD
@@ -13,6 +13,7 @@ flowchart TD
         SW["SharedWorker<br/>shared.worker.ts"]
     end
     API["apps/api<br/>Next.js 15 (App Router)"]
+    BRIDGE["시세 브릿지<br/>/bridge/ws"]
     SUPA[(Supabase)]
     UPBIT["Upbit API"]
     BINANCE["Binance API"]
@@ -21,8 +22,9 @@ flowchart TD
     WEB -. "REST (direct)" .-> UPBIT
     WEB -. "REST (direct)" .-> BINANCE
     WEB <--> SW
-    SW == "WebSocket (real-time)" ==> UPBIT
-    SW == "WebSocket (real-time)" ==> BINANCE
+    SW == "WebSocket (real-time)" ==> BRIDGE
+    BRIDGE == "aggregates" ==> UPBIT
+    BRIDGE == "aggregates" ==> BINANCE
     API --> UPBIT
     API --> BINANCE
     API --> SUPA
@@ -50,7 +52,7 @@ flowchart LR
 - **`apps/web`** — Frontend. **Next.js 14** (14.2.x), React 18, TypeScript.
   - **State**: Zustand (global UI/coin state).
   - **Server state**: React Query / TanStack Query.
-  - **Real-time**: SharedWorker (`apps/web/workers/shared.worker.ts`) sharing WebSocket connections (Upbit, Binance) across tabs.
+  - **Real-time**: SharedWorker (`apps/web/workers/shared.worker.ts`) sharing a single bridge WebSocket (unified 시세 브릿지, aggregates Upbit + Binance server-side) across tabs.
   - **Charts**: Lightweight Charts (TradingView).
   - **Styling**: Tailwind CSS + Emotion; UI built on `ownui-system`.
 - **`apps/api`** — Backend. **Next.js 15** (15.3.x) App Router. Proxies/aggregates external crypto data (Upbit, Binance) and integrates Supabase (`@supabase/supabase-js`).
