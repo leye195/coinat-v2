@@ -1,3 +1,5 @@
+import { WorkerMsg } from '@/lib/ws/worker-messages';
+import { getBridgeConfig } from './bridgeConfig';
 import {
   TickerListener,
   TickerSource,
@@ -5,9 +7,6 @@ import {
 } from './types';
 
 const DEDICATED_WORKER_URL = '/public/workers/workers/dedicated.worker.js';
-
-const WS_BASE = process.env.NEXT_PUBLIC_BRIDGE_WS_BASE ?? '';
-const TOKEN = process.env.NEXT_PUBLIC_BRIDGE_TOKEN ?? '';
 
 /**
  * A per-tab Dedicated Worker running a single bridge WebSocket off the main thread.
@@ -23,19 +22,19 @@ export function createDedicatedWorkerSource(
 
   worker.onmessage = (event: MessageEvent) => {
     const { type, payload } = event.data ?? {};
-    if (type === 'tickers' && payload) onTickers(payload);
+    if (type === WorkerMsg.Tickers && payload) onTickers(payload);
   };
   worker.onmessageerror = () => onError();
   worker.onerror = () => onError();
 
   worker.postMessage({
-    type: 'init',
-    payload: { wsBase: WS_BASE, token: TOKEN },
+    type: WorkerMsg.Init,
+    payload: getBridgeConfig(),
   });
 
   return {
     requestTickers() {
-      worker.postMessage({ type: 'tickers' });
+      worker.postMessage({ type: WorkerMsg.Tickers });
     },
     disconnect() {
       worker.terminate();

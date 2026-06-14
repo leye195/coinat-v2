@@ -1,3 +1,5 @@
+import { WorkerMsg } from '@/lib/ws/worker-messages';
+import { getBridgeConfig } from './bridgeConfig';
 import {
   TickerListener,
   TickerSource,
@@ -6,9 +8,6 @@ import {
 
 // Keep the same path convention as the rest of the app (see SharedWorkerProvider history).
 const SHARED_WORKER_URL = '/public/workers/workers/shared.worker.js';
-
-const WS_BASE = process.env.NEXT_PUBLIC_BRIDGE_WS_BASE ?? '';
-const TOKEN = process.env.NEXT_PUBLIC_BRIDGE_TOKEN ?? '';
 
 /**
  * One SharedWorker holds a single bridge WebSocket shared across all tabs.
@@ -24,7 +23,7 @@ export function createSharedWorkerSource(
 
   worker.port.onmessage = (event: MessageEvent) => {
     const { type, payload } = event.data ?? {};
-    if (type === 'tickers' && payload) onTickers(payload);
+    if (type === WorkerMsg.Tickers && payload) onTickers(payload);
   };
   worker.port.onmessageerror = () => onError();
   // Script load failures surface on the worker object, not the port.
@@ -32,18 +31,18 @@ export function createSharedWorkerSource(
 
   // Bridge config is inlined here (Next bundle) and handed to the worker.
   worker.port.postMessage({
-    type: 'init',
-    payload: { wsBase: WS_BASE, token: TOKEN },
+    type: WorkerMsg.Init,
+    payload: getBridgeConfig(),
   });
-  worker.port.postMessage({ type: 'ping' });
+  worker.port.postMessage({ type: WorkerMsg.Ping });
 
   return {
     requestTickers() {
-      worker.port.postMessage({ type: 'tickers' });
+      worker.port.postMessage({ type: WorkerMsg.Tickers });
     },
     disconnect() {
       try {
-        worker.port.postMessage({ type: 'disconnect' });
+        worker.port.postMessage({ type: WorkerMsg.Disconnect });
       } catch {
         // port may already be gone
       }

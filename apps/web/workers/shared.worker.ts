@@ -1,15 +1,13 @@
 import BrowserPort from '@/lib/browser-port';
-import { buildPayload, createBook } from '@/lib/ws/bridgeMapper';
-import BridgeWebSocket, { type BridgeConfig } from '@/lib/ws/bridgeWS';
+import { BridgeWorkerCore } from '@/lib/ws/bridgeWorkerCore';
+import { WorkerMsg } from '@/lib/ws/worker-messages';
 
 const _self = self as unknown as SharedWorkerGlobalScope;
 
 // chrome://inspect/#workers
 
-let bridge: BridgeWebSocket | null = null;
+const core = new BridgeWorkerCore();
 let ports: BrowserPort[] = [];
-
-const emptyPayload = () => buildPayload(createBook());
 
 _self.onconnect = (e: MessageEvent) => {
   const port = new BrowserPort(e.ports[0]);
@@ -19,28 +17,28 @@ _self.onconnect = (e: MessageEvent) => {
   port.addEventListener('message', (e) => {
     const { type, payload } = e.data;
 
-    if (type === 'init') {
+    if (type === WorkerMsg.Init) {
       // Config arrives from the main thread (env is inlined there, not in the tsc worker build).
-      if (!bridge && payload) bridge = new BridgeWebSocket(payload as BridgeConfig);
+      core.init(payload);
       return;
     }
 
-    if (type === 'ping') {
-      ports.forEach((p) => p.postMessage({ type: 'pong' }));
+    if (type === WorkerMsg.Ping) {
+      ports.forEach((p) => p.postMessage({ type: WorkerMsg.Pong }));
       return;
     }
 
-    if (type === 'disconnect') {
+    if (type === WorkerMsg.Disconnect) {
       ports = ports.filter((p) => p !== port);
       port.close();
       console.log('Port disconnected:', port);
       return;
     }
 
-    if (type === 'tickers') {
+    if (type === WorkerMsg.Tickers) {
       try {
-        const data = bridge ? bridge.getPayload() : emptyPayload();
-        ports.forEach((p) => p.postMessage({ type: 'tickers', payload: data }));
+        const data = core.payload();
+        ports.forEach((p) => p.postMessage({ type: WorkerMsg.Tickers, payload: data }));
       } catch (error) {
         console.error('Error sending data:', error);
       }

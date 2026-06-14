@@ -1,8 +1,6 @@
 import BridgeWebSocket from '@/lib/ws/bridgeWS';
+import { getBridgeConfig } from './bridgeConfig';
 import { TickerListener, TickerSource } from './types';
-
-const WS_BASE = process.env.NEXT_PUBLIC_BRIDGE_WS_BASE ?? '';
-const TOKEN = process.env.NEXT_PUBLIC_BRIDGE_TOKEN ?? '';
 
 /**
  * Last-resort fallback: run the bridge WebSocket directly on the main thread.
@@ -11,7 +9,7 @@ const TOKEN = process.env.NEXT_PUBLIC_BRIDGE_TOKEN ?? '';
 export function createMainThreadSource(
   onTickers: TickerListener,
 ): TickerSource {
-  const bridge = new BridgeWebSocket({ wsBase: WS_BASE, token: TOKEN });
+  const bridge = new BridgeWebSocket(getBridgeConfig());
 
   return {
     requestTickers() {
