@@ -84,6 +84,22 @@ describe('BridgeWebSocket', () => {
     expect(p.binance.btcKrw).toBe(65000);
   });
 
+  it('ignores null / primitive frames without throwing', () => {
+    const bridge = new BridgeWebSocket({ wsBase: 'wss://x', token: 't' });
+    const sock = MockWebSocket.last!;
+    expect(() => sock.onmessage?.({ data: 'null' })).not.toThrow();
+    expect(() => sock.onmessage?.({ data: '42' })).not.toThrow();
+    expect(bridge.getPayload()).toEqual({
+      upbit: { data: { krw: {}, btc: {}, usdt: {} }, btcKrw: 0 },
+      binance: { data: { krw: {}, btc: {}, usdt: {} }, btcKrw: 0 },
+    });
+  });
+
+  it('does not open a socket when the ws url has an invalid scheme', () => {
+    new BridgeWebSocket({ wsBase: '', token: 't' });
+    expect(MockWebSocket.last).toBeNull();
+  });
+
   it('close() detaches handlers and closes the socket', () => {
     const bridge = new BridgeWebSocket({ wsBase: 'wss://x', token: 't' });
     const sock = MockWebSocket.last!;

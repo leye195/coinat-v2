@@ -16,6 +16,14 @@ export default class BridgeWebSocket {
     connect() {
         if (this._isClosed)
             return;
+        // A missing/misconfigured wsBase yields a non-ws URL; `new WebSocket` would
+        // throw a DOMException. Bail (and stop reconnecting) instead of crashing the
+        // worker/main thread — the ticker-source factory then degrades to the next tier.
+        if (!this._url.startsWith('ws://') && !this._url.startsWith('wss://')) {
+            console.error('[BridgeWebSocket] invalid ws url, not connecting:', this._url);
+            this._isClosed = true;
+            return;
+        }
         const socket = new WebSocket(this._url);
         this._socket = socket;
         socket.onopen = () => {
@@ -40,6 +48,10 @@ export default class BridgeWebSocket {
         catch (_a) {
             return;
         }
+        // Defensive: `JSON.parse('null')` / a primitive frame would throw on the
+        // `.type` access below, so bail unless we got an object.
+        if (!msg || typeof msg !== 'object')
+            return;
         // Defensive: a malformed frame must not reach the mapper as undefined.
         if (msg.type === 'snapshot' && Array.isArray(msg.data)) {
             for (const t of msg.data)
@@ -53,6 +65,10 @@ export default class BridgeWebSocket {
         if (this._isClosed)
             return;
         this._socket = null;
+        // Guard against stacking timers if onClose fires again before the pending
+        // reconnect runs — only one reconnect should ever be in flight.
+        if (this._reconnectTimer)
+            clearTimeout(this._reconnectTimer);
         this._reconnectTimer = setTimeout(() => {
             this._backoff = Math.min(this._backoff * 2, MAX_BACKOFF);
             this.connect();
