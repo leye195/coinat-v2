@@ -9,7 +9,7 @@ This file provides a comprehensive overview and instructional context for the Co
 - **`apps/web`**: Frontend application built with **Next.js 14**, React, and TypeScript.
   - **State Management**: **Zustand** for global UI/coin state.
   - **Data Fetching**: **React Query (TanStack Query)** for server state management.
-  - **Real-time Data**: Utilizes a **SharedWorker** (`shared.worker.ts`) to manage shared WebSocket connections (Upbit, Binance) across multiple browser tabs, reducing redundant network traffic.
+  - **Real-time Data**: Utilizes a **SharedWorker** (`shared.worker.ts`) to manage a single shared bridge WebSocket (the unified 시세 브릿지, which aggregates Upbit + Binance server-side) across multiple browser tabs, reducing redundant network traffic.
   - **Charts**: **Lightweight Charts** (TradingView) for financial data visualization.
   - **Styling**: **Tailwind CSS** combined with **Emotion** (CSS-in-JS). Uses a UI system called **ownui-system**.
   - **Build**: Custom build scripts exist for Web Workers (`pnpm build:workers`).

@@ -2,27 +2,24 @@
 
 ## Real-time data flow (SharedWorker)
 
-One SharedWorker holds a single Upbit and a single Binance WebSocket, shared across all browser tabs. Each tab connects via a `MessagePort` and polls with a `tickers` message; the worker broadcasts the latest data to every connected port.
+One SharedWorker holds a single **bridge WebSocket** — to the unified 시세 브릿지 (`/bridge/ws`), which aggregates the Upbit + Binance feeds server-side — shared across all browser tabs. Each tab connects via a `MessagePort` and polls with a `tickers` message; the worker maps the bridge's `UnifiedTicker` stream into the legacy `{ upbit, binance }` payload (`@/lib/ws/bridgeMapper`) and broadcasts it to every connected port.
 
 ```mermaid
 sequenceDiagram
     participant T1 as Tab 1 (store/socket.ts)
     participant T2 as Tab 2
     participant SW as SharedWorker<br/>(shared.worker.ts)
-    participant UP as Upbit WS
-    participant BN as Binance WS
+    participant BR as 시세 브릿지<br/>(/bridge/ws)
 
-    Note over SW,BN: Created once per worker
-    SW->>UP: connect
-    SW->>BN: connect
-    UP-->>SW: ticker stream
-    BN-->>SW: ticker stream
+    Note over SW,BR: Bridge socket created once per worker
+    SW->>BR: connect (token, symbols)
+    BR-->>SW: UnifiedTicker stream (snapshot + ticker)
 
     T1->>SW: onconnect (MessagePort)
     T2->>SW: onconnect (MessagePort)
 
     T1->>SW: { type: "tickers" }
-    SW-->>T1: { upbit, binance } (broadcast to all ports)
+    SW-->>T1: { upbit, binance } (mapped, broadcast to all ports)
     SW-->>T2: { upbit, binance }
 
     T1->>SW: { type: "ping" }
@@ -71,7 +68,7 @@ flowchart LR
 - **Monorepo**: Turbo for task orchestration; shared configs live in `packages/@repo/*`.
 - **API layer (web)**: `apps/web/src/api/index.ts` centralizes external/internal API calls (Axios).
 - **Data fetching**: prefer custom React Query hooks in `apps/web/src/hooks/queries/` for consistency and cache reuse.
-- **Real-time**: use the SharedWorker (`apps/web/workers/shared.worker.ts`) for ticker streams — do **not** open redundant WebSocket connections in the main thread. The bulk of socket/store logic lives in `apps/web/src/store/socket.ts` (large); `apps/web/src/store/coin.ts` is the small coin store.
+- **Real-time**: use the SharedWorker (`apps/web/workers/shared.worker.ts`) for ticker streams — do **not** open redundant WebSocket connections in the main thread. All tiers connect to the unified 시세 브릿지 via a single `BridgeWebSocket` (`@/lib/ws/bridgeWS.ts`). The bulk of socket/store logic lives in `apps/web/src/store/socket.ts` (large); `apps/web/src/store/coin.ts` is the small coin store.
 - **Error handling**: `react-error-boundary` + shared `ErrorMessage` components.
 - **Styling**: Tailwind for layout/utilities; Emotion for complex/dynamic styling.
 - **TypeScript**: strict typing across the codebase.

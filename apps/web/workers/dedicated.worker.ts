@@ -1,5 +1,5 @@
-import BinanceWebSocket from '@/lib/ws/binanceWS';
-import UpbitWebSocket from '@/lib/ws/upbitWS';
+import { BridgeWorkerCore } from '@/lib/ws/bridgeWorkerCore';
+import { WorkerMsg } from '@/lib/ws/worker-messages';
 
 // Dedicated Worker fallback for browsers without SharedWorker support.
 // Mirrors shared.worker.ts but serves a single page (no onconnect/ports).
@@ -10,27 +10,20 @@ const ctx = self as unknown as {
   postMessage: (message: unknown) => void;
 };
 
-const upbitSocket = new UpbitWebSocket();
-const binanceSocket = new BinanceWebSocket();
+const core = new BridgeWorkerCore();
 
 ctx.onmessage = (event: MessageEvent) => {
-  const { type } = event.data ?? {};
+  const { type, payload } = event.data ?? {};
 
-  if (type === 'tickers') {
+  if (type === WorkerMsg.Init) {
+    core.init(payload);
+    return;
+  }
+
+  if (type === WorkerMsg.Tickers) {
     try {
-      ctx.postMessage({
-        type: 'tickers',
-        payload: {
-          upbit: {
-            data: upbitSocket.data,
-            btcKrw: upbitSocket.btcKrw,
-          },
-          binance: {
-            data: binanceSocket.data,
-            btcKrw: binanceSocket.btcKrw,
-          },
-        },
-      });
+      const data = core.payload();
+      ctx.postMessage({ type: WorkerMsg.Tickers, payload: data });
     } catch (error) {
       console.error('Error sending data:', error);
     }

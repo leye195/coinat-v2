@@ -46,7 +46,7 @@ flowchart LR
     SRC -- TickerPayload --> P
     P -- setSocketState --> Store[(useCryptoSocketStore)]
 
-    A -. WebSocket .-> EX[Upbit / Binance]
+    A -. WebSocket .-> EX[시세 브릿지 /bridge/ws]
     B -. WebSocket .-> EX
     C -. WebSocket .-> EX
 ```
@@ -58,7 +58,12 @@ flowchart LR
 | `createTickerSource.ts` | Progressive factory: capability detection + watchdog downgrade |
 | `sharedWorkerSource.ts` | Tier 1 — `SharedWorker`, one WS shared across tabs |
 | `dedicatedWorkerSource.ts` | Tier 2 — per-tab `Worker`, off the main thread |
-| `mainThreadSource.ts` | Tier 3 — `UpbitWebSocket`/`BinanceWebSocket` on the main thread |
+| `mainThreadSource.ts` | Tier 3 — single `BridgeWebSocket` on the main thread |
+| `bridgeConfig.ts` | `getBridgeConfig()` — reads `NEXT_PUBLIC_BRIDGE_*` env, shared by all three tiers |
 | `types.ts` | `TickerSource`, `TickerPayload`, listener/error types |
+| `@/lib/ws/bridgeWS.ts` | `BridgeWebSocket` — one socket to the bridge, exposes `getPayload()` |
+| `@/lib/ws/bridgeMapper.ts` | Pure `UnifiedTicker` → `TickerPayload` mapping |
+| `@/lib/ws/bridgeWorkerCore.ts` | `BridgeWorkerCore` — shared bridge lazy-init + payload logic for both workers |
+| `@/lib/ws/worker-messages.ts` | `WorkerMsg` — message protocol constants (SSOT) shared by workers and sources |
 
-The worker tiers load the compiled workers from `apps/web/workers/` (`shared.worker.ts`, `dedicated.worker.ts`); the WebSocket clients (`@/lib/ws/*`) are reused unchanged across all three tiers.
+The worker tiers load the compiled workers from `apps/web/workers/` (`shared.worker.ts`, `dedicated.worker.ts`); all three tiers build a single `BridgeWebSocket` (`@/lib/ws/bridgeWS`) that connects to the unified 시세 브릿지 and maps `UnifiedTicker` → `TickerPayload` via `@/lib/ws/bridgeMapper`. Both workers share `BridgeWorkerCore` so their bridge lifecycle cannot drift apart. Bridge config (`wsBase`/`token`) is read from `NEXT_PUBLIC_*` env in the Next bundle via `getBridgeConfig()` (`bridgeConfig.ts`) — env is unavailable inside the tsc worker build, so the main-thread sources read it and pass it to the workers via an `init` message. Message types use the `WorkerMsg` constants (`@/lib/ws/worker-messages`) on both sides.
