@@ -1,1 +1,0 @@
-{"version":3,"file":"bridgeWorkerCore.d.ts","sourceRoot":"","sources":["../../../../../src/lib/ws/bridgeWorkerCore.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,2BAA2B,CAAC;AAI/D;;;;;;;GAOG;AACH,qBAAa,gBAAgB;IAC3B,OAAO,CAAC,MAAM,CAAgC;IAE9C,iFAAiF;IACjF,IAAI,CAAC,OAAO,EAAE,OAAO,GAAG,IAAI;IAM5B,mFAAmF;IACnF,OAAO,IAAI,aAAa;CAGzB"}
