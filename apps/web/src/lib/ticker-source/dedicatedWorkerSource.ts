@@ -6,7 +6,7 @@ import {
   TickerSourceErrorHandler,
 } from './types';
 
-const DEDICATED_WORKER_URL = '/public/workers/workers/dedicated.worker.js';
+const DEDICATED_WORKER_URL = '/workers/workers/dedicated.worker.js';
 
 /**
  * A per-tab Dedicated Worker running a single bridge WebSocket off the main thread.
