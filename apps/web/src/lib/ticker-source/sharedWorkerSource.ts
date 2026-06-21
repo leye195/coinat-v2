@@ -7,7 +7,7 @@ import {
 } from './types';
 
 // Keep the same path convention as the rest of the app (see SharedWorkerProvider history).
-const SHARED_WORKER_URL = '/public/workers/workers/shared.worker.js';
+const SHARED_WORKER_URL = '/workers/workers/shared.worker.js';
 
 /**
  * One SharedWorker holds a single bridge WebSocket shared across all tabs.
