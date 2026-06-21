@@ -41,11 +41,7 @@ const nextConfig = {
   },
   compiler: {
     emotion: true,
-    // `next build` sets NODE_ENV=production, so this strips console.* from
-    // production bundles regardless of NEXT_PUBLIC_ENV. console.error is kept
-    // for production diagnostics.
-    removeConsole:
-      process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
+    removeConsole: process.env.NEXT_PUBLIC_ENV === 'production',
   },
   images: {
     remotePatterns: [
