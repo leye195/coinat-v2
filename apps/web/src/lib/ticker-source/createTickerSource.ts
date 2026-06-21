@@ -79,8 +79,11 @@ export function createTickerSource(
     const activeIndex = index;
     settled = false;
 
+    console.log(`[ticker-source] trying tier: "${tier.kind}"`);
+
     const downgrade = () => {
       if (disposed || settled || index !== activeIndex) return;
+      console.log(`[ticker-source] tier "${tier.kind}" failed → downgrading`);
       clearWatchdog();
       try {
         current?.disconnect();
@@ -96,8 +99,13 @@ export function createTickerSource(
       // Ignore late payloads from a superseded tier.
       if (disposed || index !== activeIndex) return;
       // First successful payload locks in the current tier.
-      settled = true;
-      clearWatchdog();
+      if (!settled) {
+        settled = true;
+        clearWatchdog();
+        console.log(
+          `[ticker-source] ✅ tier "${tier.kind}" is running (first snapshot received)`,
+        );
+      }
       onTickers(payload);
     };
 

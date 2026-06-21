@@ -17,7 +17,11 @@ export function createSharedWorkerSource(
   onTickers: TickerListener,
   onError: TickerSourceErrorHandler,
 ): TickerSource {
-  const worker = new SharedWorker(new URL(SHARED_WORKER_URL, import.meta.url), {
+  // Pass the absolute path as a string so it resolves against the document's
+  // base URL (http origin). Do NOT wrap in `new URL(..., import.meta.url)`:
+  // webpack inlines `import.meta.url` as a `file://` path, which would resolve
+  // the worker to `file:///workers/...` and fail to load.
+  const worker = new SharedWorker(SHARED_WORKER_URL, {
     type: 'module',
   });
 
@@ -25,9 +29,20 @@ export function createSharedWorkerSource(
     const { type, payload } = event.data ?? {};
     if (type === WorkerMsg.Tickers && payload) onTickers(payload);
   };
-  worker.port.onmessageerror = () => onError();
+  worker.port.onmessageerror = (e) => {
+    console.error('[shared-worker] port messageerror:', e);
+    onError();
+  };
   // Script load failures surface on the worker object, not the port.
-  worker.onerror = () => onError();
+  worker.onerror = (e) => {
+    console.error('[shared-worker] onerror:', {
+      message: (e as ErrorEvent).message,
+      filename: (e as ErrorEvent).filename,
+      lineno: (e as ErrorEvent).lineno,
+      event: e,
+    });
+    onError();
+  };
 
   // Bridge config is inlined here (Next bundle) and handed to the worker.
   worker.port.postMessage({
