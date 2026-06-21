@@ -58,8 +58,8 @@ Details: `apps/web/src/lib/ticker-source/README.md`.
 
 ```mermaid
 flowchart LR
-    A[edit workers/*.ts] --> B["build:workers<br/>(tsc -p tsconfig.worker.json)"]
-    B --> C[public/workers/*.js<br/>ES modules]
+    A[edit workers/*.ts] --> B["build:workers<br/>(esbuild --bundle)"]
+    B --> C[public/workers/workers/*.js<br/>self-contained ESM]
     C --> D[next build]
     D --> E[.next output]
 ```
@@ -75,7 +75,8 @@ flowchart LR
 - **Formatting**: follow the Prettier/ESLint/Stylelint configs; run `pnpm lint` (and `lint:css` in web) to verify.
 
 ## Build Quirks
-- **Workers must compile before the Next build.** `build:workers` (`tsc -p tsconfig.worker.json`) emits to `public/workers/`. If you change anything under `apps/web/workers/`, rebuild (or run `watch:workers`).
+- **Workers must bundle before the Next build.** `build:workers` runs **esbuild** (`--bundle --format=esm`) over `workers/*.worker.ts` → self-contained `public/workers/workers/*.js`. tsc was insufficient: it leaves `@/` path aliases the browser can't resolve in a module worker. Rebuild (or `watch:workers`) after editing `apps/web/workers/`.
+- **Load workers by string path**, e.g. `new SharedWorker('/workers/workers/shared.worker.js', { type: 'module' })` — files in `public/` serve at `/` (no `/public` prefix). Avoid `new URL(path, import.meta.url)`: webpack inlines `import.meta.url` as a `file://` path, so the worker resolves to `file:///workers/...` and silently fails → every tier downgrades to main-thread.
 - **Hybrid routing in web**: `apps/web/src/app/` (App Router) and a legacy `apps/web/src/pages/` (Pages Router) coexist.
 - **api dev uses Turbopack** (`next dev --turbopack`).
 - **Env files** are per-app: `apps/web/.env.development`, `apps/api/.env.development` (Supabase URL + keys; see `apps/api/.env.example`). There is no root env file.

@@ -9,7 +9,8 @@
 ## Must-know rules
 
 - **Real-time data** flows through the SharedWorker (`apps/web/workers/shared.worker.ts`) — never open redundant WebSocket connections in the main thread.
-- **`apps/web` build compiles workers first**: `pnpm build` = `pnpm build:workers && next build`. After editing `apps/web/workers/`, rebuild (or run `watch:workers`).
+- **`apps/web` bundles workers first**: `pnpm build` = `pnpm build:workers && next build` — esbuild bundles `workers/*.worker.ts` into self-contained `public/workers/workers/*.js` (NOT tsc; tsc leaves unresolvable `@/` aliases). After editing `apps/web/workers/`, rebuild (or run `watch:workers`).
+- **Loading a worker**: pass the compiled path as a plain string — `new SharedWorker('/workers/workers/shared.worker.js', { type: 'module' })`. Do NOT wrap in `new URL(path, import.meta.url)` (webpack inlines `import.meta.url` as `file://` → fails to load). Served from `/workers/...` (no `/public` prefix).
 - **Data fetching**: use the centralized API layer (`apps/web/src/api/index.ts`) and React Query hooks in `apps/web/src/hooks/queries/`.
 - **Styling**: Tailwind for layout/utilities, Emotion for dynamic styles. Run `pnpm lint` + `pnpm lint:css` (web) before finishing.
 
