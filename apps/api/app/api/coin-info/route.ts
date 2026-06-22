@@ -1,6 +1,6 @@
 import { fetchJson, FetchJsonError } from "../lib/fetchJson";
 
-const API_URL = "https://api-manager.upbit.com/api/v1/coin_info";
+const API_URL = "https://api-manager.upbit.com/api/v1/coin_info/pub/";
 
 export async function GET(request: Request) {
   try {
