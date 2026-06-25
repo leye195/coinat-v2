@@ -1,17 +1,40 @@
 import BrowserPort from '@/lib/browser-port';
 import { BridgeWorkerCore } from '@/lib/ws/bridgeWorkerCore';
+import { reapDeadPorts } from '@/lib/ws/reapDeadPorts';
 import { WorkerMsg } from '@/lib/ws/worker-messages';
 
 const _self = self as unknown as SharedWorkerGlobalScope;
 
 // chrome://inspect/#workers
 
+const SWEEP_INTERVAL_MS = 10_000;
+
 const core = new BridgeWorkerCore();
 let ports: BrowserPort[] = [];
+let sweepTimer: ReturnType<typeof setInterval> | null = null;
+
+// Periodically drop ports whose MessagePort has been garbage-collected (the
+// owning tab is gone). The timer only runs while ports are connected so the
+// worker isn't pinned alive after the last tab leaves.
+function startSweep() {
+  if (sweepTimer) return;
+  sweepTimer = setInterval(() => {
+    ports = reapDeadPorts(ports);
+    stopSweepIfEmpty();
+  }, SWEEP_INTERVAL_MS);
+}
+
+function stopSweepIfEmpty() {
+  if (ports.length === 0 && sweepTimer) {
+    clearInterval(sweepTimer);
+    sweepTimer = null;
+  }
+}
 
 _self.onconnect = (e: MessageEvent) => {
   const port = new BrowserPort(e.ports[0]);
   ports.push(port);
+  startSweep();
   console.log('Port connected:', port);
 
   port.addEventListener('message', (e) => {
@@ -31,6 +54,7 @@ _self.onconnect = (e: MessageEvent) => {
     if (type === WorkerMsg.Disconnect) {
       ports = ports.filter((p) => p !== port);
       port.close();
+      stopSweepIfEmpty();
       console.log('Port disconnected:', port);
       return;
     }
@@ -55,6 +79,7 @@ _self.onconnect = (e: MessageEvent) => {
           }
         });
         ports = alive;
+        stopSweepIfEmpty();
       } catch (error) {
         console.error('Error sending data:', error);
       }
