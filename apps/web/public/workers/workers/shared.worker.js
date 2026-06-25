@@ -192,6 +192,18 @@ var BridgeWorkerCore = class {
   }
 };
 
+// src/lib/ws/reapDeadPorts.ts
+function reapDeadPorts(ports2) {
+  return ports2.filter((port) => {
+    if (port.isAlive()) return true;
+    try {
+      port.close();
+    } catch {
+    }
+    return false;
+  });
+}
+
 // src/lib/ws/worker-messages.ts
 var WorkerMsg = {
   Init: "init",
@@ -203,11 +215,27 @@ var WorkerMsg = {
 
 // workers/shared.worker.ts
 var _self = self;
+var SWEEP_INTERVAL_MS = 1e4;
 var core = new BridgeWorkerCore();
 var ports = [];
+var sweepTimer = null;
+function startSweep() {
+  if (sweepTimer) return;
+  sweepTimer = setInterval(() => {
+    ports = reapDeadPorts(ports);
+    stopSweepIfEmpty();
+  }, SWEEP_INTERVAL_MS);
+}
+function stopSweepIfEmpty() {
+  if (ports.length === 0 && sweepTimer) {
+    clearInterval(sweepTimer);
+    sweepTimer = null;
+  }
+}
 _self.onconnect = (e) => {
   const port = new BrowserPort(e.ports[0]);
   ports.push(port);
+  startSweep();
   console.log("Port connected:", port);
   port.addEventListener("message", (e2) => {
     const { type, payload } = e2.data;
@@ -222,6 +250,7 @@ _self.onconnect = (e) => {
     if (type === WorkerMsg.Disconnect) {
       ports = ports.filter((p) => p !== port);
       port.close();
+      stopSweepIfEmpty();
       console.log("Port disconnected:", port);
       return;
     }
@@ -242,6 +271,7 @@ _self.onconnect = (e) => {
           }
         });
         ports = alive;
+        stopSweepIfEmpty();
       } catch (error) {
         console.error("Error sending data:", error);
       }
