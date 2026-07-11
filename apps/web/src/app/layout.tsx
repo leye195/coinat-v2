@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { Suspense, type ReactNode } from 'react';
 import Initialize from '@/components/Initialize';
 import Layout from '@/components/Layout';
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </Suspense>
           <Layout>{children}</Layout>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
