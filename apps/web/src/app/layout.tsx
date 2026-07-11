@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Analytics } from '@vercel/analytics/next';
 import { Suspense, type ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 import Initialize from '@/components/Initialize';
 import Layout from '@/components/Layout';
 import { NavigationEvents } from '@/components/NavigationEvents';
