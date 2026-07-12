@@ -1,5 +1,5 @@
-import { Flex } from '@/components/Flex';
-import Skeleton from '@/components/Skeleton';
+import { Flex } from '@/components/ui/Flex';
+import Skeleton from '@/components/ui/Skeleton';
 
 export const CoinInfoSkeleton = () => {
   return (

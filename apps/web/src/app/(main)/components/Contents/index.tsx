@@ -1,9 +1,9 @@
 'use client';
 
-import CoinTable from '@/components/CoinTable';
 import { useTickersData } from '@/hooks';
 import { useCoinList } from '@/hooks';
 import { cn } from '@/lib/utils';
+import CoinTable from '../CoinTable';
 import MarketLinks from '../MarketLinks';
 
 export default function Contents() {

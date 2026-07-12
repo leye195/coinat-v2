@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Skeleton from '@/components/Skeleton';
+import Skeleton from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
 import FearGreed from './index';
 

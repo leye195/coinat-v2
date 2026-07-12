@@ -1,4 +1,4 @@
-import Header from '@/components/Layout/Header';
+import Header from '@/components/shell/Layout/Header';
 import { cn } from '@/lib/utils';
 
 type Props = {

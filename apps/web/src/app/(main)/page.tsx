@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Tab from '@/components/Tab';
+import Tab from '@/components/ui/Tab';
 import { cn } from '@/lib/utils';
 import Contents from './components/Contents';
 

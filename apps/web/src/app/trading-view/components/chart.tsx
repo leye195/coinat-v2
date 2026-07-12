@@ -4,21 +4,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Suspense, useEffect, useId, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import CoinInfo from '@/components/CoinInfo';
-import { CoinInfoSkeleton } from '@/components/CoinInfo/CoinInfoSkeleton';
-import { Divider } from '@/components/Divider';
-import { Flex } from '@/components/Flex';
-import MetaTags from '@/components/Metatags';
-import {
-  BtcCoinSelector,
-  KrwCoinSelector,
-  UsdtCoinSelector,
-} from '@/components/Selector';
-import Skeleton from '@/components/Skeleton';
-import Spacing from '@/components/Spacing';
-import Tab, { ActiveBar } from '@/components/Tab';
-import Text from '@/components/Text';
-import TradingViewChart from '@/components/TradingView';
+import MetaTags from '@/components/common/Metatags';
+import { Divider } from '@/components/ui/Divider';
+import { Flex } from '@/components/ui/Flex';
+import Skeleton from '@/components/ui/Skeleton';
+import Spacing from '@/components/ui/Spacing';
+import Tab, { ActiveBar } from '@/components/ui/Tab';
+import Text from '@/components/ui/Text';
 import { timeTabs } from '@/data/tab';
 import { useExchangeData } from '@/hooks';
 import { getCoins, getCoinSymbolImage } from '@/lib/coin';
@@ -26,7 +18,11 @@ import { Unit } from '@/lib/trading-view/utils';
 import { cn, formatPrice, setComma } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 import { Coin, TickerType } from '@/types/Coin';
+import CoinInfo from './CoinInfo';
+import { CoinInfoSkeleton } from './CoinInfo/CoinInfoSkeleton';
 import Loading from './loading';
+import { BtcCoinSelector, KrwCoinSelector, UsdtCoinSelector } from './Selector';
+import TradingViewChart from './TradingView';
 
 interface ChartProps {
   code: string;

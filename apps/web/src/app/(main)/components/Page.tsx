@@ -1,10 +1,10 @@
 'use client';
 
 import { Suspense } from 'react';
-import CoinTable from '@/components/CoinTable';
-import Tab from '@/components/Tab';
+import Tab from '@/components/ui/Tab';
 import { useCoinList, useTickersData } from '@/hooks';
 import { cn } from '@/lib/utils';
+import CoinTable from './CoinTable';
 import MarketLinks from './MarketLinks';
 
 const HomePage = () => {

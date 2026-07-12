@@ -1,6 +1,6 @@
 'use client';
 
-import Exchange from '@/components/Exchange';
+import Exchange from '@/components/shell/Exchange';
 import { exchangeHeader } from '@/data/table';
 import { useExchangeMetrics } from '@/hooks';
 import { cn, setComma } from '@/lib/utils';

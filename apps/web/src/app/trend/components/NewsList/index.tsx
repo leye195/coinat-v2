@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Button from '@/components/ui/Button';
+import { Divider } from '@/components/ui/Divider';
+import { Flex } from '@/components/ui/Flex';
 import { useNewsData } from '@/hooks';
-import Button from '../Button';
-import { Divider } from '../Divider';
-import { Flex } from '../Flex';
 import MainNews from '../News/MainNews';
 import SubNews from '../News/SubNews';
 

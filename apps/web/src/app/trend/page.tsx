@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import DailyVolumn from '@/components/DailyVolumn';
-import DailyVolumnSkeleton from '@/components/DailyVolumn/DailyVolumnSkeleton';
-import ErrorMessage from '@/components/ErrorMessage';
-import { Flex } from '@/components/Flex';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import { Flex } from '@/components/ui/Flex';
+import DailyVolumn from './components/DailyVolumn';
+import DailyVolumnSkeleton from './components/DailyVolumn/DailyVolumnSkeleton';
 import Page from './components/Page';
 
 export default async function TrendPage() {

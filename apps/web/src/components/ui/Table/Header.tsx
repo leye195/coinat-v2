@@ -1,4 +1,4 @@
-import { Flex } from '@/components/Flex';
+import { Flex } from '@/components/ui/Flex';
 import { cn } from '@/lib/utils';
 
 type Props = {
