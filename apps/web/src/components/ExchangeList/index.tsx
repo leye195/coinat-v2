@@ -9,7 +9,7 @@ function ExchangeList() {
   const exchangeData = useExchangeMetrics();
 
   return (
-    <section className="max-md:overflow-auto">
+    <section className="font-bold max-md:overflow-auto">
       <div
         className={cn(
           'flex gap-1 my-2 mx-0',
