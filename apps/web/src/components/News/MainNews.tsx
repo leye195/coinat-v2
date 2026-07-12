@@ -1,3 +1,6 @@
+'use client';
+
+import DOMPurify from 'dompurify';
 import { Flex } from '@/components/Flex';
 import Text from '@/components/Text';
 import { cn, relativeTime } from '@/lib/utils';
@@ -23,12 +26,13 @@ const MainNews = ({ data }: MainNewsProps) => {
         >
           {data.title}
         </Text>
-        <Text
+        <div
           className="line-clamp-4 max-h-16 overflow-hidden text-ellipsis break-all leading-5"
-          fontSize="12px"
-        >
-          {data.content.trim()}
-        </Text>
+          style={{ fontSize: '12px', color: 'black' }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(data.content.trim()),
+          }}
+        />
         <Flex alignItems="center" gap="6px">
           <Text fontSize="10px" color={palette.gray}>
             {data.company}

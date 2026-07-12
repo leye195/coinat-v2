@@ -96,6 +96,9 @@ importers:
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
+      dompurify:
+        specifier: ^3.4.12
+        version: 3.4.12
       es-toolkit:
         specifier: ^1.39.5
         version: 1.39.5
@@ -169,6 +172,9 @@ importers:
       '@types/color':
         specifier: ^3.0.6
         version: 3.0.6
+      '@types/dompurify':
+        specifier: ^3.2.0
+        version: 3.2.0
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.14
@@ -2347,6 +2353,10 @@ packages:
   '@types/detect-port@1.3.5':
     resolution: {integrity: sha512-Rf3/lB9WkDfIL9eEKaSYKc+1L/rNVYBjThk22JTqQw0YozXarX8YljFAz+HCoC6h4B4KwCMsBPZHaFezwT4BNA==}
 
+  '@types/dompurify@3.2.0':
+    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
+    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
+
   '@types/ejs@3.1.5':
     resolution: {integrity: sha512-nv+GSx77ZtXiJzwKdsASqi+YQ5Z7vwHsTP0JY2SiQgjGckkBRKZnk8nIM+7oUZ1VCtuTz0+By4qVR7fqzp/Dfg==}
 
@@ -2480,6 +2490,9 @@ packages:
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
+
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
 
   '@types/webidl-conversions@7.0.3':
     resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
@@ -3609,6 +3622,9 @@ packages:
   domhandler@5.0.3:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
+
+  dompurify@3.4.12:
+    resolution: {integrity: sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -9779,6 +9795,10 @@ snapshots:
 
   '@types/detect-port@1.3.5': {}
 
+  '@types/dompurify@3.2.0':
+    dependencies:
+      dompurify: 3.4.12
+
   '@types/ejs@3.1.5': {}
 
   '@types/emscripten@1.41.5': {}
@@ -9924,6 +9944,9 @@ snapshots:
       '@types/jest': 29.5.14
 
   '@types/tough-cookie@4.0.5': {}
+
+  '@types/trusted-types@2.0.7':
+    optional: true
 
   '@types/webidl-conversions@7.0.3': {}
 
@@ -11124,6 +11147,10 @@ snapshots:
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
+
+  dompurify@3.4.12:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
 
   domutils@3.2.2:
     dependencies:
@@ -13538,6 +13565,8 @@ snapshots:
       - '@emotion/is-prop-valid'
       - '@opentelemetry/api'
       - '@playwright/test'
+      - '@remix-run/react'
+      - '@sveltejs/kit'
       - '@types/react'
       - aws-crt
       - babel-plugin-macros
@@ -13545,10 +13574,14 @@ snapshots:
       - debug
       - encoding
       - immer
+      - nuxt
       - sass
       - supports-color
+      - svelte
       - use-sync-external-store
       - utf-8-validate
+      - vue
+      - vue-router
 
   p-limit@2.3.0:
     dependencies:
@@ -14999,10 +15032,12 @@ snapshots:
       '@fortawesome/free-solid-svg-icons': 6.7.2
       '@fortawesome/react-fontawesome': 0.2.2(@fortawesome/fontawesome-svg-core@6.7.2)(react@18.3.1)
       '@tanstack/react-query': 5.74.11(react@18.3.1)
+      '@vercel/analytics': 2.0.1(next@14.2.35(@babel/core@7.27.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       axios: 1.9.0
       clsx: 2.1.1
       color: 4.2.3
       date-fns: 2.30.0
+      dompurify: 3.4.12
       es-toolkit: 1.39.5
       lightweight-charts: 5.0.7
       lodash.sortby: 4.7.0
@@ -15024,6 +15059,8 @@ snapshots:
       - '@emotion/is-prop-valid'
       - '@opentelemetry/api'
       - '@playwright/test'
+      - '@remix-run/react'
+      - '@sveltejs/kit'
       - '@types/react'
       - aws-crt
       - babel-plugin-macros
@@ -15031,10 +15068,14 @@ snapshots:
       - debug
       - encoding
       - immer
+      - nuxt
       - sass
       - supports-color
+      - svelte
       - use-sync-external-store
       - utf-8-validate
+      - vue
+      - vue-router
 
   webidl-conversions@3.0.1: {}
 
