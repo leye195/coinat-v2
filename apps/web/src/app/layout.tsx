@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense, type ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/next';
+import ExchangeListServer from '@/components/ExchangeList/ExchangeList.server';
 import FearGreedServer from '@/components/FearGreed/FearGreed.server';
 import Initialize from '@/components/Initialize';
 import Layout from '@/components/Layout';
 import { NavigationEvents } from '@/components/NavigationEvents';
 import Providers from '@/components/Providers';
-import ExchangeListServer from './(main)/components/ExchangeList/ExchangeList.server';
 
 import '@/styles/globals.css';
 
