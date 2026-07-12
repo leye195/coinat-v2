@@ -4,9 +4,9 @@ import { PropsWithChildren, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import RootErrorBoundary from '@/components/common/RootErrorBoundary';
 import DevelopmentContainer from '@/components/shell/DevelopmentContainer';
-import SharedWorkerProvider from '@/components/shell/Providers/SharedWorkerProvider';
 import Button from '@/components/ui/Button';
 import { rootErrorHandler } from '@/lib/error';
+import SharedWorkerProvider from './SharedWorkerProvider';
 
 function Providers({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());

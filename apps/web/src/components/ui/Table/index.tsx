@@ -1,7 +1,7 @@
-import Cell from '@/components/ui/Table/Cell';
-import Header from '@/components/ui/Table/Header';
-import Row from '@/components/ui/Table/Row';
-import Skeleton from '@/components/ui/Table/Skeleton';
+import Cell from './Cell';
+import Header from './Header';
+import Row from './Row';
+import Skeleton from './Skeleton';
 
 type Props = {
   header: JSX.Element | React.ReactElement;
