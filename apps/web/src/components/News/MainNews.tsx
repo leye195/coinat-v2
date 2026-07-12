@@ -30,10 +30,11 @@ const MainNews = ({ data }: MainNewsProps) => {
           className={cn(
             'line-clamp-4 overflow-hidden text-ellipsis break-all leading-5',
             'text-[12px] text-black',
-            '[&>img]:hidden',
           )}
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(data.content.trim()),
+            __html: DOMPurify.sanitize(data.content.trim(), {
+              FORBID_TAGS: ['img'],
+            }),
           }}
         />
         <Flex alignItems="center" gap="6px">
