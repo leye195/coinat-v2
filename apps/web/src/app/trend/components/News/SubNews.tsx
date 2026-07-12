@@ -1,5 +1,5 @@
-import { Flex } from '@/components/Flex';
-import Text from '@/components/Text';
+import { Flex } from '@/components/ui/Flex';
+import Text from '@/components/ui/Text';
 import { cn, relativeTime } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 import type { News } from '@/types/News';

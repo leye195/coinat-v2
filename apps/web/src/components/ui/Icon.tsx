@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Skeleton from '@/components/Skeleton';
+import Skeleton from '@/components/ui/Skeleton';
 
 type Props = {
   name: string;

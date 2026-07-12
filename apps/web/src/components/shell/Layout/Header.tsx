@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Text from '@/components/Text';
+import Text from '@/components/ui/Text';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
 

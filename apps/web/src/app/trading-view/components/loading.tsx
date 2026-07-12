@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { Flex } from '@/components/Flex';
-import Skeleton from '@/components/Skeleton';
+import { Flex } from '@/components/ui/Flex';
+import Skeleton from '@/components/ui/Skeleton';
 
 interface LoadingProps extends PropsWithChildren {
   isLoading: boolean;

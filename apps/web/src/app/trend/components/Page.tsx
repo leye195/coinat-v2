@@ -2,19 +2,19 @@
 
 import { ReactNode, Suspense, useCallback, useId, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Divider } from '@/components/Divider';
-import ErrorMessage from '@/components/ErrorMessage';
-import { Flex } from '@/components/Flex';
-import MarketCapTable from '@/components/MarketCapTable';
-import NewsSkeleton from '@/components/News/NewsSkeleton';
-import NewsList from '@/components/NewsList';
-import Tab, { ActiveBar } from '@/components/Tab';
-import TableSkeleton from '@/components/Table/Skeleton';
-import Text from '@/components/Text';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import { Divider } from '@/components/ui/Divider';
+import { Flex } from '@/components/ui/Flex';
+import Tab, { ActiveBar } from '@/components/ui/Tab';
+import TableSkeleton from '@/components/ui/Table/Skeleton';
+import Text from '@/components/ui/Text';
 import { newsTabs } from '@/data/tab';
 import { useMount } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
+import MarketCapTable from './MarketCapTable';
+import NewsSkeleton from './News/NewsSkeleton';
+import NewsList from './NewsList';
 
 type TrendPageProps = {
   dailyAskVolumn: ReactNode;

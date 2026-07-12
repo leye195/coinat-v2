@@ -1,6 +1,6 @@
-import { Divider } from '@/components/Divider';
-import { Flex } from '@/components/Flex';
-import Skeleton from '@/components/Skeleton';
+import { Divider } from '@/components/ui/Divider';
+import { Flex } from '@/components/ui/Flex';
+import Skeleton from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
 
 const NewsSkeleton = () => {

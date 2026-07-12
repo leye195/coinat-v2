@@ -1,5 +1,5 @@
-import Header from '@/components/Layout/Header';
 import { cn } from '@/lib/utils';
+import Header from './Header';
 
 type Props = {
   children?: React.ReactNode;

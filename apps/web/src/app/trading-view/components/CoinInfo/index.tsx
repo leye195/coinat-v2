@@ -1,11 +1,11 @@
 import { useId, memo } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getCoinInfo } from '@/api';
-import { Flex } from '@/components/Flex';
-import MultilineText from '@/components/MultilineText';
-import { SectionWithTitle } from '@/components/SectionWithTitle';
-import Table from '@/components/Table';
-import Text from '@/components/Text';
+import { Flex } from '@/components/ui/Flex';
+import MultilineText from '@/components/ui/MultilineText';
+import { SectionWithTitle } from '@/components/ui/SectionWithTitle';
+import Table from '@/components/ui/Table';
+import Text from '@/components/ui/Text';
 
 type Props = {
   code: string;

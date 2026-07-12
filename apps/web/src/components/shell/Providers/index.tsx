@@ -2,11 +2,11 @@
 
 import { PropsWithChildren, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import DevelopmentContainer from '@/components/DevelopmentContainer';
-import SharedWorkerProvider from '@/components/Providers/SharedWorkerProvider';
-import RootErrorBoundary from '@/components/RootErrorBoundary';
+import RootErrorBoundary from '@/components/common/RootErrorBoundary';
+import DevelopmentContainer from '@/components/shell/DevelopmentContainer';
+import Button from '@/components/ui/Button';
 import { rootErrorHandler } from '@/lib/error';
-import Button from '../Button';
+import SharedWorkerProvider from './SharedWorkerProvider';
 
 function Providers({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
