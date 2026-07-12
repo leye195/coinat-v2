@@ -20,17 +20,21 @@ const MainNews = ({ data }: MainNewsProps) => {
     <Flex className={cn('flex-1 cursor-pointer')} onClick={onClick}>
       <Flex flexDirection="column" gap="8px">
         <Text
-          className="line-clamp-1 max-h-5 text-ellipsis break-all"
+          className="line-clamp-1 text-ellipsis break-all"
           fontSize="14px"
           fontWeight={800}
         >
           {data.title}
         </Text>
         <div
-          className="line-clamp-4 max-h-16 overflow-hidden text-ellipsis break-all leading-5"
-          style={{ fontSize: '12px', color: 'black' }}
+          className={cn(
+            'line-clamp-4 overflow-hidden text-ellipsis break-all leading-5',
+            'text-[12px] text-black',
+          )}
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(data.content.trim()),
+            __html: DOMPurify.sanitize(data.content.trim(), {
+              FORBID_TAGS: ['img'],
+            }),
           }}
         />
         <Flex alignItems="center" gap="6px">
