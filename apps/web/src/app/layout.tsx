@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense, type ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/next';
+import FearGreedServer from '@/components/FearGreed/FearGreed.server';
 import Initialize from '@/components/Initialize';
 import Layout from '@/components/Layout';
 import { NavigationEvents } from '@/components/NavigationEvents';
 import Providers from '@/components/Providers';
+import ExchangeListServer from './(main)/components/ExchangeList/ExchangeList.server';
 
 import '@/styles/globals.css';
 
@@ -28,7 +30,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Suspense>
             <NavigationEvents />
           </Suspense>
-          <Layout>{children}</Layout>
+          <Layout>
+            <FearGreedServer />
+            <ExchangeListServer />
+            {children}
+          </Layout>
         </Providers>
         <Analytics />
       </body>
