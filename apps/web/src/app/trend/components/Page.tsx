@@ -86,7 +86,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
         }
       >
         <Suspense fallback={<NewsSkeleton />}>
-          <NewsList category={activeTab.name} />
+          <NewsList key={activeTab.name} category={activeTab.name} />
         </Suspense>
       </ErrorBoundary>
       <Flex className="max-md:!flex-col" gap="8px" isFull>
