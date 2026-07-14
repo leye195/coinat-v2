@@ -192,7 +192,20 @@ const useUpbitDataFeed = ({
       chartRef.current = null;
       seriesRef.current = null;
     };
-  }, [containerRef, colors]);
+    // colors intentionally omitted: theme changes are applied via applyOptions
+    // below so the chart is not recreated (avoids flicker / losing zoom state).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef]);
+
+  // ✅ 테마 변경 시 차트를 재생성하지 않고 색상 옵션만 갱신
+  useEffect(() => {
+    chartRef.current?.applyOptions({
+      layout: {
+        background: { type: ColorType.Solid, color: colors.backgroundColor },
+        textColor: colors.textColor,
+      },
+    });
+  }, [colors]);
 
   // ✅ 단위가 바뀌었을 때 데이터 교체
   useEffect(() => {

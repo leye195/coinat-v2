@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/store/theme';
 
@@ -41,11 +41,19 @@ const ThemeToggle = () => {
   const theme = useThemeStore((state) => state.theme);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
   const hydrate = useThemeStore((state) => state.hydrate);
+  const [mounted, setMounted] = useState(false);
 
   // Sync the store with the theme the pre-paint inline script already applied.
   useEffect(() => {
     hydrate();
+    setMounted(true);
   }, [hydrate]);
+
+  // Until mounted, the store still holds its default ('light'); render a
+  // same-size placeholder to avoid an icon flip / layout shift on hydration.
+  if (!mounted) {
+    return <div className={cn('w-8 h-8', 'max-md:w-7 max-md:h-7')} />;
+  }
 
   const isDark = theme === 'dark';
 

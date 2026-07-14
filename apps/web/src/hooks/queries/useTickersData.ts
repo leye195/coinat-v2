@@ -85,7 +85,7 @@ const useTickerData = ({
     const trimmed = keyword.trim().toLowerCase();
     if (!trimmed) return sortedData;
     return sortedData.filter(({ symbol }) =>
-      symbol.toLowerCase().includes(trimmed),
+      symbol?.toLowerCase().includes(trimmed),
     );
   }, [sortedData, keyword]);
 
