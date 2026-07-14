@@ -8,7 +8,7 @@ export default function FearGreedServer() {
     <section
       className={cn(
         'flex justify-between items-center',
-        'p-3 mt-2 bg-white border border-[#d0d0d0] font-semibold',
+        'p-3 mt-2 bg-surface border border-border font-semibold',
         'max-md:p-2 max-md:mt-0 max-md:text-sm',
         'max-sm:text-[11px]',
       )}

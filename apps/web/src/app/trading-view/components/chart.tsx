@@ -105,7 +105,7 @@ export default function Chart({ code, type }: ChartProps) {
         )} ${code.toUpperCase()}/${type === 'BTC' ? 'BTC' : 'KRW'}`}
       />
       <Flex
-        className="bg-white p-3"
+        className="bg-surface p-3"
         isFull
         flexDirection="column"
         justifyContent="center"
@@ -207,7 +207,7 @@ export default function Chart({ code, type }: ChartProps) {
         </Flex>
       </Flex>
       <Spacing size="16px" type="vertical" />
-      <Flex className="mt-2 bg-white" isFull justifyContent="space-between">
+      <Flex className="mt-2 bg-surface" isFull justifyContent="space-between">
         <Tab.Group>
           {timeTabs.map(({ name, value }, idx) => (
             <Tab.Button

@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component<PropsWithChildren, State> {
       // You can render any custom fallback UI
       return (
         <div className={cn('flex flex-col items-center justify-center', 'p-6')}>
-          <h1 className="text-[2rem] text-black">Something went wrong.</h1>
+          <h1 className="text-[2rem] text-fg">Something went wrong.</h1>
           <Button
             className={cn(
               'mt-4 bg-blue-600 border border-blue-600',
@@ -39,7 +39,7 @@ class ErrorBoundary extends React.Component<PropsWithChildren, State> {
             <div
               className={cn(
                 'w-full max-w-[492px] mt-6',
-                'bg-white text-xl rounded-lg shadow-[0_8px_24px_0_rgba(153,156,178,0.1)]',
+                'bg-surface text-xl rounded-lg shadow-[0_8px_24px_0_rgba(153,156,178,0.1)]',
               )}
             >
               <div
@@ -47,7 +47,7 @@ class ErrorBoundary extends React.Component<PropsWithChildren, State> {
                   'overflow-y-auto w-full min-h-[200px] max-h-[300px]',
                 )}
               >
-                <p className={cn('m-0 p-5 text-black')}>{error.stack}</p>
+                <p className={cn('m-0 p-5 text-fg')}>{error.stack}</p>
               </div>
             </div>
           )}

@@ -2,7 +2,7 @@ import Skeleton from '@/components/ui/Skeleton';
 
 const TableSkeleton = () => {
   return (
-    <div className="mt-3 w-full bg-white p-2">
+    <div className="mt-3 w-full bg-surface p-2">
       <Skeleton width="100%" height={52} borderRadius="8px" />
       <Skeleton
         width="100%"

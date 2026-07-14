@@ -60,7 +60,7 @@ const UsdtCoinSelector = ({ code }: UsdtCoinSelectorProps) => {
         <Dropdown.Content>
           <Dropdown.Body
             className={cn(
-              'min-w-[180px] bg-white',
+              'min-w-[180px] bg-surface',
               'max-md:min-w-[150px] h-[300px] overflow-auto scroll-m-0',
             )}
           >

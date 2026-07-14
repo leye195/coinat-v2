@@ -58,9 +58,12 @@ export const spacing: Spacing = Object.keys(spacingNumber).reduce(
 
 /*Palette*/
 export const palette = {
+  // Concrete colors: also consumed by Lightweight Charts (canvas), where CSS
+  // variables do not resolve. Up/down semantics are identical in both themes.
   red: '#ef5350',
   blue: '#0062df',
-  black: '#000000',
+  // Text tokens (DOM only) — theme-aware via CSS variables.
+  black: 'var(--color-fg)',
   white: '#ffffff',
-  gray: '#999',
+  gray: 'var(--color-fg-muted)',
 };

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import ThemeToggle from '@/components/shell/ThemeToggle';
 import Text from '@/components/ui/Text';
 import { cn } from '@/lib/utils';
 import { palette } from '@/styles/variables';
@@ -39,12 +40,13 @@ const Header = () => {
             </div>
           </Link>
         </div>
-        <div>
+        <div className={cn('flex items-center gap-2')}>
           <Link href="/trend">
             <Text fontSize="14px" color={palette.white}>
               코인동향
             </Text>
           </Link>
+          <ThemeToggle />
         </div>
       </nav>
     </div>

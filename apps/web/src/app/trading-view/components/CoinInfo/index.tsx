@@ -27,7 +27,7 @@ const CoinInfo = ({ code }: Props) => {
   return (
     <Flex
       flexDirection="column"
-      className="min-h-[550px] bg-white px-3 py-5"
+      className="min-h-[550px] bg-surface px-3 py-5"
       justifyContent="center"
       gap="32px"
       isFull
@@ -132,7 +132,7 @@ const CoinInfo = ({ code }: Props) => {
             }
             className="gap-2"
           >
-            <MultilineText className="text-gray-400 max-sm:text-xs">
+            <MultilineText className="text-fg-muted max-sm:text-xs">
               {info.detail.content}
             </MultilineText>
           </SectionWithTitle>

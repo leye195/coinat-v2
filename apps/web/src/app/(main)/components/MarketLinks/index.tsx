@@ -59,7 +59,7 @@ export default function MarketLinks() {
               <Dropdown.Content>
                 <Dropdown.Body
                   className={cn(
-                    'min-w-[180px] bg-white',
+                    'min-w-[180px] bg-surface',
                     'max-md:min-w-[150px]',
                   )}
                 >

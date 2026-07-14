@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss';
 const plugin = require('tailwindcss/plugin');
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -18,6 +19,15 @@ const config: Config = {
       xl: '1265px',
     },
     extend: {
+      colors: {
+        bg: 'var(--color-bg)',
+        surface: 'var(--color-surface)',
+        fg: 'var(--color-fg)',
+        'fg-muted': 'var(--color-fg-muted)',
+        border: 'var(--color-border)',
+        up: 'var(--color-up)',
+        down: 'var(--color-down)',
+      },
       keyframes: {
         skeleton: {
           from: {

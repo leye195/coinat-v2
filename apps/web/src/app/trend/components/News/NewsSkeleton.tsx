@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 const NewsSkeleton = () => {
   return (
     <Flex
-      className="min-h-[500px] bg-white px-3 py-6"
+      className="min-h-[500px] bg-surface px-3 py-6"
       isFull
       flexDirection="column"
       gap="12px"

@@ -20,7 +20,7 @@ const Text = ({
       style={{
         fontSize: fontSize ?? '16px',
         fontWeight: fontWeight ?? 400,
-        color: color ?? 'black',
+        color: color ?? 'var(--color-fg)',
       }}
     >
       {children}
