@@ -13,7 +13,7 @@ const Button = ({
   return (
     <button
       className={cn(
-        'bg-white text-black p-2 w-auto',
+        'bg-surface text-fg p-2 w-auto',
         'cursor-pointer disabled:cursor-not-allowed',
         className,
       )}

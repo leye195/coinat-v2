@@ -15,6 +15,7 @@ import { useUpbitSeriesData } from 'hooks/queries/useUpbitCandles';
 import { getUpbitCandles } from '@/api';
 import { getCandleKey, getUnitKey } from '@/lib/trading-view/utils';
 import { useCryptoSocketStore } from '@/store/socket';
+import { useThemeStore } from '@/store/theme';
 import { palette } from '@/styles/variables';
 import { TickerType } from '@/types/Coin';
 
@@ -36,12 +37,13 @@ const useUpbitDataFeed = ({
   const isFetchingRef = useRef(false);
   const priceSymbol = type === 'BTC' ? 'BTC' : 'KRW';
 
+  const theme = useThemeStore((state) => state.theme);
   const colors = useMemo(
-    () => ({
-      backgroundColor: 'white',
-      textColor: 'black',
-    }),
-    [],
+    () =>
+      theme === 'dark'
+        ? { backgroundColor: '#191b21', textColor: '#e6e6e6' } // --color-surface / --color-fg (dark)
+        : { backgroundColor: '#ffffff', textColor: '#000000' }, // --color-surface / --color-fg (light)
+    [theme],
   );
 
   const seriesDataMap = useUpbitSeriesData({

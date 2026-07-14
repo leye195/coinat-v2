@@ -49,7 +49,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
       gap="8px"
     >
       <Flex
-        className="bg-white p-3"
+        className="bg-surface p-3"
         alignItems="center"
         justifyContent="space-between"
         isFull
@@ -72,7 +72,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
       <ErrorBoundary
         fallback={
           <Flex
-            className="my-auto min-h-[500px] bg-white"
+            className="my-auto min-h-[500px] bg-surface"
             isFull
             alignItems="center"
             justifyContent="center"
@@ -92,7 +92,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
       <Flex className="max-md:!flex-col" gap="8px" isFull>
         <div
           className={cn(
-            'px-3 py-6 flex flex-col w-full h-auto bg-white flex-1',
+            'px-3 py-6 flex flex-col w-full h-auto bg-surface flex-1',
           )}
         >
           <div>
@@ -107,7 +107,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
         </div>
         <div
           className={cn(
-            'px-3 py-6 flex flex-col w-full h-auto bg-white flex-1',
+            'px-3 py-6 flex flex-col w-full h-auto bg-surface flex-1',
           )}
         >
           <div>
@@ -122,7 +122,7 @@ const TrendPage = ({ dailyAskVolumn, dailyBidVolumn }: TrendPageProps) => {
         </div>
       </Flex>
       <Flex
-        className="min-h-[500px] bg-white px-3 py-6"
+        className="min-h-[500px] bg-surface px-3 py-6"
         isFull
         flexDirection="column"
       >

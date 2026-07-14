@@ -1,3 +1,25 @@
+:root {
+  color-scheme: light;
+  --color-bg: #ededed;
+  --color-surface: #ffffff;
+  --color-fg: #000000;
+  --color-fg-muted: #999999;
+  --color-border: #d0d0d0;
+  --color-up: #ef5350;
+  --color-down: #0062df;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-bg: #0e0f13;
+  --color-surface: #191b21;
+  --color-fg: #e6e6e6;
+  --color-fg-muted: #8a8f99;
+  --color-border: #2b2e37;
+  --color-up: #ff5b57;
+  --color-down: #4b8bff;
+}
+
 * {
   box-sizing: border-box;
   line-height: 1.5;
@@ -17,7 +39,8 @@ body,
 }
 
 body {
-  background-color: #ededed;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
 }
 
 a {

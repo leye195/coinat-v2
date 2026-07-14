@@ -5,7 +5,7 @@ const Group = ({ children, className }: ComponentProps<'div'>) => {
   return (
     <div
       className={cn(
-        'flex items-center bg-white relative [&_*]:flex-1',
+        'flex items-center bg-surface relative [&_*]:flex-1',
         className,
       )}
     >

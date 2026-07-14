@@ -13,7 +13,7 @@ const Cell = ({ children, color, width }: CellProps) => {
         'text-[var(--color)] w-[var(--width)]',
       )}
       style={{
-        '--color': color ?? '#000000',
+        '--color': color ?? 'var(--color-fg)',
         '--width': width ?? '30%',
       }}
     >

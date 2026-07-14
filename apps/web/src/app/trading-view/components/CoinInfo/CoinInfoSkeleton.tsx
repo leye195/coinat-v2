@@ -5,7 +5,7 @@ export const CoinInfoSkeleton = () => {
   return (
     <Flex
       flexDirection="column"
-      className="min-h-[550px] bg-white px-3 py-5"
+      className="min-h-[550px] bg-surface px-3 py-5"
       gap="32px"
       isFull
     >

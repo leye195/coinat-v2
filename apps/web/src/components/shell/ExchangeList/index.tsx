@@ -14,7 +14,7 @@ function ExchangeList() {
         className={cn(
           'flex gap-1 my-2 mx-0',
           'max-md:w-full max-md:gap-0 max-md:my-1',
-          'max-md:border max-md:border-[#d0d0d0] max-md:bg-white',
+          'max-md:border max-md:border-border max-md:bg-surface',
           'max-sm:hidden max-sm:py-0 max-sm:px-1',
         )}
       >
@@ -48,7 +48,7 @@ function ExchangeList() {
         className={cn(
           'hidden gap-1 my-2 mx-0',
           'max-md:w-full max-md:gap-0 max-md:my-1',
-          'max-md:border max-md:border-[#d0d0d0] max-md:bg-white',
+          'max-md:border max-md:border-border max-md:bg-surface',
           'max-sm:flex max-sm:py-0 max-sm:px-1',
         )}
       >

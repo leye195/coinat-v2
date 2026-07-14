@@ -13,7 +13,7 @@ const ErrorMessage = ({ title, description, className }: Props) => {
   return (
     <Flex
       className={cn(
-        'w-full rounded-md border border-gray-200 bg-white p-4',
+        'w-full rounded-md border border-border bg-surface p-4',
         className,
       )}
       flexDirection="column"

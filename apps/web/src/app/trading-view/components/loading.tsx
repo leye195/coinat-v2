@@ -9,7 +9,7 @@ interface LoadingProps extends PropsWithChildren {
 export default function Loading({ isLoading, children }: LoadingProps) {
   if (isLoading) {
     return (
-      <Flex isFull className="bg-white p-[4px]">
+      <Flex isFull className="bg-surface p-[4px]">
         <Skeleton width="100%" height="300px" />
       </Flex>
     );
