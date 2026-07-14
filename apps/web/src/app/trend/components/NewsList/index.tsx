@@ -69,7 +69,7 @@ function NewsList({ category }: NewsListProps) {
       </Flex>
       {rest.length > visibleCount && (
         <Button
-          className="mt-2 self-center rounded border border-border px-6 hover:bg-gray-50"
+          className="mt-2 self-center rounded border border-border px-6 hover:bg-gray-50 dark:hover:bg-neutral-800"
           onClick={onClickMore}
           aria-label="뉴스 더보기"
         >

@@ -40,17 +40,15 @@ const MoonIcon = () => (
 const ThemeToggle = () => {
   const theme = useThemeStore((state) => state.theme);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
-  const hydrate = useThemeStore((state) => state.hydrate);
   const [mounted, setMounted] = useState(false);
 
-  // Sync the store with the theme the pre-paint inline script already applied.
+  // The store initializes from the DOM on the client, but SSR/first client
+  // render is always 'light'; render a same-size placeholder until mounted to
+  // avoid a hydration mismatch and an icon flip / layout shift.
   useEffect(() => {
-    hydrate();
     setMounted(true);
-  }, [hydrate]);
+  }, []);
 
-  // Until mounted, the store still holds its default ('light'); render a
-  // same-size placeholder to avoid an icon flip / layout shift on hydration.
   if (!mounted) {
     return <div className={cn('w-8 h-8', 'max-md:w-7 max-md:h-7')} />;
   }

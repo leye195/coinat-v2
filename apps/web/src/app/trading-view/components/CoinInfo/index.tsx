@@ -132,7 +132,7 @@ const CoinInfo = ({ code }: Props) => {
             }
             className="gap-2"
           >
-            <MultilineText className="text-gray-400 max-sm:text-xs">
+            <MultilineText className="text-fg-muted max-sm:text-xs">
               {info.detail.content}
             </MultilineText>
           </SectionWithTitle>
