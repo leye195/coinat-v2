@@ -23,9 +23,10 @@ import { TickerType } from '@/types/Coin';
 type Props = {
   coinList: CombinedTickers[];
   handleSort: (type: Sort) => () => void;
+  isLoading?: boolean;
 };
 
-const CoinTable = ({ coinList, handleSort }: Props) => {
+const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
   const { type } = useCoinStore();
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
 
@@ -112,7 +113,18 @@ const CoinTable = ({ coinList, handleSort }: Props) => {
       }
       body={
         !filteredCointList.length ? (
-          <Table.Skeleton />
+          isLoading ? (
+            <Table.Skeleton />
+          ) : (
+            <div
+              className={cn(
+                'w-full bg-surface py-10',
+                'text-center text-sm text-fg-muted',
+              )}
+            >
+              검색 결과가 없습니다.
+            </div>
+          )
         ) : (
           <>
             {filteredCointList.map((data) => (

@@ -27,6 +27,7 @@ const useTickerData = ({
 }: UseTickerDataProps) => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [sortType, setSortType] = useState(INIT_SORT_TYPE);
+  const [keyword, setKeyword] = useState('');
 
   const { type } = useCoinStore();
   const { combineTickers } = useCryptoSocketStore();
@@ -79,9 +80,20 @@ const useTickerData = ({
     );
   }, [data, selectedType, sortType]);
 
+  const filteredData = useMemo(() => {
+    if (!sortedData) return undefined;
+    const trimmed = keyword.trim().toLowerCase();
+    if (!trimmed) return sortedData;
+    return sortedData.filter(({ symbol }) =>
+      symbol.toLowerCase().includes(trimmed),
+    );
+  }, [sortedData, keyword]);
+
   return {
-    data: sortedData,
+    data: filteredData,
     handleSort,
+    keyword,
+    setKeyword,
     ...rest,
   };
 };
