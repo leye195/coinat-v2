@@ -12,7 +12,8 @@ const Header = ({ name, width, right, onClick }: Props) => {
   return (
     <div
       className={cn(
-        'flex items-center cursor-pointer',
+        'flex items-center',
+        onClick && 'cursor-pointer',
         'px-2 py-3 font-normal w-[var(--width)]',
         'max-lg:text-[14px] max-md:text-[12px] max-sm:text-[10px]',
       )}

@@ -40,7 +40,12 @@ const Header = () => {
             </div>
           </Link>
         </div>
-        <div className={cn('flex items-center gap-2')}>
+        <div className={cn('flex items-center gap-3')}>
+          <Link href="/watchlist">
+            <Text fontSize="14px" color={palette.white}>
+              관심종목
+            </Text>
+          </Link>
           <Link href="/trend">
             <Text fontSize="14px" color={palette.white}>
               코인동향
