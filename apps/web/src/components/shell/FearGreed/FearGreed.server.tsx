@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import Skeleton from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
 import FearGreed from './index';
@@ -14,11 +15,13 @@ export default function FearGreedServer() {
       )}
     >
       <div className="inline-flex">
-        <Suspense
-          fallback={<Skeleton width="100%" height={20} borderRadius="4px" />}
-        >
-          <FearGreed />
-        </Suspense>
+        <ErrorBoundary fallback={null}>
+          <Suspense
+            fallback={<Skeleton width="100%" height={20} borderRadius="4px" />}
+          >
+            <FearGreed />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </section>
   );
