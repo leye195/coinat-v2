@@ -4,6 +4,7 @@ import { Icon } from 'ownui-system';
 import { useMedia } from 'react-use';
 import { faStar as UnLiked } from '@fortawesome/free-regular-svg-icons';
 import { faStar as Liked } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@/components/ui/Button';
 import Spacing from '@/components/ui/Spacing';
@@ -22,12 +23,32 @@ import { TickerType } from '@/types/Coin';
 
 type Props = {
   coinList: CombinedTickers[];
-  handleSort: (type: Sort) => () => void;
+  handleSort?: (type: Sort) => () => void;
   isLoading?: boolean;
+  // When provided, the leading star toggle is replaced with a remove (x) button
+  // and the favorite-sorting is skipped — used by the watchlist group cards,
+  // where rows come pre-scoped to a group and are removed, not favorited.
+  onRemove?: (symbol: string) => void;
+  emptyMessage?: string;
+  // Pin the table to a specific market instead of the global coin-store type
+  // (the watchlist shows KRW/BTC/USDT cards side by side, each with its own).
+  marketType?: TickerType;
+  // Drop the outer border so it can render inside another bordered card.
+  bare?: boolean;
 };
 
-const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
-  const { type } = useCoinStore();
+const CoinTable = ({
+  coinList,
+  handleSort,
+  isLoading = false,
+  onRemove,
+  emptyMessage = '검색 결과가 없습니다.',
+  marketType,
+  bare = false,
+}: Props) => {
+  const { type: storeType } = useCoinStore();
+  const type = marketType ?? storeType;
+  const isRemoveVariant = !!onRemove;
   const isSmDown = useMedia(getBreakpointQuery(breakpoints.down('sm')), false);
 
   const { value: krwFavList, updateValue: updateKrwFavList } = useLocalStorage<
@@ -78,6 +99,11 @@ const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
   };
 
   const filteredCointList = useMemo(() => {
+    if (isRemoveVariant) {
+      // Watchlist group card: keep the caller-provided order as-is.
+      return coinList.filter((data) => data.symbol !== 'BTC');
+    }
+
     return [
       ...coinList.filter(
         (data) => data.symbol !== 'BTC' && isFavSymbol(data.symbol),
@@ -86,17 +112,20 @@ const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
         (data) => data.symbol !== 'BTC' && !isFavSymbol(data.symbol),
       ),
     ];
-  }, [coinList, isFavSymbol]);
+  }, [coinList, isFavSymbol, isRemoveVariant]);
 
   return (
     <Table
+      bare={bare}
       header={
         <>
           {TABLE_HEADERS.map((name, idx) => (
             <Table.Header
               key={name}
               name={
-                idx > 0 && idx < 3
+                // The watchlist card already shows the market as a badge, so
+                // drop the redundant (₩/BTC/USDT) suffix there to save space.
+                idx > 0 && idx < 3 && !isRemoveVariant
                   ? `${name}(${
                       MARKET_SYMBOLS[idx === 1 ? 'upbit' : 'binance'][
                         type as TickerType
@@ -104,9 +133,13 @@ const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
                     })`
                   : name
               }
-              right={<Icon name="ArrowUpDown" size={14} />}
+              right={
+                isRemoveVariant ? undefined : (
+                  <Icon name="ArrowUpDown" size={14} />
+                )
+              }
               width="25%"
-              onClick={handleSort(sortColumn[idx])}
+              onClick={handleSort ? handleSort(sortColumn[idx]) : undefined}
             />
           ))}
         </>
@@ -122,23 +155,42 @@ const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
                 'text-center text-sm text-fg-muted',
               )}
             >
-              검색 결과가 없습니다.
+              {emptyMessage}
             </div>
           )
         ) : (
           <>
             {filteredCointList.map((data) => (
-              <Table.Row key={data.symbol}>
+              <Table.Row
+                key={data.symbol}
+                className={cn(
+                  isRemoveVariant &&
+                    'py-1.5 border-b border-border/70 last:border-b-0 hover:bg-bg transition-colors',
+                )}
+              >
                 <Table.Cell>
                   <div
                     className={cn('flex items-center gap-2', 'max-sm:gap-0.5')}
                   >
-                    <Button className="p-0" onClick={toggleFav(data.symbol)}>
-                      <FontAwesomeIcon
-                        className="text-[#e2be1b]"
-                        icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
-                      />
-                    </Button>
+                    {isRemoveVariant ? (
+                      <Button
+                        className={cn(
+                          'p-0 bg-transparent text-fg-muted transition-colors',
+                          'hover:text-[#ef5350]',
+                        )}
+                        aria-label={`${data.symbol} 관심목록에서 제거`}
+                        onClick={() => onRemove?.(data.symbol)}
+                      >
+                        <FontAwesomeIcon icon={faXmark} />
+                      </Button>
+                    ) : (
+                      <Button className="p-0" onClick={toggleFav(data.symbol)}>
+                        <FontAwesomeIcon
+                          className="text-[#e2be1b]"
+                          icon={isFavSymbol(data.symbol) ? Liked : UnLiked}
+                        />
+                      </Button>
+                    )}
                     <Spacing size="4px" />
                     <Link
                       className={cn('flex items-center gap-1 cursor-pointer')}
@@ -153,7 +205,12 @@ const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
                           height={20}
                         />
                       </picture>
-                      <Text fontSize={isSmDown ? 14 : 16}>{data.symbol}</Text>
+                      <Text
+                        fontSize={isRemoveVariant ? 13 : isSmDown ? 14 : 16}
+                        fontWeight={isRemoveVariant ? 600 : undefined}
+                      >
+                        {data.symbol}
+                      </Text>
                     </Link>
                   </div>
                 </Table.Cell>
@@ -195,7 +252,12 @@ const CoinTable = ({ coinList, handleSort, isLoading = false }: Props) => {
                   }
                 >
                   <div className={cn('flex flex-col')}>
-                    <p className="m-0">{setComma(data?.per ?? 0)}%</p>
+                    <p
+                      className={cn('m-0', isRemoveVariant && 'font-semibold')}
+                    >
+                      {isRemoveVariant && (data?.per ?? 0) > 0 ? '+' : ''}
+                      {setComma(data?.per ?? 0)}%
+                    </p>
                   </div>
                 </Table.Cell>
               </Table.Row>
