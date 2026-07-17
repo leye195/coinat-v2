@@ -100,7 +100,9 @@ const AddCoinModal = ({
           </div>
 
           <ul
-            className={cn('mt-3 px-2 pb-2 overflow-y-auto flex-1 max-h-[320px]')}
+            className={cn(
+              'mt-3 px-2 pb-2 overflow-y-auto flex-1 max-h-[320px]',
+            )}
           >
             {filtered.length === 0 ? (
               <li
