@@ -68,16 +68,16 @@ const WatchlistPage = () => {
         coinData: krwCoinData || [],
       },
       {
-        key: 'BTC',
-        label: 'BTC',
-        tickerMap: toMap(combineTickers(watchedByMarket.BTC, 'BTC')),
-        coinData: btcCoinData || [],
-      },
-      {
         key: 'USDT',
         label: 'USDT',
         tickerMap: toMap(combineTickers(watchedByMarket.USDT, 'USDT')),
         coinData: usdtCoinData || [],
+      },
+      {
+        key: 'BTC',
+        label: 'BTC',
+        tickerMap: toMap(combineTickers(watchedByMarket.BTC, 'BTC')),
+        coinData: btcCoinData || [],
       },
     ],
     // `tickers` drives the live update; combineTickers reads the latest snapshot.
@@ -100,7 +100,7 @@ const WatchlistPage = () => {
             관심종목
           </h1>
           <p className={cn('m-0 mt-1 text-sm text-fg-muted')}>
-            마켓(KRW·BTC·USDT)별 시세를 한 화면에서 확인하세요.
+            마켓(KRW·USDT·BTC)별 시세를 한 화면에서 확인하세요.
           </p>
         </div>
 
