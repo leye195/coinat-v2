@@ -86,7 +86,10 @@ export const useWatchlistStore = create<State & Action>()(
             ...group,
             markets: {
               ...group.markets,
-              [market]: removeDuplicate([...group.markets[market], symbol]),
+              [market]: removeDuplicate([
+                ...(group.markets[market] || []),
+                symbol,
+              ]),
             },
           })),
         }));
@@ -97,7 +100,9 @@ export const useWatchlistStore = create<State & Action>()(
             ...group,
             markets: {
               ...group.markets,
-              [market]: group.markets[market].filter((s) => s !== symbol),
+              [market]: (group.markets[market] || []).filter(
+                (s) => s !== symbol,
+              ),
             },
           })),
         }));
@@ -111,15 +116,15 @@ export const useWatchlistStore = create<State & Action>()(
               ...group,
               markets: {
                 KRW: removeDuplicate([
-                  ...group.markets.KRW,
+                  ...(group.markets.KRW || []),
                   ...(legacy.KRW ?? []),
                 ]),
                 BTC: removeDuplicate([
-                  ...group.markets.BTC,
+                  ...(group.markets.BTC || []),
                   ...(legacy.BTC ?? []),
                 ]),
                 USDT: removeDuplicate([
-                  ...group.markets.USDT,
+                  ...(group.markets.USDT || []),
                   ...(legacy.USDT ?? []),
                 ]),
               },

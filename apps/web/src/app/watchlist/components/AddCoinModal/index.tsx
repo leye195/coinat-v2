@@ -36,7 +36,7 @@ const AddCoinModal = ({
 
   const filtered = useMemo(() => {
     const trimmed = keyword.trim().toLowerCase();
-    const list = coinData.filter(({ name }) => name !== 'BTC');
+    const list = (coinData || []).filter(({ name }) => name !== 'BTC');
     if (!trimmed) return list;
     return list.filter(({ name }) => name.toLowerCase().includes(trimmed));
   }, [coinData, keyword]);

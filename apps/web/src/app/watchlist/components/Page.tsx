@@ -45,30 +45,51 @@ const WatchlistPage = () => {
     seedFromLegacy({ KRW: krwFav, BTC: btcFav });
   }, [seeded, seedFromLegacy]);
 
+  // Only the coins actually watched (across all groups) per market — combining
+  // tickers over the full universe every socket tick would be wasteful.
+  const watchedByMarket = useMemo(() => {
+    const pick = (market: TickerType, universe: Coin[]) => {
+      const watched = new Set(groups.flatMap((g) => g.markets?.[market] || []));
+      return (universe || []).filter((coin) => watched.has(coin.name));
+    };
+    return {
+      KRW: pick('KRW', krwCoinData),
+      BTC: pick('BTC', btcCoinData),
+      USDT: pick('USDT', usdtCoinData),
+    };
+  }, [groups, krwCoinData, btcCoinData, usdtCoinData]);
+
   const markets = useMemo<MarketView[]>(
     () => [
       {
         key: 'KRW',
         label: 'KRW',
-        tickerMap: toMap(combineTickers(krwCoinData, 'KRW')),
-        coinData: krwCoinData,
+        tickerMap: toMap(combineTickers(watchedByMarket.KRW, 'KRW')),
+        coinData: krwCoinData || [],
       },
       {
         key: 'BTC',
         label: 'BTC',
-        tickerMap: toMap(combineTickers(btcCoinData, 'BTC')),
-        coinData: btcCoinData,
+        tickerMap: toMap(combineTickers(watchedByMarket.BTC, 'BTC')),
+        coinData: btcCoinData || [],
       },
       {
         key: 'USDT',
         label: 'USDT',
-        tickerMap: toMap(combineTickers(usdtCoinData, 'USDT')),
-        coinData: usdtCoinData,
+        tickerMap: toMap(combineTickers(watchedByMarket.USDT, 'USDT')),
+        coinData: usdtCoinData || [],
       },
     ],
     // `tickers` drives the live update; combineTickers reads the latest snapshot.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [combineTickers, krwCoinData, btcCoinData, usdtCoinData, tickers],
+    [
+      combineTickers,
+      krwCoinData,
+      btcCoinData,
+      usdtCoinData,
+      watchedByMarket,
+      tickers,
+    ],
   );
 
   return (
