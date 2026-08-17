@@ -12,13 +12,16 @@ const Icon = ({ name, width, height, borderRadius = '8px' }: Props) => {
   const ref = useRef<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsLoading(true);
-    import(`../../public/assets/icons/${name}.svg`).then((mod) => {
-      ref.current = mod.default;
-      setIsLoading(false);
-    });
-  }, [name]);
+  useEffect(
+    function loadIconModule() {
+      setIsLoading(true);
+      import(`../../public/assets/icons/${name}.svg`).then((mod) => {
+        ref.current = mod.default;
+        setIsLoading(false);
+      });
+    },
+    [name],
+  );
 
   if (ref.current) {
     const { current: SVG } = ref;

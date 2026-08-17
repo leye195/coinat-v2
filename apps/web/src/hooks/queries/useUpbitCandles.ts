@@ -79,11 +79,14 @@ const useUpbitCandles = ({
     },
   });
 
-  useEffect(() => {
-    if (!data || !enabled || !isFetched) return;
+  useEffect(
+    function notifyCandlesLoaded() {
+      if (!data || !enabled || !isFetched) return;
 
-    onSuccess?.(data);
-  }, [enabled, data, onSuccess, isFetched]);
+      onSuccess?.(data);
+    },
+    [enabled, data, onSuccess, isFetched],
+  );
 
   return { data, isFetched, ...rest };
 };

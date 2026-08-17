@@ -45,7 +45,7 @@ const ThemeToggle = () => {
   // The store initializes from the DOM on the client, but SSR/first client
   // render is always 'light'; render a same-size placeholder until mounted to
   // avoid a hydration mismatch and an icon flip / layout shift.
-  useEffect(() => {
+  useEffect(function markMounted() {
     setMounted(true);
   }, []);
 

@@ -74,23 +74,29 @@ export default function Chart({ code, type }: ChartProps) {
     });
   };
 
-  useEffect(() => {
-    const checkCodeValidation = async () => {
-      const response = await getCoins(type === 'BTC' ? 'BTC' : 'KRW');
-      const data = response.find((item: Coin) => item.name === code);
+  useEffect(
+    function redirectOnUnknownCode() {
+      const checkCodeValidation = async () => {
+        const response = await getCoins(type === 'BTC' ? 'BTC' : 'KRW');
+        const data = response.find((item: Coin) => item.name === code);
 
-      if (!data) {
-        navigate.replace('/');
-        return;
-      }
-    };
+        if (!data) {
+          navigate.replace('/');
+          return;
+        }
+      };
 
-    checkCodeValidation();
-  }, [code, navigate, type]);
+      checkCodeValidation();
+    },
+    [code, navigate, type],
+  );
 
-  useEffect(() => {
-    setActiveTimeTab(DEFAULT_TAB);
-  }, [code]);
+  useEffect(
+    function resetTimeTabOnCodeChange() {
+      setActiveTimeTab(DEFAULT_TAB);
+    },
+    [code],
+  );
 
   return (
     <Flex

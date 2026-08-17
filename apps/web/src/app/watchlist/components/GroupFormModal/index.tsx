@@ -25,9 +25,12 @@ const GroupFormModal = ({
 }: Props) => {
   const [name, setName] = useState(initialName);
 
-  useEffect(() => {
-    if (isOpen) setName(initialName);
-  }, [isOpen, initialName]);
+  useEffect(
+    function syncNameOnOpen() {
+      if (isOpen) setName(initialName);
+    },
+    [isOpen, initialName],
+  );
 
   const handleSubmit = () => {
     const trimmed = name.trim();
