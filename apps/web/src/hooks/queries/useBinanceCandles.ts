@@ -58,11 +58,14 @@ const useBinanceCandles = ({
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (!data || !enabled) return;
+  useEffect(
+    function notifyCandlesLoaded() {
+      if (!data || !enabled) return;
 
-    onSuccess?.(data);
-  }, [data, enabled, onSuccess]);
+      onSuccess?.(data);
+    },
+    [data, enabled, onSuccess],
+  );
 
   return {
     data,

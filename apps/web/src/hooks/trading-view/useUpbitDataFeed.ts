@@ -163,106 +163,121 @@ const useUpbitDataFeed = ({
     }, 1000);
   }, [fetchPreviousCandles]);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+  useEffect(
+    function createChartInstance() {
+      if (!containerRef.current) return;
 
-    // ✅ 차트 생성
-    const chart = createChart(containerRef.current, {
-      layout: {
-        background: { type: ColorType.Solid, color: colors.backgroundColor },
-        textColor: colors.textColor,
-      },
+      // ✅ 차트 생성
+      const chart = createChart(containerRef.current, {
+        layout: {
+          background: { type: ColorType.Solid, color: colors.backgroundColor },
+          textColor: colors.textColor,
+        },
 
-      width: containerRef.current.clientWidth,
-      height: 300,
-    });
-    chartRef.current = chart;
+        width: containerRef.current.clientWidth,
+        height: 300,
+      });
+      chartRef.current = chart;
 
-    // ✅ 리사이즈 대응
-    const handleResize = () => {
-      if (containerRef.current) {
-        chart.applyOptions({ width: containerRef.current.clientWidth });
-      }
-    };
-    window.addEventListener('resize', handleResize);
+      // ✅ 리사이즈 대응
+      const handleResize = () => {
+        if (containerRef.current) {
+          chart.applyOptions({ width: containerRef.current.clientWidth });
+        }
+      };
+      window.addEventListener('resize', handleResize);
 
-    return () => {
-      chart.remove();
-      window.removeEventListener('resize', handleResize);
-      chartRef.current = null;
-      seriesRef.current = null;
-    };
+      return () => {
+        chart.remove();
+        window.removeEventListener('resize', handleResize);
+        chartRef.current = null;
+        seriesRef.current = null;
+      };
+    },
     // colors intentionally omitted: theme changes are applied via applyOptions
     // below so the chart is not recreated (avoids flicker / losing zoom state).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef]);
+    [containerRef],
+  );
 
   // ✅ 테마 변경 시 차트를 재생성하지 않고 색상 옵션만 갱신
-  useEffect(() => {
-    chartRef.current?.applyOptions({
-      layout: {
-        background: { type: ColorType.Solid, color: colors.backgroundColor },
-        textColor: colors.textColor,
-      },
-    });
-  }, [colors]);
+  useEffect(
+    function applyThemeColors() {
+      chartRef.current?.applyOptions({
+        layout: {
+          background: { type: ColorType.Solid, color: colors.backgroundColor },
+          textColor: colors.textColor,
+        },
+      });
+    },
+    [colors],
+  );
 
   // ✅ 단위가 바뀌었을 때 데이터 교체
-  useEffect(() => {
-    if (!chartRef.current) return;
+  useEffect(
+    function replaceCandleSeries() {
+      if (!chartRef.current) return;
 
-    // 기존 시리즈 제거
-    if (seriesRef.current) {
-      chartRef.current.removeSeries(seriesRef.current);
-      seriesRef.current = null;
-    }
-
-    // 새 시리즈 생성
-    const newSeries = chartRef.current.addSeries(CandlestickSeries, {
-      upColor: palette.red,
-      downColor: palette.blue,
-      wickUpColor: palette.red,
-      wickDownColor: palette.blue,
-      borderVisible: false,
-      priceFormat: {
-        type: 'price',
-        precision: type === 'BTC' ? 10 : 2, // 보여줄 소수점 자릿수
-        minMove: type === 'BTC' ? 0.0000000001 : 0.001, // 최소 단위
-      },
-    });
-    newSeries.setData(seriesData); // 새로운 단위 데이터 반영
-
-    seriesRef.current = newSeries;
-    chartRef.current.timeScale().fitContent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unit, code, type, JSON.stringify(seriesData)]);
-
-  useEffect(() => {
-    if (!wsData || wsData?.open === 0) return;
-
-    seriesRef.current?.update(wsData);
-  }, [wsData]);
-
-  useEffect(() => {
-    if (!chartRef.current) return;
-
-    const handleRangeChange = (range: LogicalRange | null) => {
-      if (!range) return;
-
-      if (range.from < 30) {
-        throttledFetch(); // 👈 여기서 호출
+      // 기존 시리즈 제거
+      if (seriesRef.current) {
+        chartRef.current.removeSeries(seriesRef.current);
+        seriesRef.current = null;
       }
-    };
 
-    const timeScale = chartRef.current.timeScale();
-    timeScale.fitContent();
-    timeScale.subscribeVisibleLogicalRangeChange(handleRangeChange);
+      // 새 시리즈 생성
+      const newSeries = chartRef.current.addSeries(CandlestickSeries, {
+        upColor: palette.red,
+        downColor: palette.blue,
+        wickUpColor: palette.red,
+        wickDownColor: palette.blue,
+        borderVisible: false,
+        priceFormat: {
+          type: 'price',
+          precision: type === 'BTC' ? 10 : 2, // 보여줄 소수점 자릿수
+          minMove: type === 'BTC' ? 0.0000000001 : 0.001, // 최소 단위
+        },
+      });
+      newSeries.setData(seriesData); // 새로운 단위 데이터 반영
 
-    return () => {
-      timeScale.unsubscribeVisibleLogicalRangeChange(handleRangeChange);
-      throttledFetch.cancel?.();
-    };
-  }, [throttledFetch]);
+      seriesRef.current = newSeries;
+      chartRef.current.timeScale().fitContent();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [unit, code, type, JSON.stringify(seriesData)],
+  );
+
+  useEffect(
+    function updateLastCandleFromSocket() {
+      if (!wsData || wsData?.open === 0) return;
+
+      seriesRef.current?.update(wsData);
+    },
+    [wsData],
+  );
+
+  useEffect(
+    function subscribeVisibleRange() {
+      if (!chartRef.current) return;
+
+      const handleRangeChange = (range: LogicalRange | null) => {
+        if (!range) return;
+
+        if (range.from < 30) {
+          throttledFetch(); // 👈 여기서 호출
+        }
+      };
+
+      const timeScale = chartRef.current.timeScale();
+      timeScale.fitContent();
+      timeScale.subscribeVisibleLogicalRangeChange(handleRangeChange);
+
+      return () => {
+        timeScale.unsubscribeVisibleLogicalRangeChange(handleRangeChange);
+        throttledFetch.cancel?.();
+      };
+    },
+    [throttledFetch],
+  );
 
   return {
     chart: chartRef.current,

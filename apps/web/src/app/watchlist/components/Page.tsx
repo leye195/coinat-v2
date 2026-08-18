@@ -38,12 +38,15 @@ const WatchlistPage = () => {
 
   // One-time, non-destructive migration of the legacy per-market favorites
   // into the default group, keeping each market's list separate.
-  useEffect(() => {
-    if (seeded) return;
-    const krwFav: string[] = getLocalStorageData('krwfav') ?? [];
-    const btcFav: string[] = getLocalStorageData('btcfav') ?? [];
-    seedFromLegacy({ KRW: krwFav, BTC: btcFav });
-  }, [seeded, seedFromLegacy]);
+  useEffect(
+    function seedGroupsFromLegacyFavorites() {
+      if (seeded) return;
+      const krwFav: string[] = getLocalStorageData('krwfav') ?? [];
+      const btcFav: string[] = getLocalStorageData('btcfav') ?? [];
+      seedFromLegacy({ KRW: krwFav, BTC: btcFav });
+    },
+    [seeded, seedFromLegacy],
+  );
 
   // Only the coins actually watched (across all groups) per market — combining
   // tickers over the full universe every socket tick would be wasteful.

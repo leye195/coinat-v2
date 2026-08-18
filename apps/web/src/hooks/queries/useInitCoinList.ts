@@ -11,23 +11,26 @@ type UseInitCointListProps = {
 const useInitCoinList = ({ initialData }: UseInitCointListProps) => {
   const { setList, isLoading } = useCoinStore();
 
-  useEffect(() => {
-    if (
-      initialData.krw.length === 0 ||
-      initialData.btc.length === 0 ||
-      !isLoading
-    ) {
-      return;
-    }
+  useEffect(
+    function hydrateCoinStore() {
+      if (
+        initialData.krw.length === 0 ||
+        initialData.btc.length === 0 ||
+        !isLoading
+      ) {
+        return;
+      }
 
-    const { krw, btc, usdt } = initialData;
+      const { krw, btc, usdt } = initialData;
 
-    setList({
-      krw,
-      btc,
-      usdt,
-    });
-  }, [initialData, isLoading, setList]);
+      setList({
+        krw,
+        btc,
+        usdt,
+      });
+    },
+    [initialData, isLoading, setList],
+  );
 };
 
 export default useInitCoinList;

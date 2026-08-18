@@ -23,37 +23,40 @@ export default function SharedWorkerProvider({ children }: PropsWithChildren) {
     refetchInterval: 1000,
   });
 
-  useEffect(() => {
-    if (!isMounted) return;
+  useEffect(
+    function connectTickerSource() {
+      if (!isMounted) return;
 
-    // Progressive source: SharedWorker → Dedicated Worker → main thread.
-    // Unsupported browsers silently fall back instead of crashing the error boundary.
-    const source = createTickerSource(({ upbit, binance }) => {
-      setSocketState({
-        tickers: {
-          upbit: upbit.data,
-          binance: binance.data,
-        },
-        btcKrw: {
-          upbit: upbit.btcKrw,
-          binance: binance.btcKrw,
-        },
+      // Progressive source: SharedWorker → Dedicated Worker → main thread.
+      // Unsupported browsers silently fall back instead of crashing the error boundary.
+      const source = createTickerSource(({ upbit, binance }) => {
+        setSocketState({
+          tickers: {
+            upbit: upbit.data,
+            binance: binance.data,
+          },
+          btcKrw: {
+            upbit: upbit.btcKrw,
+            binance: binance.btcKrw,
+          },
+        });
       });
-    });
 
-    sourceRef.current = source;
-    setReady(true);
+      sourceRef.current = source;
+      setReady(true);
 
-    const handleUnload = () => source.disconnect();
-    window.addEventListener('unload', handleUnload);
+      const handleUnload = () => source.disconnect();
+      window.addEventListener('unload', handleUnload);
 
-    return () => {
-      window.removeEventListener('unload', handleUnload);
-      source.disconnect();
-      sourceRef.current = null;
-      setReady(false);
-    };
-  }, [isMounted, setSocketState]);
+      return () => {
+        window.removeEventListener('unload', handleUnload);
+        source.disconnect();
+        sourceRef.current = null;
+        setReady(false);
+      };
+    },
+    [isMounted, setSocketState],
+  );
 
   return <>{children}</>;
 }
